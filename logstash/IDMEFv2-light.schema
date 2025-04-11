@@ -1,18 +1,30 @@
 {
-    "description": "JSON schema for the Intrusion Detection Message Exchange Format (IDMEF) version 2 (revision 2.D.V02)",
+    "description": "JSON schema for the Intrusion Detection Message Exchange Format (IDMEF) version 2 (revision 2.D.V05)",
     "properties": {
         "Version": {
-            "description": "The version of the IDMEF format in use by this alert. During the drafts tuning period the version is equal to the draft version. Therefore it is \"2.D.V02\" for Draft V02.",
+            "description": "The version of the IDMEF format in use by this alert. During the drafts tuning period the version is equal to the draft version. Therefore it is \"2.D.V05\" for Draft V05.",
             "enum": [
-                "2.D.V02"
+                "2.D.V05"
             ]
         },
         "ID": {
             "description": "Unique identifier for the alert.",
             "$ref": "#/definitions/uuidType"
         },
-        "Entity": {
-            "description": "Tenant ID to support multi-tenancy (e.g. decentralized infrastructure, local agency, subsidiary company, etc.). Should be used when there are multiple sites/locations or multiple tenants (e.g. by Managed Security Services Providers).",
+        "OrganisationName": {
+            "description": "Corporate/Main Office Organisation Name Useful if alerts are sent to a multi-organisation incident detection system. Example: ACME Corporation",
+            "type": "string"
+        },
+        "OrganisationId": {
+            "description": "Corporate/Main Office Organisation ID. Where possible official organisation ID manage by national authority. Useful if alerts are sent to a multi-organisation incident detection system. This ID has to be chosen depending on the overall detection perimeter and the nature of the monitored organisation (Private/Public, Commercial, International, etc.) Examples: OrganisationId in France could be SIREN, in England could be CR, Germany could be Handelsregisternummer, Spain could be CIF, Italia could be Partita IVA, USA could be EIN, etc. Commercial OrganisationId in Europe could be V.A.T ID",
+            "type": "string"
+        },
+        "EntityName": {
+            "description": "Entity Name, monitored by the organisation, where the incident occurred. Could be a town, region or country name or an internal name. Could also be the name of a client for a MSSP centralizing it's client incidents in a single system. Do not repeat the organisation name in the EntityName Example : \n- ACME HeadQuaters is located in Paris France and has a local office in India\n- If the incident occurred in the local office : \"OrganisationName\" : \" ACME\" , \"EntityName\" : \"India\"\n- If the incident occurred in the headquaters : \"OrganisationName\" : \"ACME\", \"EntityName\" : \"Headquaters\" (or \"Paris\")",
+            "type": "string"
+        },
+        "EntityId": {
+            "description": "Entity ID, monitored by the organisation, where the incident occurred. Useful if organisation and entity are not directly linked, like a client and a MSSP.",
             "type": "string"
         },
         "Category": {
@@ -809,5 +821,5 @@
         }
     },
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "IDMEF 2.D.V02"
+    "title": "IDMEF 2.D.V05"
 }

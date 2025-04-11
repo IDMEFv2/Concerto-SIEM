@@ -50,7 +50,7 @@ filter {
   if ![Version] {
     mutate {
       replace => {
-        '[Version]' => '2.D.V02'
+        '[Version]' => '2.D.V05'
       }
     }
   }
@@ -70,7 +70,10 @@ filter {
       # Top-level IDMEF attributes
       'Version',
       'ID',
-      'Entity',
+      'OrganisationName',
+      'OrganisationId',
+      'EntityName',
+      'EntityId',
       'Category',
       'ext-Category',
       'Cause',
