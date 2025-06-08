@@ -44,28 +44,64 @@
 
     "properties": {
       "Version": {
-        "type": "keyword",
-        "norms": false
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
       },
       "ID": {
-        "type": "keyword",
-        "norms": false
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
       },
       "Entity": {
-        "type": "keyword",
-        "norms": false
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
       },
       "Category": {
-        "type": "keyword",
-        "norms": false
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
       },
       "ext-Category": {
-        "type": "keyword",
-        "norms": false
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
       },
       "Cause": {
-        "type": "keyword",
-        "norms": false
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
       },
       "Description": {
         "type": "text",
@@ -78,19 +114,37 @@
         }
       },
       "Status": {
-        "type": "keyword",
-        "norms": false
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
       },
       "Priority": {
-        "type": "keyword",
-        "norms": false
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
       },
       "Confidence": {
         "type": "double"
       },
       "Note": {
         "type": "text",
-        "norms": false
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
       },
       "CreateTime": {
         "type": "date",
@@ -115,8 +169,14 @@
         }
       },
       "AltCategory": {
-        "type": "keyword",
-        "norms": false
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
       },
       "Ref": {
         "type": "text",
@@ -130,20 +190,44 @@
         }
       },
       "CorrelID": {
-        "type": "keyword",
-        "norms": false
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
       },
       "AggrCondition": {
-        "type": "keyword",
-        "norms": false
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
       },
       "PredID": {
-        "type": "keyword",
-        "norms": false
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
       },
       "RelID": {
-        "type": "keyword",
-        "norms": false
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
       },
 
       "Analyzer": {
@@ -169,40 +253,94 @@
             }
           },
           "Hostname": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Model": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Type": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Category": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "ext-Category": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Data": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "ext-Data": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Method": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "ext-Method": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "GeoLocation": {
             "type": "geo_point"
@@ -255,12 +393,24 @@
             }
           },
           "Hostname": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Model": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "GeoLocation": {
             "type": "geo_point"
@@ -288,7 +438,13 @@
           },
           "CaptureZone": {
             "type": "text",
-            "norms": false
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           }
         }
       },
@@ -307,8 +463,14 @@
             }
           },
           "Hostname": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Note": {
             "type": "text",
@@ -321,20 +483,44 @@
             }
           },
           "TI": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "User": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Email": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Protocol": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Port": {
             "type": "integer"
@@ -364,8 +550,14 @@
             }
           },
           "Attachment": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           }
         }
       },
@@ -384,8 +576,14 @@
             }
           },
           "Hostname": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Note": {
             "type": "text",
@@ -398,16 +596,34 @@
             }
           },
           "Service": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "User": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Email": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Port": {
             "type": "integer"
@@ -437,8 +653,14 @@
             }
           },
           "Attachment": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           }
         }
       },
@@ -448,12 +670,24 @@
         "dynamic": false,
         "properties": {
           "Category": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "ext-Category": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Name": {
             "type": "text",
@@ -476,8 +710,14 @@
             }
           },
           "TI": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "GeoLocation": {
             "type": "geo_point"
@@ -507,8 +747,14 @@
             }
           },
           "Attachment": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           }
         }
       },
@@ -539,8 +785,14 @@
             }
           },
           "Hash": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Size": {
             "type": "long"
@@ -578,12 +830,24 @@
             }
           },
           "ContentType": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "ContentEncoding": {
-            "type": "keyword",
-            "norms": false
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           },
           "Content": {
             "type": "wildcard"
