@@ -127,8 +127,8 @@ spec:
             mountPath: /usr/share/logstash/config/rulesets
             subPath: rulesets
           - name: config
-            mountPath: /usr/share/logstash/config/to_idmef
-            subPath: to_idmef
+            mountPath: /usr/share/logstash/config/idmef
+            subPath: idmef
       volumes:
       - name: config
         hostPath:
