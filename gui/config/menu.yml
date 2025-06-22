@@ -25,6 +25,9 @@
               expand: true
               tabs:
                   - Alerts
+            - name: Phone map
+              tabs:
+                  - Phone map
 - name: ARCHIVE
   icon: database
   categories:
