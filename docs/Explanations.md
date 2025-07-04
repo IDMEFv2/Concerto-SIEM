@@ -2,7 +2,7 @@
 
 Fully based on podman and podman-compose
 
-One container for each function:
+One container for each function : [Container Name]: Description
 * kafka: broker for each step of data manipulation, from collect to storage, with detection and correlation.
 * zoo: (ZooKeeper) centralized service for maintaining configuration of Kafka
 * kafdrop: Web interface for Kafka
