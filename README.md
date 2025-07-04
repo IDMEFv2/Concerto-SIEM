@@ -65,7 +65,7 @@ make clean
 The following services are exposed with their primary purpose:
 
   - Web interface: `http://localhost` (SIEM user interface)
-  - Alert's database: `http://elastic:elastic@localhost:9200` (Elasticsearch for alert storage)
+  - Elastic database: `http://elastic:elastic@localhost:9200` (Elasticsearch for alert & log storage)
   - Syslog input: `tcp://localhost:6514` (For receiving syslog messages)
   - IDMEFv2 input: `http://localhost:4690` (For receiving IDMEFv2 alerts)
   - Kafka status: `http://localhost:9201` (Kafdrop UI for Kafka monitoring)
