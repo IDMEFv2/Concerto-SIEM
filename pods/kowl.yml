@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kowl
+  labels:
+    app: kowl-service
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      name: kowl-8080
+      nodePort: 30392
+  selector:
+    app: kowl-tmpl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kowl
+  labels:
+    app: kowl-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kowl-tmpl
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: kowl-tmpl
+    spec:
+      containers:
+      - image: quay.io/cloudhut/kowl:master
+        name: kowl
+        env:
+        - name: KAFKA_BROKERS
+          value: kafka:9092
+        ports:
+        - containerPort: 8080
+          name: kowl-8080
