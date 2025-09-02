@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: is-gateway-sd
+  labels:
+    app: is-gateway-sd-service
+spec:
+  type: NodePort
+  ports:
+    - port: 10081
+      name: is-gw-sd-10081
+      nodePort: 30592
+  selector:
+    app: is-gateway-sd-tmpl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: is-gateway-sd
+  labels:
+    app: is-gateway-sd-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: is-gateway-sd-tmpl
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: is-gateway-sd-tmpl
+    spec:
+      containers:
+      - image: localhost/is-gateway
+        imagePullPolicy: Never
+        name: is-gateway-sd
+        ports:
+        - containerPort: 10081
+          name: is-gw-sd-10081
+        volumeMounts:
+          - name: config
+            mountPath: /application.properties
+            subPath: sender.properties
+      volumes:
+      - name: config
+        hostPath:
+          path: /mnt/minikube/is-gateway/config
+          type: Directory
