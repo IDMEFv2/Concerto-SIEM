@@ -11,6 +11,7 @@ def register(params)
   @fields = ['author', 'category', 'description', 'license', 'version']
 
   Dir.glob(params['rules']) do |filename|
+    logger.debug("match.rb : Loading " + filename)
     YAML.load_stream(File.read(filename)) do |doc|
       patterns = []
       rules = {}
@@ -66,8 +67,8 @@ def eval_predicate(predicate, event)
     'less_equal'    => ['<=', false],
     'greater_than'  => ['>', false],
     'greater_equal' => ['>=', false],
-    'in'            => ['contains?', false],
-    'not_in'        => ['contains?', true],
+    'in'            => ['include?', false],
+    'not_in'        => ['include?', true],
     'xor'           => ['^', false],
   }
 
@@ -124,6 +125,7 @@ end
 
 def filter(event)
   @rulesets.each do |ruleset|
+    logger.debug("match.rb : filter : " + ruleset['name'])
     predicate = ruleset['predicate']
     next unless predicate.nil? or eval_predicate(predicate, event)
 
