@@ -7,7 +7,7 @@ ruleset:
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
       - operator: constant
-        operands: ["su", "SU"]
+        operands: "su"
   rules:
     - id: 10002
       pattern: "BAD SU (?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][user][name]} to (?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][user][effective][name]} on %{TTY:terminal_name}"

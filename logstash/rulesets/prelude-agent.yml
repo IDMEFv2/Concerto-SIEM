@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "preludecorrelator.main"
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "preludecorrelator.main"
   rules:
     - id: 100080
       pattern: "INFO: %{INT:numPlugin} plugins have been loaded"

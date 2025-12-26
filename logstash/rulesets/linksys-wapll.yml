@@ -2,11 +2,11 @@ ruleset:
   name: wireless_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: or
+    operator: in
     operands:
-      - operator: contains
-        operands: "wireless"
-      - operator: contains
+      - operator: variable
+        operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
         operands: "Wireless"
   rules:
     - id: 2200

@@ -2,16 +2,12 @@ ruleset:
   name: squid_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: or
+    operator: in
     operands:
-      - operator: contains
-        operands: "Acceptin"
-      - operator: contains
+      - operator: variable
+        operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
         operands: "Squid"
-      - operator: contains
-        operands: "Disabled"
-      - operator: contains
-        operands: "DENIED"
   rules:
     - id: 1801
       pattern: "Starting Squid Cache version %{DATA:version} for %{DATA:distribution}..."

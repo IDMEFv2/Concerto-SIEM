@@ -2,7 +2,7 @@ ruleset:
   name: intrushield_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: equals
+    operator: equal
     operands:
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"

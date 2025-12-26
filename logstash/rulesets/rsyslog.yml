@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "rsyslogd"
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "rsyslogd"
   rules:
     - id: 101000
       pattern: "\\[.*software=\"rsyslogd\".*\\] exiting on signal %{INT:signal_number}"

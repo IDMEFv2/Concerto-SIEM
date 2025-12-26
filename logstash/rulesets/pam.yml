@@ -6,16 +6,16 @@ ruleset:
     operands:
       - operator: in
         operands:
-          - operator: constant
-            operands: "pam_"
           - operator: variable
             operands: "[Attachment][RawLog][Content][process][name]"
+          - operator: constant
+            operands: "pam"
       - operator: in
         operands:
-          - operator: constant
-            operands: "PAM_"
           - operator: variable
             operands: "[Attachment][RawLog][Content][process][name]"
+          - operator: constant
+            operands: "PAM"
   rules:
     - id: 1
       pattern: "session opened for user (?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][user][effective][name]} by (?:(?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][user][name]]})?\\(uid=%{NONNEGINT:[Attachment][RawLog][Content][user][id]}\\)"

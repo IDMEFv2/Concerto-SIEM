@@ -4,12 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "bigconf.cgi"
-      - operator: constant
-        operands: "kernel"
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "bigconf.cgi"
   rules:
     - id: 3600
       pattern: "AUDIT -- %{WORD:action} (?!VIPPORT)(%{WORD:data}) %{IP:[Attachment][RawLog][Content][destination][address]}.+User: %{USER:[Attachment][RawLog][Content][user][name]}"

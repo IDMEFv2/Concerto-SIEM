@@ -4,22 +4,22 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "radiusd"
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "radiusd"
   rules:
     - id: 35000
       pattern: "(?<data>Ready to process requests)"
       samples:
         - "May  3 14:43:38 SERVER_NAME radiusd[2081]: Ready to process requests."
     - id: 35001
-      pattern: "(?<data>Login incorrect: \[%{NOTSPACE:[Attachment][RawLog][Content][user][name]}\] \(from client %{NOTSPACE:client} port %{POSINT:[Attachment][RawLog][Content][source][port]:int} cli %{IP:[Attachment][RawLog][Content][source][address]}\))"
+      pattern: "(?<data>Login incorrect: \\[%{NOTSPACE:[Attachment][RawLog][Content][user][name]}\\] \\(from client %{NOTSPACE:client} port %{POSINT:[Attachment][RawLog][Content][source][port]:int} cli %{IP:[Attachment][RawLog][Content][source][address]}\\))"
       samples:
         - "May  3 14:43:48 SERVER_NAME radiusd[name3]: Login incorrect: [USER] (from client HOST_NAME port xxx cli x.x.x.x)"
     - id: 35002
-      pattern: "(?<data>Login incorrect: \[%{NOTSPACE:[Attachment][RawLog][Content][user][name]}\] \(from client %{NOTSPACE:client} port %{POSINT:[Attachment][RawLog][Content][source][port]:int} cli ip:source-ip=%{IP:[Attachment][RawLog][Content][source][address]}\))"
+      pattern: "(?<data>Login incorrect: \\[%{NOTSPACE:[Attachment][RawLog][Content][user][name]}\\] \\(from client %{NOTSPACE:client} port %{POSINT:[Attachment][RawLog][Content][source][port]:int} cli ip:source-ip=%{IP:[Attachment][RawLog][Content][source][address]}\\))"
     - id: 35003
-      pattern: "(?<data>Login OK: \[%{NOTSPACE:[Attachment][RawLog][Content][user][name]}\] \(from client %{NOTSPACE:client} port %{POSINT:[Attachment][RawLog][Content][source][port]:int} cli %{IP:[Attachment][RawLog][Content][source][address]}\))"
+      pattern: "(?<data>Login OK: \\[%{NOTSPACE:[Attachment][RawLog][Content][user][name]}\\] \\(from client %{NOTSPACE:client} port %{POSINT:[Attachment][RawLog][Content][source][port]:int} cli %{IP:[Attachment][RawLog][Content][source][address]}\\))"
     - id: 35004
-      pattern: "(?<data>Login OK: \[%{NOTSPACE:[Attachment][RawLog][Content][user][name]}\] \(from client %{NOTSPACE:client} port %{POSINT:[Attachment][RawLog][Content][source][port]:int}\))"
+      pattern: "(?<data>Login OK: \\[%{NOTSPACE:[Attachment][RawLog][Content][user][name]}\\] \\(from client %{NOTSPACE:client} port %{POSINT:[Attachment][RawLog][Content][source][port]:int}\\))"

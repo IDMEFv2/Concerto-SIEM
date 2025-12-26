@@ -4,12 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "\(CONNECT_DATA="
-      - operator: constant
-        operands: "<unknown connect data>"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "CONNECT_DATA"
   rules:
     - id: 16101
       pattern: "\\(CONNECT_DATA=\\(SID=(?<sid>[^)]*)\\)\\(CID=\\(PROGRAM=(?<program>[^)]*)\\)\\(HOST=([^)]*)\\)\\(USER=%{USER:[Attachment][RawLog][Content][user][target][name]}\\)\\)\\)\\s+\\*\\s+\\(ADDRESS=\\(PROTOCOL=%{DATA:[Attachment][RawLog][Content][network][transport]}\\)\\(HOST=(?:%{IPORHOST:[Attachment][RawLog][Content][source][address]})?\\)\\(PORT=(?:%{POSINT:[Attachment][RawLog][Content][source][port]:int})?\\)\\)\\s+\\*\\s+establish\\s+%{DATA}\\s+0$"

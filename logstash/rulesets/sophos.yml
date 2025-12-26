@@ -4,14 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "aua"
-      - operator: constant
-        operands: "auisys"
-      - operator: constant
-        operands: "exim-out"
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "aua"
   rules:
     - id: 50000
       pattern: "id=\"%{INT:id}\" severity=\"warn\" sys=\"System\" sub=\"auth\" name=\"Authentication failed\" srcip=\"%{IP:[Attachment][RawLog][Content][source][address]}\" host=\"%{HOSTNAME:[Attachment][RawLog][Content][source][hostname]}\" user=\"%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}\" caller=\"webadmin\" reason=\"DENIED\""
@@ -24,4 +20,4 @@ ruleset:
     - id: 50002
       pattern: "id=\"%{NOTSPACE:id}\" severity=\"info\" sys=\"system\" sub=\"up2date\" name=\"Successfully installed Up2Date package\" status=\"success\" action=\"install\" package_version=\"%{NOTSPACE:pkg_version}\" package=\"%{NOTSPACE:package}\""
     - id: 50003
-      pattern: "== %{NOTSPACE} R=dnslookup T=remote_smtp defer \(\-%{INT:number}\): SMTP error from remote mail server after RCPT TO:<%{NOTSPACE:dstAddr}>: host %{IPORHOST:[Attachment][RawLog][Content][server][address]} \[%{IP:[Attachment][RawLog][Content][server][ip]}\]: %{INT:id} %{NOTSPACE:data} <%{NOTSPACE:email}>: %{GREEDYDATA:[Attachment][RawLog][Content][event][reason]}"
+      pattern: "== %{NOTSPACE} R=dnslookup T=remote_smtp defer \\(\\-%{INT:number}\\): SMTP error from remote mail server after RCPT TO:<%{NOTSPACE:dstAddr}>: host %{IPORHOST:[Attachment][RawLog][Content][server][address]} \\[%{IP:[Attachment][RawLog][Content][server][ip]}\\]: %{INT:id} %{NOTSPACE:data} <%{NOTSPACE:email}>: %{GREEDYDATA:[Attachment][RawLog][Content][event][reason]}"

@@ -7,8 +7,6 @@ ruleset:
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
       - operator: constant
-        operands: "kernel"
-      - operator: constant
         operands: "ulogd"
   rules:
     - id: 700

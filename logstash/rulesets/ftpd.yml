@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "ftpd"
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "ftpd"
   rules:
     - id: 2300
       pattern: "ANONYMOUS FTP LOGIN FROM ([\\w\\-\\.]+) \\[%{IP:[Attachment][RawLog][Content][source][address]}\\], %{NOTSPACE:[Attachment][RawLog][Content][user][name]}"

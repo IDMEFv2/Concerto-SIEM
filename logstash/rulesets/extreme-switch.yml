@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "MSM-A"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "MSM-A"
   rules:
     - id: 20101
       pattern: "Login passed for user %{NOTSPACE:[Attachment][RawLog][Content][user][name]} through %{NOTSPACE:[Attachment][RawLog][Content][network][protocol]} \\(%{IPORHOST:[Attachment][RawLog][Content][destination][address]}\\)"

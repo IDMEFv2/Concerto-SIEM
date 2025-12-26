@@ -2,7 +2,7 @@ ruleset:
   name: citric_netscaler_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: regex
+    operator: match
     operands:
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"

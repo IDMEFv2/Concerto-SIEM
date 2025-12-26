@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "ha-eventmgr"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "ha-eventmgr"
   rules:
     - id: 175000100
       pattern: "User %{USER:[Attachment][RawLog][Content][user][name]}@%{IPORHOST:[Attachment][RawLog][Content][source][address]} logged in"

@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "product:"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "product:"
   rules:
     - id: 100
       pattern: "drop %{IPORHOST} (<|>)([\\w-]+) product: VPN-1 & FireWall-1; src: %{IPORHOST:[Attachment][RawLog][Content][source][address]}; s_port: %{DATA:[Attachment][RawLog][Content][source][port]}; dst: %{IPORHOST:[Attachment][RawLog][Content][destination][address]}; service: %{DATA:[Attachment][RawLog][Content][destination][port]}; proto: %{NOTSPACE:[Attachment][RawLog][Content][network][transport]};"

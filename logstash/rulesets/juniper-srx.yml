@@ -2,12 +2,12 @@ ruleset:
   name: juniper_srx_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: regex
+    operator: match
     operands:
-      - operator: constant
-        operands: "RT_|KERN_|KMD_|UI_"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "RT_|KERN_|KMD_|UI_"
   rules:
     - id: 22001
       pattern: "\\[%{USER:[Attachment][RawLog][Content][user][name]}@%{NOTSPACE:domain} source-address=\"%{IP:[Attachment][RawLog][Content][source][address]}\" source-port=\"%{POSINT:[Attachment][RawLog][Content][source][port]:int}\" destination-address=\"%{IP:[Attachment][RawLog][Content][destination][address]}\" destination-port=\"%{POSINT:[Attachment][RawLog][Content][destination][port]}\" service-name=\"%{DATA}\" protocol-id=\"%{WORD:[Attachment][RawLog][Content][network][iana_number]:int}\""

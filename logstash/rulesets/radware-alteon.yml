@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "WebOS"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "WebOS"
   rules:
     - id: 168000100
       pattern: "Failed login attempt via %{NOTSPACE:[Attachment][RawLog][Content][network][protocol]} from host %{NOTSPACE:[Attachment][RawLog][Content][source][address]}"

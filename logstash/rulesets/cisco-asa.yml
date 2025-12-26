@@ -2,23 +2,31 @@ ruleset:
   name: asa_pix_logs
   field: "[Attachment][RawLog][Content][event][original]"
   predicate:
-    operator: in
+    operator: or
     operands:
-      - operator: constant
-        operands: "ASA-"
-      - operator: constant
-        operands: "PIX-"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][message]"
+          - operator: constant
+            operands: "ASA-"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][message]"
+          - operator: constant
+            operands: "PIX-"
   rules:
     - id: 195
       pattern: "-410001: Dropped %{NOTSPACE:[Attachment][RawLog][Content][network][transport]} %{NOTSPACE:[Attachment][RawLog][Content][network][protocol]} %{DATA} from %{DATA}:%{IP:[Attachment][RawLog][Content][source][address]}/%{POSINT:[Attachment][RawLog][Content][source][port]:int} to %{DATA}:%{IP:[Attachment][RawLog][Content][destination][address]}/%{POSINT:[Attachment][RawLog][Content][destination][port]:int}; %{GREEDYDATA:[Attachment][RawLog][Content][event][reason]}"
       samples:
         - "Sep 20 18:25:50 ASA_NAME %ASA-4-410001: Dropped UDP DNS packet_type from source_interface:source_address/source_port to dest_interface:dest_address/dest_port; error_length_type length length bytes exceeds max_length_type limit of maximum_length bytes"
     - id: 196
-      pattern: "-4000\d\d: I[PD]S:%{INT} %{DATA:[Attachment][RawLog][Content][event][reason]} from %{IP:[Attachment][RawLog][Content][source][address]} to %{IP:[Attachment][RawLog][Content][destination][address]} on interface %{DATA}"
+      pattern: "-4000\\.\\.: I[PD]S:%{INT} %{DATA:[Attachment][RawLog][Content][event][reason]} from %{IP:[Attachment][RawLog][Content][source][address]} to %{IP:[Attachment][RawLog][Content][destination][address]} on interface %{DATA}"
       samples:
         - "May 10 09:25:28 asa %ASA-4-400000: IPS:1000 IP options-Bad Option List from 193.211.21.12 to 78.12.34.1 on interface dmz"
     - id: 197
-      pattern: "-605005: Login permitted from %{IP:[Attachment][RawLog][Content][source][address]}/%{NOTSPACE:[Attachment][RawLog][Content][source][port]} to %{DATA}:%{IP:[Attachment][RawLog][Content][destination][address]}/%{NOTSPACE:[Attachment][RawLog][Content][destination][port]} for user \"%{DATA:[Attachment][RawLog][Content][user][target][name]}\""
+      pattern: "-605005: Login permitted from %{IP:[Attachment][RawLog][Content][source][address]}/%{NOTSPACE:[Attachment][RawLog][Content][source][port]} to %{DATA}:%{IP:[Attachment][RawLog][Content][destination][address]}/%{NOTSPACE:[Attachment][RawLog][Content][destination][port]} for user \\.%{DATA:[Attachment][RawLog][Content][user][target][name]}\\."
     - id: 198
       pattern: "-111008: User '%{DATA:[Attachment][RawLog][Content][user][name]}' executed the 'enable' command"
     - id: 199
@@ -34,13 +42,13 @@ ruleset:
     - id: 204
       pattern: "-611103: User logged out: Uname: %{WORD:[Attachment][RawLog][Content][user][name]}"
     - id: 205
-      pattern: "-605004: Login denied from %{IP:[Attachment][RawLog][Content][source][address]}/%{POSINT:[Attachment][RawLog][Content][source][port]:int} to %{WORD:interface}:%{IP:[Attachment][RawLog][Content][destination][address]}/%{WORD:service} for user \"%{WORD:[Attachment][RawLog][Content][user][target][name]}\""
+      pattern: "-605004: Login denied from %{IP:[Attachment][RawLog][Content][source][address]}/%{POSINT:[Attachment][RawLog][Content][source][port]:int} to %{WORD:interface}:%{IP:[Attachment][RawLog][Content][destination][address]}/%{WORD:service} for user \\.%{WORD:[Attachment][RawLog][Content][user][target][name]}\\."
     - id: 206
-      pattern: "-308001: console enable password incorrect for %{INT:number} tries \(from %{IP:ip} \)"
+      pattern: "-308001: console enable password incorrect for %{INT:number} tries \\.from %{IP:ip} \\."
     - id: 207
       pattern: "-315011: SSH session from %{IP:[Attachment][RawLog][Content][source][address]} on interface %{DATA:interface_name} for user %{DATA:user} disconnected by SSH server, reason: %{GREEDYDATA:reason}"
     - id: 208
-      pattern: "-407002: Embryonic limit for through connections exceeded %{INT}/%{INT}\. %{IP:[Attachment][RawLog][Content][source][address]}/%{POSINT:[Attachment][RawLog][Content][source][port]:int} to %{IP}\(%{IP:[Attachment][RawLog][Content][destination][address]}\)/%{POSINT:[Attachment][RawLog][Content][destination][port]} on interface %{GREEDYDATA}"
+      pattern: "-407002: Embryonic limit for through connections exceeded %{INT}/%{INT}\\. %{IP:[Attachment][RawLog][Content][source][address]}/%{POSINT:[Attachment][RawLog][Content][source][port]:int} to %{IP}\\.%{IP:[Attachment][RawLog][Content][destination][address]}\\./%{POSINT:[Attachment][RawLog][Content][destination][port]} on interface %{GREEDYDATA}"
     - id: 209
       pattern: "-106012: Deny IP from %{IP:[Attachment][RawLog][Content][source][address]} to %{IP:[Attachment][RawLog][Content][destination][address]}, IP options: %{WORD:hex}"
     - id: 210
@@ -52,23 +60,23 @@ ruleset:
     - id: 213
       pattern: "-405001: Received ARP (request|response) collision from %{IP:[Attachment][RawLog][Content][source][address]}/%{MAC:MAC_address} on interface %{WORD:interface_name}"
     - id: 214
-      pattern: "-710003: (?=TCP|UDP)%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} access denied by ACL from %{IP:[Attachment][RawLog][Content][source][address]}/%{POSINT:[Attachment][RawLog][Content][source][port]:int} to (\S+):%{IP:[Attachment][RawLog][Content][destination][address]}/%{POSINT:[Attachment][RawLog][Content][destination][port]}"
+      pattern: "-710003: (?=TCP|UDP)%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} access denied by ACL from %{IP:[Attachment][RawLog][Content][source][address]}/%{POSINT:[Attachment][RawLog][Content][source][port]:int} to (\\.+):%{IP:[Attachment][RawLog][Content][destination][address]}/%{POSINT:[Attachment][RawLog][Content][destination][port]}"
     - id: 215
-      pattern: "-305006: Dst IP is network/broadcast IP, translation creation failed for (?=tcp|udp)%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} src (\S+):%{IP:[Attachment][RawLog][Content][source][address]}/%{POSINT:[Attachment][RawLog][Content][source][port]:int} dst (\S+):%{IP:[Attachment][RawLog][Content][destination][address]}/%{POSINT:[Attachment][RawLog][Content][destination][port]}"
+      pattern: "-305006: Dst IP is network/broadcast IP, translation creation failed for (?=tcp|udp)%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} src (\\.+):%{IP:[Attachment][RawLog][Content][source][address]}/%{POSINT:[Attachment][RawLog][Content][source][port]:int} dst (\\.+):%{IP:[Attachment][RawLog][Content][destination][address]}/%{POSINT:[Attachment][RawLog][Content][destination][port]}"
     - id: 216
-      pattern: "-313003: Invalid destination for ICMP error message: ICMP source %{IP:[Attachment][RawLog][Content][source][address]} destination %{IP:[Attachment][RawLog][Content][destination][address]} \(type (\d+), code (\d+)\) on (\S+) interface"
+      pattern: "-313003: Invalid destination for ICMP error message: ICMP source %{IP:[Attachment][RawLog][Content][source][address]} destination %{IP:[Attachment][RawLog][Content][destination][address]} \\.type (\\.+), code (\\.+)\\. on (\\.+) interface"
     - id: 219
       pattern: "-106007: Deny inbound UDP from %{IP:[Attachment][RawLog][Content][source][address]} /%{POSINT:[Attachment][RawLog][Content][source][port]:int} to %{IP:[Attachment][RawLog][Content][destination][address]}/%{POSINT:[Attachment][RawLog][Content][destination][port]} due to DNS {Response|Query}"
     - id: 221
       pattern: "-106017: Deny IP due to Land Attack from %{IP:[Attachment][RawLog][Content][source][address]} to %{IP:[Attachment][RawLog][Content][destination][address]}"
     - id: 222
-      pattern: "-305006: regular translation creation failed for icmp src (\S+):%{NOTSPACE:source} dst (\S+):%{NOTSPACE:target} \(type (\d+), code (\d+)\)"
+      pattern: "-305006: regular translation creation failed for icmp src (\\.+):%{NOTSPACE:source} dst (\\.+):%{NOTSPACE:target} \\.type (\\.+), code (\\.+)\\."
     - id: 223
-      pattern: "-313003: Invalid destination for ICMP error message: icmp src (\S+):%{IP:[Attachment][RawLog][Content][source][address]} dst (\S+):%{IP:[Attachment][RawLog][Content][destination][address]} \(type (\d+), code (\d+)\)"
+      pattern: "-313003: Invalid destination for ICMP error message: icmp src (\\.+):%{IP:[Attachment][RawLog][Content][source][address]} dst (\\.+):%{IP:[Attachment][RawLog][Content][destination][address]} \\.type (\\.+), code (\\.+)\\."
     - id: 224
-      pattern: "-710005: (?=TCP|UDP)%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} request discarded from %{IP:[Attachment][RawLog][Content][source][address]}/%{POSINT:[Attachment][RawLog][Content][source][port]:int} to (\S+):%{IP:[Attachment][RawLog][Content][destination][address]}/%{POSINT:[Attachment][RawLog][Content][destination][port]}"
+      pattern: "-710005: (?=TCP|UDP)%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} request discarded from %{IP:[Attachment][RawLog][Content][source][address]}/%{POSINT:[Attachment][RawLog][Content][source][port]:int} to (\\.+):%{IP:[Attachment][RawLog][Content][destination][address]}/%{POSINT:[Attachment][RawLog][Content][destination][port]}"
     - id: 500
-      pattern: "-733100: \[%{DATA}\] drop rate-(1|2) exceeded."
+      pattern: "-733100: \\.%{DATA}\\. drop rate-(1|2) exceeded."
     - id: 502
       pattern: "-106022: Deny protocol connection spoof from %{IP:[Attachment][RawLog][Content][source][address]} to %{IP:[Attachment][RawLog][Content][destination][address]} on interface (S+)"
     - id: 503
@@ -76,8 +84,8 @@ ruleset:
     - id: 504
       pattern: "-111008: User '%{NOTSPACE:[Attachment][RawLog][Content][user][name]}' executed the 'configure terminal' command"
     - id: 505
-      pattern: "-107001: RIP auth failed from %{IP:[Attachment][RawLog][Content][source][address]}: version=(\d+), type=(\S+), mode=(\S+), sequence=(\d+), on interface (\S+)"
+      pattern: "-107001: RIP auth failed from %{IP:[Attachment][RawLog][Content][source][address]}: version=(\\.+), type=(\\.+), mode=(\\.+), sequence=(\\.+), on interface (\\.+)"
     - id: 506
-      pattern: "-107002: RIP pkt failed from ([\d\.]+): version=(\d+) on interface (\S+)"
+      pattern: "-107002: RIP pkt failed from ([\\.\\.]+): version=(\\.+) on interface (\\.+)"
     - id: 507
-      pattern: "-109017: User at ([\d\.]+) exceeded auth proxy connection limit"
+      pattern: "-109017: User at ([\\.\\.]+) exceeded auth proxy connection limit"

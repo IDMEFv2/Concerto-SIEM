@@ -4,12 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "Keepalived_vrrp"
-      - operator: constant
-        operands: "Keepalived"
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "Keepalived"
   rules:
     - id: 23201
       pattern: "Stopping Keepalived %{NOTSPACE:desc}"

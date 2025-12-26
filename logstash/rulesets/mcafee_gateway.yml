@@ -4,12 +4,12 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "mwg"
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "mwg"
   rules:
     - id: 23500
-      pattern: "\"[^=\"]*=([^,]*)[^\"]*\" %{IP:[Attachment][RawLog][Content][source][address]} %{INT:statusCode} \"(?<method>GET|POST|CONNECT|OPTIONS) (?<url>[^\s]*) [^\"]*\" \"(?<desc>[^\"]*)\" \"High Risk\" \"[^\"]*\" \d+ \d+ \"(?<usrAgent>[^\"]*)\""
+      pattern: "\"[^=\"]*=([^,]*)[^\"]*\" %{IP:[Attachment][RawLog][Content][source][address]} %{INT:statusCode} \"(?<method>GET|POST|CONNECT|OPTIONS) (?<url>[^\\s]*) [^\"]*\" \"(?<desc>[^\"]*)\" \"High Risk\" \"[^\"]*\" \\d+ \\d+ \"(?<usrAgent>[^\"]*)\""
       samples:
         - "[21/Jun/2017:06:46:55 +0200] \"CN=User1,OU=Users,OU=BZ,DC=domain,DC=eu,DC=com\" 10.6.10.6 200 \"CONNECT r.ladatab.io:443 HTTP/1.1\" \"Malicious Sites, Spam URLs\" \"High Risk\" \"\" 5471 1183 \"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)\" \"\" \"0\" \"\""

@@ -4,14 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "tacacs_system"
-      - operator: constant
-        operands: "tacacs_accounting"
-      - operator: constant
-        operands: "tacacs_debug"
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "tacacs"
   rules:
     - id: 120001
       pattern: "\\[%{IP:src}:%{INT:srcPort}\\] No authorization entry found for %{IP:[Attachment][RawLog][Content][source][address]} %{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}"

@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "GMT"
       - operator: variable
         operands: "[Attachment][RawLog][Content][event][original]"
+      - operator: constant
+        operands: "GMT"
   rules:
     - id: 24301
       pattern: "%{NOTSPACE:id} %{NOTSPACE:name} VIRUS FOUND in attached file"

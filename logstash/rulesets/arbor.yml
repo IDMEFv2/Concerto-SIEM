@@ -6,22 +6,16 @@ ruleset:
     operands:
       - operator: in
         operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][message]"
           - operator: constant
             operands: "anomaly"
-          - operator: variable
-            operands: "[Attachment][RawLog][Content][message]"
       - operator: in
         operands:
-          - operator: constant
-            operands: "since"
           - operator: variable
             operands: "[Attachment][RawLog][Content][message]"
-      - operator: in
-        operands:
           - operator: constant
             operands: "firstSeen"
-          - operator: variable
-            operands: "[Attachment][RawLog][Content][message]"
   rules:
     - id: 4300
       pattern: "anomaly ([a-zA-Z_-]+) id %{INT:[Attachment][RawLog][Content][id]} status %{NOTSPACE:[Attachment][RawLog][Content][status]} severity %{INT:[Attachment][RawLog][Content][severity]} src %{IP:[Attachment][RawLog][Content][source][address]}/%{INT} \\w+ dst %{IP:[Attachment][RawLog][Content][destination][address]}/%{INT} \\w+ start (?<date>[\\d\\- :\\+]+) duration %{INT:[Attachment][RawLog][Content][duration]} percent %{NUMBER:[Attachment][RawLog][Content][percent]} rate (?<rate>[\\de\\+\\-]+) rateUnit %{WORD:[Attachment][RawLog][Content][rateunit]} protocol %{WORD:[Attachment][RawLog][Content][proto]} flags %{WORD:[Attachment][RawLog][Content][flag]} url %{NOTSPACE:[Attachment][RawLog][Content][url]}"

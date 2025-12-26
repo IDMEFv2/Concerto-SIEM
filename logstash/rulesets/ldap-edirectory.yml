@@ -2,12 +2,12 @@ ruleset:
   name: ldap_edirectory_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: regex
+    operator: match
     operands:
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
       - operator: constant
-        operands: "^\\d+ (AUTH|LDAP): \\[\\d{4}/\\d{2}/\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d+\\]"
+        operands: "\\d+ (AUTH|LDAP): \\[\\d{4}/\\d{2}/\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d+\\]"
   rules:
     - id: 25700
       pattern: "AUTH: \\[%{YEAR}/%{MONTHNUM}/%{MONTHDAY} %{HOUR}:?%{MINUTE}(?::?%{SECOND})\\]\\s\\[%{DATA:[Attachment][RawLog][Content][user][target][name]}\\]\\s+<\\.(?<Name1>.+)\\.(?<Name2>[^\\.]+)\\.(?<Name3>[^\\.]+)\\.(?<Name4>[^\\.]+)\\.>\\s+LocalLoginRequest\\. Error\\s+success,\\sconn:\\s+%{INT:number}"

@@ -7,7 +7,7 @@ ruleset:
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
       - operator: constant
-        operands: ["imapd", "ipop3d"]
+        operands: "imapd"
   rules:
     - id: 25605
       pattern: "Login failure user=%{USER:[Attachment][RawLog][Content][user][target][name]} host=(?:%{HOSTNAME:[Attachment][RawLog][Content][source][hostname]} )?\\[%{IP:[Attachment][RawLog][Content][source][address]}\\]"

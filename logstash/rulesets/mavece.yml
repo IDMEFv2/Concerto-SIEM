@@ -2,13 +2,17 @@ ruleset:
   name: norton_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: contains
-    operands: "norton"
+    operator: equal
+    operands:
+      - operator: constant
+        operands: "norton"
+      - operator: variable
+        operands: "[Attachment][RawLog][Content][process][name]"
   rules:
     - id: 1200
       pattern: "Virus Found!Virus name: %{NOTSPACE:[Attachment][RawLog][Content][malware][name]} in File: (?<filePath>.+) by: (?<processName>.+). Action: (?<action>.+)"
       samples:
-        - "Nov  3 17:10:28 mrfreeze.itg.sac.tfs norton antivirus[error] 5  Virus Found!Virus name: W32.Yaha.F@mm.enc in File: C:\Program Files\Exchsrvr\Mailroot\vsi 1\Queue\NTFS_6e44a57a01c3a270000282de.EML by: Realtime Protection scan.  Action: Clean failed : Quarantine failed : Access denied"
+        - "Nov  3 17:10:28 mrfreeze.itg.sac.tfs norton antivirus[error] 5  Virus Found!Virus name: W32.Yaha.F@mm.enc in File: C:\\Program Files\\Exchsrvr\\Mailroot\\\vsi 1\\Queue\\NTFS_6e44a57a01c3a270000282de.EML by: Realtime Protection scan.  Action: Clean failed : Quarantine failed : Access denied"
     - id: 1201
       pattern: "Download of virus definition file from LiveUpdate server succeeded"
       samples:

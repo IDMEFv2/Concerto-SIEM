@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "id=firewall"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "id=firewall"
   rules:
     - id: 4600
       pattern: "fw=%{IP:ipAddr} pri=%{INT:priority} c=%{INT:category} m=%{INT:Id} msg=\"(?<message>.+)\" n=%{INT:Id1} usr=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]} src=%{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int}(?::%{NOTSPACE:port})?(?: dst=%{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}(?::%{NOTSPACE:port_})?)?$"

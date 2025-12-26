@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "mysqld"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "mysqld"
   rules:
     - id: 23601
       pattern: "\\[\\w+\\] /usr/libexec/mysqld: Shutdown complete"

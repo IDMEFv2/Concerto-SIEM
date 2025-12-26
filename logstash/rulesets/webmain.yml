@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "webmin"
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "webmin"
   rules:
     - id: 2900
       pattern: "Successful login as %{NOTSPACE:[Attachment][RawLog][Content][user][name]} from %{IP:[Attachment][RawLog][Content][source][address]}"

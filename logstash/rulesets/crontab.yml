@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "crontab"
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "crontab"
   rules:
     - id: 23801
       pattern: "\\(%{USERNAME:[Attachment][RawLog][Content][user][name]}\\) BEGIN EDIT \\(%{USERNAME:[Attachment][RawLog][Content][user][target][name]}\\)"

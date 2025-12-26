@@ -2,14 +2,12 @@ ruleset:
   name: arpwatch_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: and
+    operator: equal
     operands:
-      - operator: eq
-        operands:
-          - operator: variable
-            operands: "[Attachment][RawLog][Content][process][name]"
-          - operator: constant
-            operands: "arpwatch"
+      - operator: variable
+        operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "arpwatch"
   rules:
     - id: 4200
       pattern: "new (station|activity) %{IP:[Attachment][RawLog][Content][source][address]} ([\\da-f:]+)"

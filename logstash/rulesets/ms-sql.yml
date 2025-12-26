@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "mssql"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "mssql"
   rules:
     - id: 1000
       pattern: "mssqlserver(?:\\[%{WORD:procID}\\])? %{POSINT:identifiant}  %{POSINT:id_name} : Login failed for user '%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}'"

@@ -2,12 +2,20 @@ ruleset:
   name: shadow-utils
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: in
+    operator: or
     operands:
-      - operator: variable
-        operands: "[Attachment][RawLog][Content][process][name]"
-      - operator: constant
-        operands: ["useradd", "groupadd", "usermod", "groupmod", "userdel", "groupdel"]
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][process][name]"
+          - operator: constant
+            operands: "user"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][process][name]"
+          - operator: constant
+            operands: "group"
   rules:
     - id: 3300
       pattern: "new group: name=%{WORD:[Attachment][RawLog][Content][group][name]}, [Gg][Ii][Dd]=%{NONNEGINT:[Attachment][RawLog][Content][group][id]:int}"

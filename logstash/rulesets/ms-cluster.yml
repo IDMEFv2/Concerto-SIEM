@@ -2,8 +2,12 @@ ruleset:
   name: ms_cluster_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: contains
-    operands: "clussvc"
+    operator: in
+    operands:
+      - operator: variable
+        operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "clussvc"
   rules:
     - id: 4900
       pattern: "The node cannot join the cluster because it cannot communicate with node %{NOTSPACE:[Attachment][RawLog][Content][user][name]} over any network configured for internal cluster communication."

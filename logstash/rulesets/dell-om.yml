@@ -2,8 +2,12 @@ ruleset:
   name: server_administrator_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: constant
-    operands: "server administrator"
+    operator: in
+    operands:
+      - operator: variable
+        operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "server administrator"
   rules:
     - id: 3800
       pattern: "1306  Redundancy lost Redundancy unit: (?<description>.+?) Chassis location: (?<chassisLocation>.+?) Previous redundancy state was: (?<device>.+?) Number of devices required for full redundancy: %{INT:id}"

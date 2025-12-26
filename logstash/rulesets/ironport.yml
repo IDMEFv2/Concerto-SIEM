@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "Info:"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "Info:"
   rules:
     - id: 24501
       pattern: "Info: New SMTP ICID \\d+ interface [^\\)]+\\(%{NOTSPACE:nodeAddr}\\) address %{IP:[Attachment][RawLog][Content][destination][address]} reverse dns host unknown"

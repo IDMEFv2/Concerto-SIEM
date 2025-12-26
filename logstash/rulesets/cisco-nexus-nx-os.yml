@@ -6,16 +6,16 @@ ruleset:
     operands:
       - operator: in
         operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][event][code]"
           - operator: constant
             operands: "AUTHPRIV-"
-          - operator: variable
-            operands: "[Attachment][RawLog][Content][event][code]"
       - operator: in
         operands:
-          - operator: constant
-            operands: "VIM-"
           - operator: variable
             operands: "[Attachment][RawLog][Content][event][code]"
+          - operator: constant
+            operands: "VIM-"
   rules:
     - id: 25200
       pattern: "-SYSTEM_MSG: pam_aaa:Authentication failed for user %{NOTSPACE:[Attachment][RawLog][Content][user][name]} from %{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}"

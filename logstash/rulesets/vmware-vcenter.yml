@@ -2,18 +2,18 @@ ruleset:
   name: vmware_vcenter_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: regex
+    operator: match
     operands:
-      - operator: constant
-        operands: "\S+Net\S*:|START:"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "\\S+Net\\S*:|START:"
   rules:
     - id: 21001
       pattern: "START: %{NOTSPACE:[Attachment][RawLog][Content][service][name]} pid=%{NOTSPACE:pidNum} from=%{NOTSPACE:[Attachment][RawLog][Content][source][address]}"
       samples:
         - "Aug 31 10:10:10 192.168.1.1 xinetd[4787]: START: vmware-authd pid=17922 from=192.168.1.2"
     - id: 21002
-      pattern: "Net\S*: %{NOTSPACE}: (?<status>disconnected|dissociate|disabled) .*port %{NOTSPACE}"
+      pattern: "Net\\S*: %{NOTSPACE}: (?<status>disconnected|dissociate|disabled) .*port %{NOTSPACE}"
       samples:
         - "Aug 31 10:10:10 192.168.1.1 vmkernel: 19:17:22:49.226 cpu53:4188)Net: 1234: disconnected client from port 0x30000b1"

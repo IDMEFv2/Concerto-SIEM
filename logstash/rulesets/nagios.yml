@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: equal
     operands:
-      - operator: constant
-        operands: "nagios"
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "nagios"
   rules:
     - id: 1100
       pattern: "SERVICE ALERT: %{IPORHOST:[Attachment][RawLog][Content][host][name]};%{DATA:[Attachment][RawLog][Content][service][name]};%{DATA:[Attachment][RawLog][Content][service][state]};HARD;%{INT};%{GREEDYDATA:[Attachment][RawLog][Content][event][reason]}"

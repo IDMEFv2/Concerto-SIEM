@@ -10,91 +10,91 @@ ruleset:
         operands: "[Attachment][RawLog][Content][process][name]"
   rules:
     - id: 11001
-      pattern: "\w+\s*Access (?:L|l)og.+Connecting to primary server (?<serverName>.+) on port %{INT:port}.+NORMAL_EVENT"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}Access (?:L|l)og.+Connecting to primary server (?<serverName>.+) on port %{INT:port}.+NORMAL_EVENT"
       samples:
         - "Feb 11 14:59:40 192.168.10.11 ProxySG: E0000 Access Log FTP (im): Connecting to primary server 192.168.10.5 on port 21.(0) NORMAL_EVENT ../FTPClientAL.cpp 106"
     - id: 11002
-      pattern: "\w+\s*DNS lookup to (?<server>.+) for %{NOTSPACE:[Attachment][RawLog][Content][network][transport]} rejected by server\.\(.+NORMAL_EVENT"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}DNS lookup to (?<server>.+) for %{NOTSPACE:[Attachment][RawLog][Content][network][transport]} rejected by server\\.\\..+NORMAL_EVENT"
       samples:
         - "Feb 07 12:50:34 192.168.11.181 ProxySG: 48041 DNS lookup to 192.168.10.100 for https rejected by server.(0) NORMAL_EVENT ../dns.cpp 1027"
     - id: 11003
-      pattern: "\w+\s*Read/write mode entered from serial for user '?(?<userName>.+)'?\("
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}Read/write mode entered from serial for user '?(?<userName>.+)'?\\."
       samples:
         - "Feb 01 14:06:38 192.168.11.181 ProxySG: 26001F Read/write mode entered from serial for user 'unknown user'(0) NORMAL_EVENT ..//../AuthConsole.cpp 230"
     - id: 11007
-      pattern: "\w+\s*Read/write mode entered from %{IP:[Attachment][RawLog][Content][source][address]} for user '(?<UserName>.+)'\(.+NORMAL_EVENT"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}Read/write mode entered from %{IP:[Attachment][RawLog][Content][source][address]} for user '(?<UserName>.+)'\\..+NORMAL_EVENT"
       samples:
         - "Feb 03 10:36:25 192.168.11.181 ProxySG: 26001F Read/write mode entered from 192.168.10.12 for user 'admin'(0) NORMAL_EVENT ..//../AuthConsole.cpp 230"
     - id: 11008
-      pattern: "\w+\s*Enable password authentication from %{IP:[Attachment][RawLog][Content][source][address]} failed for user '(?<userName>.+)'\(.+NORMAL_EVENT"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}Enable password authentication from %{IP:[Attachment][RawLog][Content][source][address]} failed for user '(?<userName>.+)'\\..+NORMAL_EVENT"
       samples:
         - "Feb 01 15:25:25 192.168.11.181 ProxySG: 260017 Enable password authentication from 192.168.10.12 failed for user 'admin'(0) NORMAL_EVENT ..//../AuthConsole.cpp 198"
     - id: 11009
-      pattern: "\w+\s*Console user password authentication from %{IP:[Attachment][RawLog][Content][source][address]} failed for user '(?<userName>.+)'.+NORMAL_EVENT"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}Console user password authentication from %{IP:[Attachment][RawLog][Content][source][address]} failed for user '(?<userName>.+)'.+NORMAL_EVENT"
       samples:
         - "Feb 03 12:31:35 192.168.11.181 ProxySG: 260017 Console user password authentication from 192.168.10.12 failed for user 'admin'(0) NORMAL_EVENT ..//../AuthConsole.cpp 160"
     - id: 11010
-      pattern: "\w+\s*NULL character found in the request line from %{IP:[Attachment][RawLog][Content][source][address]}"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}NULL character found in the request line from %{IP:[Attachment][RawLog][Content][source][address]}"
       samples:
         - "Feb 03 11:14:08 192.168.11.181 ProxySG: 8040F NULL character found in the request line from 192.168.10.101(0) NORMAL_EVENT ../htp_client.cpp 1077"
     - id: 11011
-      pattern: "\w+\s*Failed (?:password|none) for (?<src>.+)\s+ssh2.+NORMAL_EVENT"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}Failed (?:password|none) for (?<src>.+)\\.+ssh2.+NORMAL_EVENT"
       samples:
         - "Feb 03 11:14:24 192.168.11.181 ProxySG: 46000C Failed none for root  ssh2(0) NORMAL_EVENT ../ssh_log.cpp 60"
     - id: 11012
-      pattern: "\w+\s*Administrator login from %{IP:[Attachment][RawLog][Content][source][address]} denied.+NORMAL_EVENT"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}Administrator login from %{IP:[Attachment][RawLog][Content][source][address]} denied.+NORMAL_EVENT"
       samples:
         - "Feb 03 11:14:54 192.168.11.181 ProxySG: 160003 Administrator login from 192.168.10.101 denied: Default secure admin mode(5) NORMAL_EVENT ../cli_worker.cpp 426"
     - id: 11013
-      pattern: "\w+\s*Access (?:L|l)og .+:.+SEVERE_ERROR"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}Access (?:L|l)og .+:.+SEVERE_ERROR"
       samples:
         - "Feb 04 21:22:04 192.168.11.181 ProxySG: E0008 Access log (main): Log uploading failed.  Remote filename: SG_main.log size: 0 KB.(0) SEVERE_ERROR ../LogManager.cpp 2174"
     - id: 11014
-      pattern: "\w+\s*CFSSL.+SEVERE_ERROR"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}CFSSL.+SEVERE_ERROR"
       samples:
         - "Feb 03 12:51:39 192.168.11.181 ProxySG: 310000 CFSSL:SSL_accept error:1407609C:SSL routines:SSL23_GET_CLIENT_HELLO:http request(0) SEVERE_ERROR ../cf_ssl.cpp 1406"
     - id: 11016
-      pattern: "\w+\s*Administrator login from %{IP:[Attachment][RawLog][Content][source][address]}, user '(?<usrName>.+)'.+NORMAL_EVENT"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}Administrator login from %{IP:[Attachment][RawLog][Content][source][address]}, user '(?<usrName>.+)'.+NORMAL_EVENT"
       samples:
         - "Feb 02 10:48:27 192.168.11.181 ProxySG: 26001E Administrator login from 192.168.11.181, user 'admin'(0) NORMAL_EVENT ..//../AuthConsole.cpp 258"
     - id: 11017
-      pattern: "\w+\s*Local: Authentication failed from %{IP:[Attachment][RawLog][Content][source][address]}: no such user in realm '(?<usrName>.+)'?.+NORMAL_EVENT"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}Local: Authentication failed from %{IP:[Attachment][RawLog][Content][source][address]}: no such user in realm '(?<usrName>.+)'?.+NORMAL_EVENT"
       samples:
         - "Feb 02 10:48:38 192.168.11.181 ProxySG: 260001 Local: Authentication failed from 192.168.10.12: no such user in realm 'test'(6) NORMAL_EVENT ..//../AuthUtility.cpp 281"
     - id: 11018
-      pattern: "\w+\s*NTP: Tried all configured servers. Unable to obtain NTP update due to NTP server errors"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}NTP: Tried all configured servers. Unable to obtain NTP update due to NTP server errors"
       samples:
         - "Feb 07 13:51:59 192.168.11.181 ProxySG: 90000 NTP: Tried all configured servers. Unable to obtain NTP update due to NTP server errors.(0) SEVERE_ERROR ../ntp.cpp 694"
     - id: 11019
-      pattern: "\w+\s*SSH admin at %{IP:[Attachment][RawLog][Content][source][address]}, (?<srcUser>[^,]+), changed password for user '(?<usrName>.+)' in local user list '(?<list>.+)'"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}SSH admin at %{IP:[Attachment][RawLog][Content][source][address]}, (?<srcUser>[^,]+), changed password for user '(?<usrName>.+)' in local user list '(?<list>.+)'"
       samples:
         - "Feb 01 15:28:37 192.168.11.181 ProxySG: 160002 SSH admin at 192.168.10.12, admin, changed password for user 'koma' in local user list 'local_user_database'(0) CONFIGURATION_EVENT ../cli_parse.hpp 290"
     - id: 11020
-      pattern: "\w+\s*SSH admin at %{IP:[Attachment][RawLog][Content][source][address]}, (?<srcUser>[^,]+), added user '(?<usrName>.+)' to local user list '(?<list>.+)'"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}SSH admin at %{IP:[Attachment][RawLog][Content][source][address]}, (?<srcUser>[^,]+), added user '(?<usrName>.+)' to local user list '(?<list>.+)'"
       samples:
         - "Feb 01 15:27:33 192.168.11.181 ProxySG: 160002 SSH admin at 192.168.10.12, admin, added user 'koma' to local user list 'local_user_database'(0) CONFIGURATION_EVENT ../cli_parse.hpp 290"
     - id: 11021
-      pattern: "\w+\s*(?:Management Console|SSH) admin at %{IP:[Attachment][RawLog][Content][destination][address]}, (?<desc>[^\(]+)"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}(?:Management Console|SSH) admin at %{IP:[Attachment][RawLog][Content][destination][address]}, (?<desc>[^\\.]+)"
       samples:
         - "Feb 01 17:49:25 192.168.11.181 ProxySG: 160002 SSH admin at 192.168.10.12, admin, services: Disabled ftp listener on port 21(0) CONFIGURATION_EVENT ../cli_parse.hpp 290"
         - "Feb 01 15:37:21 192.168.11.181 ProxySG: 60003 Management Console admin at 192.168.10.12, admin, unable to start user requested test upload.(0) CONFIGURATION_EVENT ../cag_agent.cpp 671"
     - id: 11022
-      pattern: "\w+\s*Accepted password for (?<user>[^\s]+).+NORMAL_EVENT"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}Accepted password for (?<user>[^\\.]+).+NORMAL_EVENT"
       samples:
         - "Feb 15 10:54:21 192.168.11.181 ProxySG: 46000C Accepted password for admin  ssh2(0) NORMAL_EVENT ../ssh_log.cpp 60"
     - id: 11023
-      pattern: "\w+\s*Failed publickey for (?<user>[^\(]+).+NORMAL_EVENT"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}Failed publickey for (?<user>[^\\.]+).+NORMAL_EVENT"
       samples:
         - "Feb 15 10:55:10 192.168.11.181 ProxySG: 46000C Failed publickey for admin  ssh2(0) NORMAL_EVENT ../ssh_log.cpp 60"
     - id: 11024
-      pattern: "\w+\s*DNS service restored.+NORMAL_EVENT"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}DNS service restored.+NORMAL_EVENT"
       samples:
         - "Feb 04 12:51:40 192.168.11.181 ProxySG: 48010 DNS service restored after 0 timeouts, 0 refused connections and 1 rejected queries.(0) NORMAL_EVENT ../dns.cpp 1046"
     - id: 11025
-      pattern: "\w+\s*Serial admin initiated reboot.+CONFIGURATION_EVENT"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}Serial admin initiated reboot.+CONFIGURATION_EVENT"
       samples:
         - "Feb 01 14:07:56 192.168.11.181 ProxySG: 160002 Serial admin initiated reboot(0) CONFIGURATION_EVENT ../cli_parse.hpp 290"
     - id: 11026
-      pattern: "\w+\s*Unable to send the keep alive message, make sure keep alive interval is less than the server timeout.+NORMAL_EVENT"
+      pattern: "%{WORD}:%{SPACE}%{WORD}%{SPACE}Unable to send the keep alive message, make sure keep alive interval is less than the server timeout.+NORMAL_EVENT"
       samples:
         - "Feb 08 17:48:04 192.168.11.181 ProxySG: E0000 Unable to send the keep alive message, make sure keep alive interval is less than the server timeout(32) NORMAL_EVENT ../LogStream.cpp 163"

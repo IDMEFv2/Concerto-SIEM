@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "(LOG|FATAL): {2}"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "(LOG|FATAL): {2}"
   rules:
     - id: 23701
       pattern: "\\[%{DATA}\\] (?:%{IP:[Attachment][RawLog][Content][source][address]}: )?FATAL:\\s*%{NOTSPACE} authentication failed for user \"%{USERNAME:[Attachment][RawLog][Content][user][target][name]}\""

@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "Oracle Audit"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "Oracle Audit"
   rules:
     - id: 130001
       pattern: "LENGTH: %{NOTSPACE} SESSIONID:\\[%{INT:sessionId}\\] %{NOTSPACE} ENTRYID:.+ STATEMENT:\\[\\d+\\] \\S+ USERID:\\[\\d+\\] \"%{DATA:[Attachment][RawLog][Content][user][target][name]}\" USERHOST:\\[\\d+\\] \"%{IPORHOST:[Attachment][RawLog][Content][host][address]}\" TERMINAL:\\[\\d+\\] %{NOTSPACE} ACTION:\\[\\d+\\] %{NOTSPACE} RETURNCODE:\\[\\d+\\] \"0\" COMMENT\\$TEXT:\\[\\d+\\] \"Authenticated by: %{DATA}; Client address: \\(ADDRESS=\\(PROTOCOL=%{DATA:[Attachment][RawLog][Content][network][transport]}\\)\\(HOST=%{IPORHOST:[Attachment][RawLog][Content][source][address]}\\)\\(PORT=%{POSINT:[Attachment][RawLog][Content][source][port]:int}\\)\\)\" OS\\$USERID:\\[\\d+\\] \"%{USER:[Attachment][RawLog][Content][client][user][name]}\" DBID:\\[\\d+\\] \\S+ PRIV\\$USED:\\[\\d\\] %{NOTSPACE}"

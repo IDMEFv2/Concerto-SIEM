@@ -2,21 +2,25 @@ ruleset:
   name: paloalto_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: in
+    operator: or
     operands:
-      - operator: constant
-        operands: "THREAT"
-      - operator: constant
-        operands: "SYSTEM"
-      - operator: constant
-        operands: "CONFIG"
-      - operator: variable
-        operands: "[Attachment][RawLog][Content][message]"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][message]"
+          - operator: constant
+            operands: "THREAT"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][message]"
+          - operator: constant
+            operands: "SYSTEM"
   rules:
     - id: 24601
       pattern: "%{DATA},THREAT,%{DATA}"
       samples:
-        - "Jun  5 12:15:16 10.0.0.244 Jun  05 12: 15:20 1,06/05 12:15:20,0001a100200,THREAT,url,2,06/05 12:15:15,10.0.0.101,10.0.0.224,0.0.0.0,0.0.0.0,mike,,paloaltonetwork\mjacobsen,web-browsing,vsys1,l2-lan-trust,l2-lan-untrust,ethernet1/12,ethernet1/11,Forward to Mike,06/05 12:15:20,297554,1,53821,80,0,0,0x0,tcp,alert,10.0.0.224/clearspace/styles/jive-sidebar,(9999),unkn"
+        - "Jun  5 12:15:16 10.0.0.244 Jun  05 12: 15:20 1,06/05 12:15:20,0001a100200,THREAT,url,2,06/05 12:15:15,10.0.0.101,10.0.0.224,0.0.0.0,0.0.0.0,mike,,paloaltonetwork\\mjacobsen,web-browsing,vsys1,l2-lan-trust,l2-lan-untrust,ethernet1/12,ethernet1/11,Forward to Mike,06/05 12:15:20,297554,1,53821,80,0,0,0x0,tcp,alert,10.0.0.224/clearspace/styles/jive-sidebar,(9999),unkn"
     - id: 24602
       pattern: "%{DATA},SYSTEM,%{DATA},Authentication failed for user %{NOTSPACE:[Attachment][RawLog][Content][user][target][name]} via ([^\\s]+) from %{IP:[Attachment][RawLog][Content][source][address]}"
       samples:

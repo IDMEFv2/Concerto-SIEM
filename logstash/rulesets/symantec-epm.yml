@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "SymantecServer"
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "SymantecServer"
   rules:
     - id: 172000100
       pattern: "Site: %{DATA:[Attachment][RawLog][Content][observer][geo][location]},Server: (?:%{HOSTNAME:[Attachment][RawLog][Content][observer][hostname]}|%{IP:[Attachment][RawLog][Content][observer][ip]}),Successfully downloaded the Virus and Spyware definitions"
@@ -22,6 +22,6 @@ ruleset:
     - id: 172000103
       pattern: "Site: %{DATA:[Attachment][RawLog][Content][observer][geo][location]},Server: (?:%{HOSTNAME:[Attachment][RawLog][Content][observer][hostname]}|%{IP:[Attachment][RawLog][Content][observer][ip]}),Successfully downloaded the Revocation Data security definitions from LiveUpdate"
     - id: 172000104
-      pattern: "Virus found.+Computer name: (?:%{HOSTNAME:[Attachment][RawLog][Content][host][hostname]}|%{IP:[Attachment][RawLog][Content][host][ip]}),.+,Risk name: ([^,]+),Occurrences: \d+,.+,Actual action: (?<action>[^,]+)"
+      pattern: "Virus found.+Computer name: (?:%{HOSTNAME:[Attachment][RawLog][Content][host][hostname]}|%{IP:[Attachment][RawLog][Content][host][ip]}),.+,Risk name: ([^,]+),Occurrences: \\d+,.+,Actual action: (?<action>[^,]+)"
     - id: 172000200
       pattern: "Forced SONAR threat detected,Computer name: (?:%{HOSTNAME:[Attachment][RawLog][Content][host][hostname]}|%{IP:[Attachment][RawLog][Content][host][ip]}),Detection type: %{DATA},Application name: %{DATA:[Attachment][RawLog][Content][file][pe][product]},%{DATA},(?:Hash type: SHA-1,Application hash: %{BASE16NUM:[Attachment][RawLog][Content][file][hash][sha1]}|Hash type: SHA-256,Application hash: %{BASE16NUM:[Attachment][RawLog][Content][file][hash][sha256]}),%{DATA},User: %{USER:[Attachment][RawLog][Content][host][user][name]},%{DATA},\"%{DATA:[Attachment][RawLog][Content][file][path]}\",Actual action:"

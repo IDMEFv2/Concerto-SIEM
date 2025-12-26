@@ -4,13 +4,13 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "SEV="
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "SEV="
   rules:
     - id: 300
-      pattern: "(?<data>.*)%{IP:[Attachment][RawLog][Content][source][address]}  User \[%{NOTSPACE:[Attachment][RawLog][Content][user][name]}\], Group \[%{NOTSPACE}\] disconnected:  Duration: %{NOTSPACE}  Bytes xmt: %{NOTSPACE}  Bytes rcv: %{INT}  Reason: %{GREEDYDATA:reason}"
+      pattern: "(?<data>.*)%{IP:[Attachment][RawLog][Content][source][address]}  User \\.%{NOTSPACE:[Attachment][RawLog][Content][user][name]}\\., Group \\.%{NOTSPACE}\\. disconnected:  Duration: %{NOTSPACE}  Bytes xmt: %{NOTSPACE}  Bytes rcv: %{INT}  Reason: %{GREEDYDATA:reason}"
       samples:
         - "Oct 28 19:00:35 vpn 1453 10/28/2003 19:00:34.930 SEV=4 AUTH/28 RPT=22 12.34.56.78  User [gene.gomez], Group [Staff] disconnected:  Duration: 0:10:12  Bytes xmt: 2745816  Bytes rcv: 172696  Reason: User Requested"
     - id: 301
@@ -18,8 +18,8 @@ ruleset:
       samples:
         - "Oct 29 19:18:20 vpn 1793 10/29/2003 19:18:20.190 SEV=3 AUTH/5 RPT=6 12.34.56.78  Authentication rejected: Reason = Invalid password handle = 66, server = Internal, user = gene.gomez, domain = <not specified>"
     - id: 302
-      pattern: "(?<data>.*)%{IP:[Attachment][RawLog][Content][source][address]}  Group \[%{NOTSPACE:group}\] User \[%{USER:[Attachment][RawLog][Content][user][target][name]}\] User %{NOTSPACE} authenticated"
+      pattern: "(?<data>.*)%{IP:[Attachment][RawLog][Content][source][address]}  Group \\.%{NOTSPACE:group}\\. User \\.%{USER:[Attachment][RawLog][Content][user][target][name]}\\. User %{NOTSPACE} authenticated"
     - id: 303
-      pattern: "(?<data>.*) User \[ %{USER:[Attachment][RawLog][Content][user][target][name]} \] Protocol \[ %{NOTSPACE:[Attachment][RawLog][Content][network][protocol]} \] attempted ADMIN logon.. Status: <REFUSED>"
+      pattern: "(?<data>.*) User \\. %{USER:[Attachment][RawLog][Content][user][target][name]} \\. Protocol \\. %{NOTSPACE:[Attachment][RawLog][Content][network][protocol]} \\. attempted ADMIN logon.. Status: <REFUSED>"
     - id: 304
-      pattern: "(?<data>.*) User \[ %{USER:[Attachment][RawLog][Content][user][target][name]} \] Protocol \[ %{NOTSPACE:[Attachment][RawLog][Content][network][protocol]} \] attempted ADMIN logon.. Status: <ACCESS GRANTED>"
+      pattern: "(?<data>.*) User \\. %{USER:[Attachment][RawLog][Content][user][target][name]} \\. Protocol \\. %{NOTSPACE:[Attachment][RawLog][Content][network][protocol]} \\. attempted ADMIN logon.. Status: <ACCESS GRANTED>"

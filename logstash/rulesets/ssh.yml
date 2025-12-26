@@ -3,7 +3,7 @@ ruleset:
   description: "SSH, is a cryptographic (encrypted) network protocol to allow remote login and other network services to operate securely over an unsecured network."
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: equal
+    operator: in
     operands:
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"

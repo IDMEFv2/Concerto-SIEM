@@ -4,13 +4,13 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "^[A-Z0-9_]+-\d+-[A-Z0-9_]$"
       - operator: variable
         operands: "[Attachment][RawLog][Content][event][code]"
+      - operator: constant
+        operands: "^[A-Z0-9_]+-\\.+-[A-Z0-9_]$"
   rules:
     - id: 5600
-      pattern: "SEC-6-IPACCESSLOGP: list %{DATA:data} denied (udp|tcp) %{IP:[Attachment][RawLog][Content][source][address]}\(%{INT:number}\) -> %{IP:[Attachment][RawLog][Content][destination][address]}\(%{POSINT:[Attachment][RawLog][Content][destination][port]:int}\), %{INT:count} %{GREEDYDATA:text}"
+      pattern: "SEC-6-IPACCESSLOGP: list %{DATA:data} denied (udp|tcp) %{IP:[Attachment][RawLog][Content][source][address]}\\.%{INT:number}\\. -> %{IP:[Attachment][RawLog][Content][destination][address]}\\.%{POSINT:[Attachment][RawLog][Content][destination][port]:int}\\., %{INT:count} %{GREEDYDATA:text}"
       samples:
         - "Sep 23 07:30:41 gate 301270: 5d17h: %SEC-6-IPACCESSLOGP: list 101 denied tcp 1.2.3.4(1929) -> 5.6.7.8(80), 1 packet"
     - id: 5601
@@ -22,4 +22,4 @@ ruleset:
     - id: 5603
       pattern: "%CRYPTO-6-IKMP_UNK_EXCHANGE: IKE peer at %{IP:[Attachment][RawLog][Content][source][address]} %{GREEDYDATA:data} sent a message with unknown %{GREEDYDATA:text}"
     - id: 5604
-      pattern: "%IDS-4-(\S+)_SIG: Sig:%{INT:port}:%{DATA:data} - from %{IP:[Attachment][RawLog][Content][source][address]} to %{IP:[Attachment][RawLog][Content][destination][address]}"
+      pattern: "%IDS-4-(\\.+)_SIG: Sig:%{INT:port}:%{DATA:data} - from %{IP:[Attachment][RawLog][Content][source][address]} to %{IP:[Attachment][RawLog][Content][destination][address]}"

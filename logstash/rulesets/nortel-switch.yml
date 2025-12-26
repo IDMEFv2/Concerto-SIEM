@@ -6,40 +6,16 @@ ruleset:
     operands:
       - operator: in
         operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][message]"
           - operator: constant
             operands: "MLT"
-          - operator: variable
-            operands: "[Attachment][RawLog][Content][message]"
       - operator: in
         operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][message]"
           - operator: constant
             operands: "SNMP"
-          - operator: variable
-            operands: "[Attachment][RawLog][Content][message]"
-      - operator: in
-        operands:
-          - operator: constant
-            operands: "SSH"
-          - operator: variable
-            operands: "[Attachment][RawLog][Content][message]"
-      - operator: in
-        operands:
-          - operator: constant
-            operands: "HW"
-          - operator: variable
-            operands: "[Attachment][RawLog][Content][message]"
-      - operator: in
-        operands:
-          - operator: constant
-            operands: "SW"
-          - operator: variable
-            operands: "[Attachment][RawLog][Content][message]"
-      - operator: in
-        operands:
-          - operator: constant
-            operands: "CPU"
-          - operator: variable
-            operands: "[Attachment][RawLog][Content][message]"
   rules:
     - id: 16001
       pattern: "smltRemote\\sis\\sFalse\\sfor\\sthis\\smac\\s=%{MAC:macAddr}<000>"
@@ -124,11 +100,11 @@ ruleset:
     - id: 16039
       pattern: "Session opened from IP address: %{IP:[Attachment][RawLog][Content][source][address]}, access mode: (?<mode>.*)"
     - id: 16040
-      pattern: "Session closed \((.*)\), IP address: %{IP:[Attachment][RawLog][Content][source][address]}, access mode: (?<mode>.*)"
+      pattern: "Session closed \\((.*)\\), IP address: %{IP:[Attachment][RawLog][Content][source][address]}, access mode: (?<mode>.*)"
     - id: 16041
-      pattern: "Connection closed \((?<desc>.*)\), IP address: %{IP:[Attachment][RawLog][Content][source][address]}"
+      pattern: "Connection closed \\((?<desc>.*)\\), IP address: %{IP:[Attachment][RawLog][Content][source][address]}"
     - id: 16042
-      pattern: "ssh\((?<srcAddr>[\\w\.-]*)\): %{INT:Num} days, (?<date>[\\d:]+): (?<status>.*)"
+      pattern: "ssh\\((?<srcAddr>[\\w\\.-]*)\\): %{INT:Num} days, (?<date>[\\d:]+): (?<status>.*)"
     - id: 16043
       pattern: "Web server starts service on port %{INT:port}."
     - id: 16044
@@ -150,9 +126,9 @@ ruleset:
     - id: 16052
       pattern: "Disallowed connection attempt from IP address: %{IP:[Attachment][RawLog][Content][source][address]}"
     - id: 16053
-      pattern: "Failed login from IP address: (?<srcAddr>[\\w\.-]+)"
+      pattern: "Failed login from IP address: (?<srcAddr>[\\w\\.-]+)"
     - id: 16054
-      pattern: "stack manager event JOIN_STACK \(module id = %{INT:Id}\)"
+      pattern: "stack manager event JOIN_STACK \\(module id = %{INT:Id}\\)"
     - id: 16055
       pattern: "IGMP: Unknown Multicast Filter disabled"
     - id: 16056

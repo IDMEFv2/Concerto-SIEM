@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "vpopmail"
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "vpopmail"
   rules:
     - id: 2100
       pattern: "vchkpw: vpopmail user not found %{NOTSPACE:[Attachment][RawLog][Content][user][name]}:%{IP:[Attachment][RawLog][Content][source][address]}"

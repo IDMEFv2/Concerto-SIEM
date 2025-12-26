@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "ACE-"
       - operator: variable
         operands: "[Attachment][RawLog][Content][event][code]"
+      - operator: constant
+        operands: "ACE-"
   rules:
     - id: 5101
       pattern: "-442002: Health probe %{DATA:classification} detected %{DATA:target} \\(interface %{DATA:interface}\\) in serverfarm %{DATA:server} changed state to DOWN"

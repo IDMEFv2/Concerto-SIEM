@@ -6,16 +6,16 @@ ruleset:
     operands:
       - operator: in
         operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][message]"
           - operator: constant
             operands: "discovery.php"
-          - operator: variable
-            operands: "[Attachment][RawLog][Content][message]"
       - operator: in
         operands:
-          - operator: constant
-            operands: "poller.php"
           - operator: variable
             operands: "[Attachment][RawLog][Content][message]"
+          - operator: constant
+            operands: "poller.php"
   rules:
     - id: 25500
       pattern: "new \\S+ \\S+ - (?<id>[1-9]\\d*) devices discovered"

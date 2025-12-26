@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "ipfw"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "ipfw"
   rules:
     - id: 800
       pattern: "\\d+ Deny (?=TCP|UDP)%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]} in via %{WORD:[Attachment][RawLog][Content][interface]}"

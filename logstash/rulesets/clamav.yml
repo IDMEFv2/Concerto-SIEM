@@ -2,14 +2,20 @@ ruleset:
   name: virus_found_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: in
+    operator: or
     operands:
-      - operator: constant
-        operands: "FOUND"
-      - operator: constant
-        operands: "virus"
-      - operator: variable
-        operands: "[Attachment][RawLog][Content][message]"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][message]"
+          - operator: constant
+            operands: "FOUND"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][message]"
+          - operator: constant
+            operands: "virus"
   rules:
     - id: 3200
       pattern: "%{NOTSPACE:filePath}: %{NOTSPACE:type} FOUND"

@@ -4,12 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "[SSHChannel"
-      - operator: constant
-        operands: "[SSHService"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "SSH"
   rules:
     - id: 20000
       pattern: "\\[SSHService ssh-userauth on SSHServerTransport,%{INT},%{IP:[Attachment][RawLog][Content][source][address]}\\] %{NOTSPACE:[Attachment][RawLog][Content][user][target][name]} trying auth password"

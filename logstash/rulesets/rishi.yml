@@ -2,7 +2,7 @@ ruleset:
   name: rishi_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: eq
+    operator: equal
     operands:
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"

@@ -5,10 +5,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "EMU"
       - operator: variable
         operands: "[Attachment][RawLog][Content][event][original]"
+      - operator: constant
+        operands: "EMU"
   rules:
     - id: 2800
       pattern: "Probe %{INT:[Attachment][RawLog][Content][APC-EMU][probe][number]:int} '%{DATA:[Attachment][RawLog][Content][APC-EMU][probe][name]}' high  humidity violation, '%{INT:[Attachment][RawLog][Content][APC-EMU][humidity]:int}%"

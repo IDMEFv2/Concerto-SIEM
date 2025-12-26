@@ -2,7 +2,7 @@ ruleset:
   name: sudo
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: equal
+    operator: in
     operands:
       - operator: variable
         operands: "[Attachment][RawLog][Content][process][name]"

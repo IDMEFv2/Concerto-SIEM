@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "CactiTholdLog"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "CactiTholdLog"
   rules:
     - id: 4500
       pattern: "%{NOTSPACE:[Attachment][RawLog][Content][nodeName]} - (?<data>.+) went above threshold of %{INT:[Attachment][RawLog][Content][threshold]} with %{NUMBER:[Attachment][RawLog][Content][value]} at trigger"

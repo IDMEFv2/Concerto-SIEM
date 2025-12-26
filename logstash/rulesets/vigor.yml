@@ -2,12 +2,12 @@ ruleset:
   name: vigor_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: or
+    operator: in
     operands:
-      - operator: contains
-        operands: "wan @Group:"
-      - operator: contains
-        operands: "lan @Group:"
+      - operator: variable
+        operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "@Group:"
   rules:
     - id: 2000
       pattern: "(?<interface>[wl]an) @Group:Rule=(?<acl>\\d+:\\d+) b %{IP:[Attachment][RawLog][Content][source][address]},%{WORD:size} -> %{IP:[Attachment][RawLog][Content][destination][address]},%{WORD:dstsize}    PR %{NOTSPACE:[Attachment][RawLog][Content][network][transport]} len %{INT:id1} %{INT:id2} %{NOTSPACE:data} %{INT:id3} %{INT:id4} %{INT:id5} (IN|OUT)"

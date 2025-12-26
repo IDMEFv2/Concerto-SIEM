@@ -4,10 +4,10 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "avc:"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "avc:"
   rules:
     - id: 4000
       pattern: "denied  \\{ (?<desc>[\\w ]+) \\} for  pid=%{INT:[Attachment][RawLog][Content][process][pid]} exe=%{DATA:[Attachment][RawLog][Content][process][command]} name=(shadow|passwd|group) dev=%{NOTSPACE:[Attachment][RawLog][Content][device]} ino=%{NOTSPACE:[Attachment][RawLog][Content][id_user]} scontext=%{NOTSPACE:[Attachment][RawLog][Content][user][name]}:%{NOTSPACE:ruser}:%{NOTSPACE:tuser} tcontext=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}:%{NOTSPACE:obj}:"

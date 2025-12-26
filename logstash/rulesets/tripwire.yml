@@ -4,18 +4,18 @@ ruleset:
   predicate:
     operator: in
     operands:
-      - operator: constant
-        operands: "Tripwire"
       - operator: variable
         operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "Tripwire"
   rules:
     - id: 24001
       pattern: "Added (?<Path>.*) on (?<dstAddr>.*) by (?<data>.*)"
       samples:
-        - "2009-02-23 15:55:01 slxp0060 Tripwire: Added C:\test\AutoRetrieve\bin\AutoRetrieve.ini on srvtest by Regles test Standard"
+        - "2009-02-23 15:55:01 slxp0060 Tripwire: Added C:\\\\test\\\\AutoRetrieve\\\\bin\\\\AutoRetrieve.ini on srvtest by Regles test Standard"
     - id: 24002
       pattern: "Removed\\s(?<Path>.*)\\son\\s(?<dstAddr>.*)\\sby\\s(?<data>.*)"
       samples:
-        - "2009-02-23 15:45:01 slxp0060 Tripwire: Removed C:\test\checksign\bin\checksign_win32.ini on srvtest by Regles test Standard"
+        - "2009-02-23 15:45:01 slxp0060 Tripwire: Removed C:\\\\test\\\\checksign\\\\bin\\\\checksign_win32.ini on srvtest by Regles test Standard"
     - id: 24003
       pattern: "Modified\\s(?<Path>.*)\\son\\s(?<dstAddr>.*)\\sby\\s(?<data>.*)"
