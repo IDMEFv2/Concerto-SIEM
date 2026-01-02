@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: correlator
+  labels:
+    app: correlator-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: correlator-tmpl
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: correlator-tmpl
+    spec:
+      containers:
+      - image: localhost/idmefv2-correlator
+        imagePullPolicy: Never
+        name: correlator
+        volumeMounts:
+          - name: config
+            mountPath: /opt/kafka.yaml
+            subPath: kafka.yaml
+          - name: config
+            mountPath: /opt/elastalert/config.yaml
+            subPath: config.yaml
+          - name: config
+            mountPath: /opt/sigma_rules
+            subPath: rules
+      volumes:
+      - name: config
+        hostPath:
+          path: /mnt/minikube/idmefv2-correlator
+          type: Directory

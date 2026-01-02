@@ -1,0 +1,26 @@
+title: Failed Logon Event
+name: failed_logon
+description: Detects failed logon events on Windows systems.
+logsource:
+    category: alerts
+detection:
+    selection:
+        Category: Attempt.Login
+    condition: selection
+---
+title: Bruteforce attack
+description: Multiple failed logons for a single user (possible brute force attack)
+idmefv2:
+  Category:
+    - "Attempt.Login"
+  Priority: "High"
+correlation:
+    type: event_count
+    rules:
+        - failed_logon
+    group-by:
+        - Target.User
+    timespan: 5m
+    condition:
+        gte: 10
+    generate: true

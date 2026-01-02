@@ -1,0 +1,72 @@
+From de0b6cc699985d61de77059db7877b97443fa1a4 Mon Sep 17 00:00:00 2001
+From: "Maxime @ Bytes 'n AI" <maxime@bytesnai.tech>
+Date: Fri, 2 Jan 2026 02:40:40 +0000
+Subject: [PATCH] new
+
+
+diff --git a/sigma/backends/elasticsearch/elasticsearch_elastalert.py b/sigma/backends/elasticsearch/elasticsearch_elastalert.py
+index 2fbcce1..b823176 100644
+--- a/sigma/backends/elasticsearch/elasticsearch_elastalert.py
++++ b/sigma/backends/elasticsearch/elasticsearch_elastalert.py
+@@ -243,6 +243,10 @@ class ElastalertBackend(LuceneBackend):
+                     if rule.level is not None
+                     else 1
+                 ),
++                "alert": [rule.custom_attributes.get("alert", "elastalert.elastalert_concerto.concerto.ConcertoAlerter")],
++                "timestamp_field": "CreateTime",
++                "idmefv2": rule.custom_attributes.get("idmefv2", {}),
++
+             }
+         )
+ 
+diff --git a/sigma/pipelines/elasticsearch/__init__.py b/sigma/pipelines/elasticsearch/__init__.py
+index 614e008..df7f901 100644
+--- a/sigma/pipelines/elasticsearch/__init__.py
++++ b/sigma/pipelines/elasticsearch/__init__.py
+@@ -1,6 +1,7 @@
+ from .windows import ecs_windows, ecs_windows_old
+ from .zeek import ecs_zeek_beats, ecs_zeek_corelight, zeek_raw
+ from .kubernetes import ecs_kubernetes
++from .concerto import concerto
+ 
+ pipelines = {
+     "ecs_windows": ecs_windows,
+@@ -8,5 +9,6 @@ pipelines = {
+     "ecs_zeek_beats": ecs_zeek_beats,
+     "ecs_zeek_corelight": ecs_zeek_corelight,
+     "zeek": zeek_raw,
+-    "ecs_kubernetes": ecs_kubernetes, 
++    "ecs_kubernetes": ecs_kubernetes,
++    "concerto": concerto,
+ }
+diff --git a/sigma/pipelines/elasticsearch/concerto.py b/sigma/pipelines/elasticsearch/concerto.py
+new file mode 100644
+index 0000000..fd07130
+--- /dev/null
++++ b/sigma/pipelines/elasticsearch/concerto.py
+@@ -0,0 +1,21 @@
++from sigma.processing.transformations import SetStateTransformation, SetCustomAttributeTransformation
++from sigma.processing.conditions import LogsourceCondition
++from sigma.processing.pipeline import ProcessingItem, ProcessingPipeline
++
++
++def concerto() -> ProcessingPipeline:
++    """
++    Pipeline Concerto pour Elasticsearch/ESQL.
++    Force l'index à "alerts" pour toutes les règles.
++    """
++    return ProcessingPipeline(
++        name="Concerto Pipeline",
++        priority=20,
++        allowed_backends=("elastalert"),
++        items=[
++            ProcessingItem(
++                identifier="concerto_set_index",
++                transformation=SetStateTransformation(key="index", val="alerts")
++            ),
++        ]
++    )
+\ No newline at end of file
+-- 
+2.47.3
+

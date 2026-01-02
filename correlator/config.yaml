@@ -1,0 +1,17 @@
+rules_folder: /opt/elastalert/rules
+
+run_every:
+  seconds: 10
+
+buffer_time:
+  minutes: 15
+
+es_host: 192.168.49.2
+es_port: 30292
+es_username: elastic
+es_password: elastic
+
+writeback_index: elastalert_status
+
+alert_time_limit:
+  days: 2

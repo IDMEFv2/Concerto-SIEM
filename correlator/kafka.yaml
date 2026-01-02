@@ -1,0 +1,7 @@
+Hostname: "CorrealtorHostname"
+IP: "192.168.34.1"
+Location: "Safe4SOC - Prototype"
+Model: "Concerto Correlator 2.1"
+Name: "Concerto Correlator"
+UnLocation: "FR PAR"
+bootstrapserver: "kafka:9092"
