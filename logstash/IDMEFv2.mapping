@@ -63,7 +63,17 @@
           }
         }
       },
-      "Entity": {
+      "EntityName": {
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
+      },
+      "EntityID": {
         "type": "text",
         "norms": false,
         "fields": {
