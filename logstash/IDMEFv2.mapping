@@ -63,6 +63,26 @@
           }
         }
       },
+      "OrganisationName": {
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
+      },
+      "OrganisationId": {
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
+      },
       "EntityName": {
         "type": "text",
         "norms": false,
@@ -73,7 +93,7 @@
           }
         }
       },
-      "EntityID": {
+      "EntityId": {
         "type": "text",
         "norms": false,
         "fields": {
@@ -243,6 +263,16 @@
       "Analyzer": {
         "dynamic": false,
         "properties": {
+          "ID": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
           "IP": {
             "type": "ip",
             "fields": {
@@ -383,6 +413,16 @@
         "type": "nested",
         "dynamic": false,
         "properties": {
+          "ID": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
           "IP": {
             "type": "ip",
             "fields": {
@@ -463,6 +503,16 @@
         "type": "nested",
         "dynamic": false,
         "properties": {
+          "ID": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
           "IP": {
             "type": "ip",
             "fields": {
@@ -576,6 +626,16 @@
         "type": "nested",
         "dynamic": false,
         "properties": {
+          "ID": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
           "IP": {
             "type": "ip",
             "fields": {
@@ -679,6 +739,16 @@
         "type": "nested",
         "dynamic": false,
         "properties": {
+          "ID": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
           "Category": {
             "type": "text",
             "norms": false,

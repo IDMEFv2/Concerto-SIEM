@@ -1,10 +1,10 @@
 {
-    "description": "JSON schema for the Intrusion Detection Message Exchange Format (IDMEF) version 2 (revision 2.D.V05)",
+    "description": "JSON schema for the Intrusion Detection Message Exchange Format (IDMEF) version 2 (revision 2.D.V06)",
     "properties": {
         "Version": {
-            "description": "The version of the IDMEF format in use by this alert. During the drafts tuning period the version is equal to the draft version. Therefore it is \"2.D.V05\" for Draft V05.",
+            "description": "The version of the IDMEF format in use by this alert. During the drafts tuning period the version is equal to the draft version. Therefore it is \"2.D.V0X\" for Draft V0X.",
             "enum": [
-                "2.D.V05"
+                "2.D.V06"
             ]
         },
         "ID": {
@@ -56,7 +56,9 @@
         },
         "Confidence": {
             "description": "A floating-point value between 0 and 1 indicating the analyzer's confidence in its own reliability of this particular detection, where 0 means that the detection is surely incorrect while 1 means there is no doubt about the detection made.",
-            "type": "number"
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
         },
         "Note": {
             "description": "Free text human-readable additional note, possibly a longer description of the incident if is not already obvious. The Note attribute can be used to store any additional information. It can be additional information about the event and/or about the incident resolution, although the incident resolution information should in principle be stored elsewhere (with a link with the external tool in AltNames)",
@@ -129,6 +131,10 @@
             "items": {
                 "description": "The Analyzer class describes the module that has analyzed the data captured by the sensors, identified an event of interest and decided to create an alert.",
                 "properties": {
+                    "ID": {
+                      "description": "Unique identifier for the analyzer.",
+                      "$ref": "#/definitions/uuidType"
+                    },
                     "IP": {
                         "description": "Analyzer IP address.",
                         "$ref": "#/definitions/ipType"
@@ -199,9 +205,7 @@
                     }
                 },
                 "additionalProperties": false,
-                "type": "object",
                 "required": [
-                    "IP",
                     "Name"
                 ]
             }
@@ -211,6 +215,10 @@
             "items": {
                 "description": "The Sensor class describes the module that captured the data before sending it to an analyzer. The Sensor may be a subpart of the Analyzer.",
                 "properties": {
+                    "ID": {
+                      "description": "Unique identifier for the sensor.",
+                      "$ref": "#/definitions/uuidType"
+                    },
                     "IP": {
                         "description": "The sensor's IP address.",
                         "$ref": "#/definitions/ipType"
@@ -247,7 +255,6 @@
                 "additionalProperties": false,
                 "type": "object",
                 "required": [
-                    "IP",
                     "Name"
                 ]
             }
@@ -257,6 +264,10 @@
             "items": {
                 "description": "The Source class describes the origin(s) of the event(s) leading up to the alert.",
                 "properties": {
+                    "ID": {
+                        "description": "Unique identifier for the Source.",
+                        "$ref": "#/definitions/uuidType"
+                    },
                     "IP": {
                         "description": "Source IP address.",
                         "$ref": "#/definitions/ipType"
@@ -328,6 +339,10 @@
             "items": {
                 "description": "The Target class describes the target(s) impacted by the event(s) leading up to the alert.",
                 "properties": {
+                    "ID": {
+                      "description": "Unique identifier for the target.",
+                      "$ref": "#/definitions/uuidType"
+                    },
                     "IP": {
                         "description": "Target IP address.",
                         "$ref": "#/definitions/ipType"
@@ -389,6 +404,10 @@
             "items": {
                 "description": "The Vector class describes the vector(s) of the event(s) leading up to the alert. \u2022 Name, location, description, \u2026",
                 "properties": {
+                    "ID": {
+                      "description": "Unique identifier for the GPS.",
+                      "$ref": "#/definitions/uuidType"
+                    },
                     "Category": {
                         "description": "Category for the detected \"vector\".",
                         "type": "array",
@@ -440,70 +459,74 @@
                     }
                 },
                 "additionalProperties": false,
-                "type": "object",
-                "required": [
-                    "Category"
-                ]
+                "type": "object"
             }
         },
         "Attachment": {
-			"type": "object",
-			"additionalProperties": false,
-			"patternProperties": {
-				"^[a-zA-Z0-9]+$": {
-                    "description": "The Attachment class contains additional data which was captured in relation with the event.",
-                    "properties": {
-                        "FileName": {
-                            "description": "Attachment filename. This will usually be the original name of the captured file or the name of the file containing the captured content (e.g. a packet capture file).",
-                            "type": "string"
-                        },
-                        "Hash": {
-                            "description": "A list of hash results for the attachment's Content. The values in this list are computed by taking the raw value of the attachment's \"Content\" attribute. The hash result is computed before any other transformation (e.g. Base64 encoding) is applied to the content, so that a receiving IDMEF system may reverse the transformation, apply the same hashing function and obtain the same hash result. See also the definition for the \"ContentEncoding\" attribute below. It is RECOMMENDED that compatible implementations use one of the hashing functions from the SHA-2 or SHA-3 families to compute the hash results in this list.",
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/hashType"
-                            }
-                        },
-                        "Size": {
-                            "description": "Length of the content (in bytes). This value MUST be a non-negative integer.",
-                            "type": "integer"
-                        },
-                        "Ref": {
-                            "description": "References to sources of information related to the alert and/or vulnerability, and specific to this attachment.",
-                            "type": "array",
-                            "items": {
-                                "type": "string",
-                                "format": "uri"
-                            }
-                        },
-                        "ExternalURI": {
-                            "description": "If the attachment's content is available and/or recognizable from an external resource, this is the URI (usually a URL) to that resource. This MAY also be a URN in a registered or unregistered ad-hoc namespace bearing reasonable information value and uniqueness, such as \"urn:mhr:55eaf7effadc07f866d1eaed9c64e7ee49fe081a\" or \"magnet:?xt=urn:sha1:YNCKHTQCWBTRNJIV4WNAE52SJUQCZO5C\".",
-                            "type": "array",
-                            "items": {
-                                "type": "string",
-                                "format": "uri"
-                            }
-                        },
-                        "Note": {
-                            "description": "Free text human-readable additional note for this attachment.",
-                            "type": "string"
-                        },
-                        "ContentType": {
-                            "description": "Internet Media Type of the attachment. For compatibility reasons, implementations SHOULD prefer one of the well-known media types registered in IANA .",
-                            "$ref": "#/definitions/mediatypeType"
-                        },
-                        "ContentEncoding": {
-                            "description": "Content encoding. The following encodings are defined in this version of the specification: \n- \"json\": The content refers to a JSON object which has been serialized to a string using the serialization procedure defined in .\n- \"base64\": The content has been serialized using the Base64 encoding defined in . The \"base64\" encoding SHOULD be used when the content contains binary data. If omitted, the \"json\" encoding MUST be assumed.",
-                            "type": "string"
-                        },
-                        "Content": {
-                            "description": "The attachment's content, in case it is directly embedded inside the message. For large attachments, it is RECOMMENDED that implementations make use of the \"ExternalURI\" attribute to refererence a copy of the content saved in an external storage mechanism.",
-                            "type": ["object", "string"]
+            "type": "array",
+            "items": {
+                "description": "The Attachment class contains additional data which was captured in relation with the event.",
+                "properties": {
+                    "Name": {
+                        "description": "A unique identifier among attachments that can be used to reference this attachment from other classes using the \"Attachment\" attribute.",
+                        "$ref": "#/definitions/attachmentNameType"
+                    },
+                    "FileName": {
+                        "description": "Attachment filename. This will usually be the original name of the captured file or the name of the file containing the captured content (e.g. a packet capture file).",
+                        "type": "string"
+                    },
+                    "Hash": {
+                        "description": "A list of hash results for the attachment's Content. The values in this list are computed by taking the raw value of the attachment's \"Content\" attribute. The hash result is computed before any other transformation (e.g. Base64 encoding) is applied to the content, so that a receiving IDMEF system may reverse the transformation, apply the same hashing function and obtain the same hash result. See also the definition for the \"ContentEncoding\" attribute below. It is RECOMMENDED that compatible implementations use one of the hashing functions from the SHA-2 or SHA-3 families to compute the hash results in this list.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/hashType"
                         }
                     },
-                    "additionalProperties": false,
-                    "type": "object"
-                }
+                    "Size": {
+                        "description": "Length of the content (in bytes). This value MUST be a non-negative integer.",
+                        "type": "integer"
+                    },
+                    "Ref": {
+                        "description": "References to sources of information related to the alert and/or vulnerability, and specific to this attachment.",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uri"
+                        }
+                    },
+                    "ExternalURI": {
+                        "description": "If the attachment's content is available and/or recognizable from an external resource, this is the URI (usually a URL) to that resource. This MAY also be a URN in a registered or unregistered ad-hoc namespace bearing reasonable information value and uniqueness, such as \"urn:mhr:55eaf7effadc07f866d1eaed9c64e7ee49fe081a\" or \"magnet:?xt=urn:sha1:YNCKHTQCWBTRNJIV4WNAE52SJUQCZO5C\".",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uri"
+                        }
+                    },
+                    "Note": {
+                        "description": "Free text human-readable additional note for this attachment.",
+                        "type": "string"
+                    },
+                    "ContentType": {
+                        "description": "Internet Media Type of the attachment. For compatibility reasons, implementations SHOULD prefer one of the well-known media types registered in IANA .",
+                        "$ref": "#/definitions/mediatypeType"
+                    },
+                    "ContentEncoding": {
+                        "description": "Content encoding. The following encodings are defined in this version of the specification: \n- \"json\": The content refers to a JSON object which has been serialized to a string using the serialization procedure defined in .\n- \"base64\": The content has been serialized using the Base64 encoding defined in . The \"base64\" encoding SHOULD be used when the content contains binary data. If omitted, the \"json\" encoding MUST be assumed.",
+                        "type": "string"
+                    },
+                    "Content": {
+                        "description": "The attachment's content, in case it is directly embedded inside the message. For large attachments, it is RECOMMENDED that implementations make use of the \"ExternalURI\" attribute to refererence a copy of the content saved in an external storage mechanism.",
+                        "type": [
+                            "object",
+                            "string"
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                    "Name"
+                ]
             }
         }
     },
@@ -543,8 +566,8 @@
                 "Availability.Sabotage",
                 "Availability.Outage",
                 "Availability.Failure",
-                "Information. UnauthorizedAccess",
-                "Information. UnauthorizedModification",
+                "Information.UnauthorizedAccess",
+                "Information.UnauthorizedModification",
                 "Information.DataLoss",
                 "Information.DataLeak",
                 "Fraud.UnauthorizedUsage",
@@ -559,20 +582,20 @@
                 "Geophysical.Earthquake",
                 "Geophysical.MassMovement",
                 "Geophysical.Volcanic",
-                "Meteorological. Temperature",
+                "Meteorological.Temperature",
                 "Meteorological.Fog",
                 "Meteorological.Storm",
                 "Hydrological.Flood",
                 "Hydrological.Landslide",
                 "Hydrological.Wave",
                 "Climatological.Drought",
-                "Climatological. LakeOutburst",
+                "Climatological.LakeOutburst",
                 "Climatological.Wildfire",
                 "Biological.Epidemic",
                 "Biological.Insect",
                 "Biological.Animal",
                 "Extraterrestrial.Impact",
-                "Extraterrestrial. SpaceWeather",
+                "Extraterrestrial.SpaceWeather",
                 "Other.Uncategorised",
                 "Other.Undetermined",
                 "Test.Test",
@@ -821,5 +844,5 @@
         }
     },
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "IDMEF 2.D.V05"
+    "title": "IDMEF 2.D.V06"
 }
