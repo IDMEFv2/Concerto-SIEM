@@ -1,6 +1,6 @@
-# IDMEFv2-prototype
+# IDMEFv2 SIEM
 
-The IDMEFv2 prototype is a Security Information & Event Manager (SIEM) compatible with the IDMEFv2 format.
+The COncerto SIEM is a Security Information & Event Manager (SIEM) compatible with the IDMEFv2 format.
 Its main goal is to demonstrate building a cyber-physical SIEM using the IDMEFv2 (Incident Detection Message Exchange Format v2) standard.
 
 This prototype, based partially on Prelude OSS (IDMEFv1), is under active development with the current version (2024) operational.
@@ -13,7 +13,7 @@ Key features include:
 * Log management and analysis with `Logstash`
 * A test environment with local Linux logs and a local webserver
 
-IDMEFv2-prototype is a contribution from the Safe4Soc (http://safe4soc.eu) Consortium towards IDMEFv2 standardization.
+Concerto SIEM is a contribution from the Safe4Soc (http://safe4soc.eu) Consortium towards IDMEFv2 standardization.
 
 More information about IDMEFv2 at :
 [https://www.idmefv2.org](https://www.idmefv2.org)
