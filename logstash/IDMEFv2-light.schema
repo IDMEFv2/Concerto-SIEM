@@ -1,10 +1,10 @@
 {
-    "description": "JSON schema for the Intrusion Detection Message Exchange Format (IDMEF) version 2 (revision 2.D.V06)",
+    "description": "JSON schema for the Intrusion Detection Message Exchange Format (IDMEF) version 2 (revision 2.D.V08)",
     "properties": {
         "Version": {
             "description": "The version of the IDMEF format in use by this alert. During the drafts tuning period the version is equal to the draft version. Therefore it is \"2.D.V0X\" for Draft V0X.",
             "enum": [
-                "2.D.V06"
+                "2.D.V08"
             ]
         },
         "ID": {
@@ -844,5 +844,5 @@
         }
     },
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "IDMEF 2.D.V06"
+    "title": "IDMEF 2.D.V08"
 }

@@ -103,6 +103,26 @@
           }
         }
       },
+      "EntitySector": {
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
+      },
+      "Type": {
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
+      },
       "Category": {
         "type": "text",
         "norms": false,
@@ -185,6 +205,10 @@
         "format": "strict_date_optional_time_nanos"
       },
       "EndTime": {
+        "type": "date",
+        "format": "strict_date_optional_time_nanos"
+      },
+      "ReportTime": {
         "type": "date",
         "format": "strict_date_optional_time_nanos"
       },
@@ -283,6 +307,16 @@
             }
           },
           "Name": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
+          "Type": {
             "type": "text",
             "norms": false,
             "fields": {
@@ -532,6 +566,16 @@
               }
             }
           },
+          "Category": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
           "Note": {
             "type": "text",
             "norms": false,
@@ -665,6 +709,16 @@
               }
             }
           },
+          "Category": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
           "Service": {
             "type": "text",
             "norms": false,
@@ -700,110 +754,6 @@
           },
           "GeoLocation": {
             "type": "geo_point"
-          },
-          "UnLocation": {
-            "type": "keyword",
-            "norms": false,
-            "fields": {
-              "country": {
-                "type": "keyword",
-                "normalizer": "unlocode_normalizer",
-                "norms": false
-              }
-            }
-          },
-          "Location": {
-            "type": "text",
-            "norms": false,
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "norms": false
-              }
-            }
-          },
-          "Attachment": {
-            "type": "text",
-            "norms": false,
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "norms": false
-              }
-            }
-          }
-        }
-      },
-
-      "Vector": {
-        "type": "nested",
-        "dynamic": false,
-        "properties": {
-          "ID": {
-            "type": "text",
-            "norms": false,
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "norms": false
-              }
-            }
-          },
-          "Category": {
-            "type": "text",
-            "norms": false,
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "norms": false
-              }
-            }
-          },
-          "ext-Category": {
-            "type": "text",
-            "norms": false,
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "norms": false
-              }
-            }
-          },
-          "Name": {
-            "type": "text",
-            "norms": false,
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "norms": false
-              }
-            }
-          },
-          "Note": {
-            "type": "text",
-            "norms": false,
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "norms": false
-              }
-            }
-          },
-          "TI": {
-            "type": "text",
-            "norms": false,
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "norms": false
-              }
-            }
-          },
-          "GeoLocation": {
-            "type": "geo_point"
-          },
-          "GeoRadius": {
-            "type": "double"
           },
           "UnLocation": {
             "type": "keyword",
