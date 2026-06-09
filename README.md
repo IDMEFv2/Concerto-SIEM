@@ -1,9 +1,9 @@
-# IDMEFv2 SIEM
+# Concerto IDMEFv2 SIEM
 
-The COncerto SIEM is a Security Information & Event Manager (SIEM) compatible with the IDMEFv2 format.
+The Concerto SIEM is a Security Information & Event Manager (SIEM) compatible with the IDMEFv2 format.
 Its main goal is to demonstrate building a cyber-physical SIEM using the IDMEFv2 (Incident Detection Message Exchange Format v2) standard.
 
-This prototype, based partially on Prelude OSS (IDMEFv1), is under active development with the current version (2024) operational.
+This SIEM, based partially on Prelude OSS (IDMEFv1), is under active development but fully operational operational.
 
 Key features include:
 * A `kafka`-based communication bus
@@ -35,7 +35,6 @@ services:
 # Prerequisite
 
 You need :
-
   - podman version 4 or higher
   - podman-compose version 1 or higher
 
