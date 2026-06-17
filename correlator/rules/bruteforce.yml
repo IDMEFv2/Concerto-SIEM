@@ -5,14 +5,14 @@ logsource:
     category: alerts
 detection:
     selection:
-        Category: Attempt.Login
+        Category: Access.Other
     condition: selection
 ---
 title: Bruteforce attack
 description: Multiple failed logons for a single user (possible brute force attack)
 idmefv2:
   Category:
-    - "Attempt.Login"
+    - "Access.Other"
   Priority: "High"
 correlation:
     type: event_count
