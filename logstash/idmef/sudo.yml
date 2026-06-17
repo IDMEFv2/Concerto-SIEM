@@ -17,8 +17,8 @@ ruleset:
         - source: "[Attachment][RawLog][Content][target][user][name]"
           target: "[Category][0]"
           dictionary:
-           "root": "Intrusion.AdminCompromise"
-          fallback: "Intrusion.UserCompromise"
+           "root": "Defense.Other"
+          fallback: "Defense.Other"
         - source: "[Attachment][RawLog][Content][target][user][name]"
           target: "[Priority]"
           dictionary:

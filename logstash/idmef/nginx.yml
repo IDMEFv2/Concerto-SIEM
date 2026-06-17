@@ -14,4 +14,4 @@ ruleset:
         "[Source][0][IP]": "%{[Attachment][RawLog][Content][source][address]}"
         "[Target][0][Hostname]": "%{[Attachment][RawLog][Content][host][hostname]}"
         "[Priority]": "Medium"
-        "[Category][0]": "Malicious.System"
+        "[Category][0]": "Defense.Other"
