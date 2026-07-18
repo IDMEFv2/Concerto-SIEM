@@ -22,8 +22,10 @@ endif
 ifeq (,$(shell which podman-compose))
 		$(error "podman-compose seems to not be installed")
 endif
-ifneq (4,$(shell podman --version | awk '{print $$3}' | head -c 1))
-		$(error "podman version is not 4 or more")
+
+PODMAN_VERSION_OK := $(shell podman version --format '{{.Version}}' | awk -F. '$$1 >= 4 {print "yes"}')
+ifndef PODMAN_VERSION_OK
+	$(error Podman version must be >= 4)
 endif
 
 .PHONY: proto_dirs
