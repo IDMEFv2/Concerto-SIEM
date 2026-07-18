@@ -813,7 +813,7 @@
                 "Open",
                 "Closed",
                 "FalsePositive",
-                "Reported"
+                "Obsolete"
             ],
             "description": "Possible alert status"
         },
