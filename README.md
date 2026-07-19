@@ -47,13 +47,17 @@ Examples can be found at: [https://github.com/IDMEFv2/IDMEFv2-Examples](https://
 # Clone Concerto 
 
 ```bash
-git clone git\@github.com:IDMEFv2/Concerto-SIEM.git
+ git clone https://github.com/IDMEFv2/Concerto-SIEM.git
 ```
 
 
 # Run the prototype
 
 In Concerto-SIEM directory you will find a Makefile for installing, running, stopping, etc ... Concerto-SIEM.
+
+```bash
+cd Concerto-SIEM
+```
 
 Run the following command:
 ```bash
