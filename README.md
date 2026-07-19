@@ -134,7 +134,7 @@ or
 make clean-test
 ```
 
-## Manualy push IDMEFv2 to your prototype with curl
+## Manualy send alerts to Concerto with curl
 
 Your prototype is listening on port `4690` for IDMEFv2 alerts. You can use curl command to send IDMEFv2 alerts.
 
@@ -149,7 +149,7 @@ curl -X POST -sSv http://127.0.0.1:4690 -H "Content-Type: application/json" --da
 ```
 When done you should be able to connect to the "Alerts" view and see your alert. Make sure to configure the viewing period in the control menu if your alert is "old".
 
-## Manually send logs to your prototype
+## Manually send logs to Concerto with netcat
 
 For example, to send a log entry indicating a failed SSH login:
 ```
