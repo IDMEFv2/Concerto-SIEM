@@ -85,14 +85,16 @@ make clean
 The following services are exposed with their primary purpose:
 
   - Web interface: [http://localhost](http://localhost) or [http://localhost:8000](http://localhost:8000) (SIEM user interface)
-  - Elastic database: `http://elastic:elastic@localhost:9200` (Elasticsearch for alert & log storage)
+  - Elastic database: [http://elastic:elastic@localhost:9200](http://elastic:elastic@localhost:9200) (Elasticsearch for alert & log storage)
   - Syslog input: `tcp://localhost:6514` (For receiving syslog messages)
   - IDMEFv2 input: `http://localhost:4690` (For receiving IDMEFv2 alerts)
-  - Kafka status: `http://localhost:9201` (Kafdrop UI for Kafka monitoring)
+  - Kafka status: [http://localhost:9201](http://localhost:9201) (Kafdrop UI for Kafka monitoring)
   - Kafka broker: `http://localhost:9092` (Main Kafka message bus)
   - NGINX test Webserver: `http://localhost:8080` (Test webserver for generating logs)
 
 # Test your prototype system
+
+Before connecting to all Concerto views you must fill some alerts and some logs (so Elastic index will be created)
 
 ## Configure your system to send logs to your prototype
 
@@ -132,64 +134,20 @@ or
 make clean-test
 ```
 
-## Push IDMEFv2 to your prototype
+## Manualy push IDMEFv2 to your prototype with curl
 
-Your prototype is listening on port `4690` for IDMEFv2 alerts.
+Your prototype is listening on port `4690` for IDMEFv2 alerts. You can use curl command to send IDMEFv2 alerts.
 
-For example, if you have a file named `/tmp/test.json` with the following content:
+First get some examples here so you will have last draft version compatible :
 
-```json
-{
-     "Description": "Potential bruteforce attack on root user account",
-     "Priority": "Medium",
-     "CreateTime": "2024-10-18T20:55:29.196408+00:00",
-     "StartTime": "2021-05-10T16:55:29+00:00",
-     "Category": [
-       "Attempt.Login"
-     ],
-     "Analyzer": {
-       "Name": "SIEM",
-       "Hostname": "siem.acme.com",
-       "Type": "Cyber",
-       "Model": "Concerto SIEM 5.2",
-       "Category": [
-         "SIEM",
-         "LOG"
-       ],
-       "Data": [
-         "Log"
-       ],
-       "Method": [
-         "Monitor",
-         "Signature"
-       ],
-       "IP": "192.0.2.1"
-     },
-     "Sensor": [
-       {
-         "IP": "192.0.2.5",
-         "Name": "syslog",
-         "Hostname": "www.acme.com",
-         "Model": "rsyslog 8.2110",
-         "Location": "Server room A1, rack 10"
-       }
-     ],
-     "Target": [
-       {
-         "IP": "192.0.2.2",
-         "Hostname": "www.acme.com",
-         "Location": "Server room A1, rack 10",
-         "User": "root"
-       }
-     ]
- }
-```
+Examples can be found at: [https://github.com/IDMEFv2/IDMEFv2-Examples](https://github.com/IDMEFv2/IDMEFv2-Examples)
 
-You can send this alert to the prototype using `curl`:
+Save your example in `/tmp/test.json` for example, then run the command bellow:
 
 ```bash
 curl -X POST -sSv http://127.0.0.1:4690 -H "Content-Type: application/json" --data @/tmp/test.json
 ```
+When done you should be able to connect to the "Alerts" view and see your alert. Make sure to configure the viewing period in the control menu if your alert is "old".
 
 ## Manually send logs to your prototype
 
@@ -200,6 +158,8 @@ Mar  11 11:00:35 itguxweb2 sshd[24541]: Failed password for root from 12.34.56.7
 You can use the `netcat` tool:
 ```bash
 echo 'Mar  11 11:00:35 itguxweb2 sshd[24541]: Failed password for root from 12.34.56.78 port 1806' | nc -N localhost 6514
+
+## Use included srcipts to send logs and alerts (Makefile)
 ```
 Alternatively, use the embedded test container:
 ```bash
