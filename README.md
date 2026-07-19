@@ -63,7 +63,7 @@ make clean
 
 The following services are exposed with their primary purpose:
 
-  - Web interface: [http://localhost](http://localhost) (SIEM user interface)
+  - Web interface: [http://localhost](http://localhost) or [http://localhost:8000](http://localhost:8000) (SIEM user interface)
   - Elastic database: `http://elastic:elastic@localhost:9200` (Elasticsearch for alert & log storage)
   - Syslog input: `tcp://localhost:6514` (For receiving syslog messages)
   - IDMEFv2 input: `http://localhost:4690` (For receiving IDMEFv2 alerts)
