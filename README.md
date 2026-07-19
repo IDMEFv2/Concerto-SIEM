@@ -37,13 +37,30 @@ services:
 You need :
   - podman version 4 or higher
   - podman-compose version 1 or higher
+  - make 
+
+# WARNING (2026) 
+Concerto SIEM is still under developemnt as well as IDMEFv2. Make sur when you test to use the last version of the format.
+
+Examples can be found at: [https://github.com/IDMEFv2/IDMEFv2-Examples](https://github.com/IDMEFv2/IDMEFv2-Examples)
+
+# Clone Concerto 
+
+```bash
+git clone git\@github.com:IDMEFv2/Concerto-SIEM.git
+```
+
 
 # Run the prototype
+
+In Concerto-SIEM directory you will find a Makefile for installing, running, stopping, etc ... Concerto-SIEM.
 
 Run the following command:
 ```bash
 make up
 ```
+This will install all the necessary components (kafka, elastic, etc.) the first time and run the components. 
+Alerts and logs index in Elastic will be created when you first send logs and alerts (see below)
 
 # Stop the prototype
 
