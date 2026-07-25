@@ -37,7 +37,8 @@ services:
 You need :
   - podman version 4 or higher
   - podman-compose version 1 or higher
-  - make 
+  - make , git
+  - Optional: net-tools
 
 # WARNING (2026) 
 Concerto SIEM is still under developemnt as well as IDMEFv2. Make sur when you test to use the last version of the format.
