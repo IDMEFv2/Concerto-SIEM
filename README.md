@@ -1,19 +1,18 @@
 # Concerto IDMEFv2 SIEM
 
-The Concerto SIEM is a Security Information & Event Manager (SIEM) compatible with the IDMEFv2 format.
-Its main goal is to demonstrate building a cyber-physical SIEM using the IDMEFv2 (Incident Detection Message Exchange Format v2) standard.
+The Concerto SIEM is a Security Information & Event Manager (SIEM) compatible with the IDMEFv2 format. Thus it is the only SIEM able to monitor cyber and physical alerts.
 
 This SIEM, based partially on Prelude OSS (IDMEFv1), is under active development but fully operational operational.
 
-Key features include:
+Technical key features include:
 * A `kafka`-based communication bus
 * JSON alert storage in `Elasticsearch`
 * A web user interface (based on `Prewikka OSS`)
-* A Python rules-based correlation engine (based on `Prelude OSS Correlator`)
+* A correlation engine (based on yara rules)
 * Log management and analysis with `Logstash`
 * A test environment with local Linux logs and a local webserver
 
-Concerto SIEM is a contribution from the Safe4Soc (http://safe4soc.eu) Consortium towards IDMEFv2 standardization.
+2024-2026: Concerto SIEM is currently developed by the Safe4Soc Consortium (http://safe4soc.eu).
 
 More information about IDMEFv2 at :
 [https://www.idmefv2.org](https://www.idmefv2.org)
@@ -41,7 +40,7 @@ You need :
   - Optional: net-tools
 
 # WARNING (2026) 
-Concerto SIEM is still under developemnt as well as IDMEFv2. Make sur when you test to use the last version of the IDMEFv2 format.
+Concerto SIEM is still under developemnt as well as IDMEFv2. Make sure when you test to use the last version of the IDMEFv2 format.
 
 Examples can be found at: [https://github.com/IDMEFv2/IDMEFv2-Examples](https://github.com/IDMEFv2/IDMEFv2-Examples)
 
@@ -193,7 +192,7 @@ make clean-test
 ```
 # Detection rules
 
-Alerts can be created by Probes (IDS, AV, FW, CCTVs, etc) and sent to IDMEFv2. Concerto SIEM can also analyse syslog messages and identify potential incidents based on preconfigured "Detection rules". Thos rules are composed of two part (in two separate files) a parsing rule detecting "incident" logs and parsing the content and an idmefv2 rule creation an IDMEFv2 message with the data previously parsed. Those two rules are identfied by the same ID.
+Alerts can be created by Probes (IDS, AV, FW, CCTVs, etc) and sent to IDMEFv2. Concerto SIEM can also analyse syslog messages and identify potential incidents based on preconfigured "Detection rules". Those rules are composed of two part (in two separate files) a parsing rule detecting "incident" logs and parsing the content and an idmefv2 rule creation an IDMEFv2 message with the data previously parsed. Those two rules are identfied by the same ID.
 
 ## Write your own parsing rule
 
