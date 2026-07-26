@@ -18,7 +18,7 @@ Concerto SIEM is a contribution from the Safe4Soc (http://safe4soc.eu) Consortiu
 More information about IDMEFv2 at :
 [https://www.idmefv2.org](https://www.idmefv2.org)
 
-# Prototype of IDMEFv2 implementation
+# Concerto SIEM component
 
 This repository provide docker files and docker-compose files for these
 services:
@@ -41,18 +41,18 @@ You need :
   - Optional: net-tools
 
 # WARNING (2026) 
-Concerto SIEM is still under developemnt as well as IDMEFv2. Make sur when you test to use the last version of the format.
+Concerto SIEM is still under developemnt as well as IDMEFv2. Make sur when you test to use the last version of the IDMEFv2 format.
 
 Examples can be found at: [https://github.com/IDMEFv2/IDMEFv2-Examples](https://github.com/IDMEFv2/IDMEFv2-Examples)
 
-# Clone Concerto 
+# Clone Concerto SIEM
 
 ```bash
  git clone https://github.com/IDMEFv2/Concerto-SIEM.git
 ```
 
 
-# Run the prototype
+# Run Concerto SIEM
 
 In Concerto-SIEM directory you will find a Makefile for installing, running, stopping, etc ... Concerto-SIEM.
 
@@ -64,22 +64,8 @@ Run the following command:
 ```bash
 make up
 ```
-This will install all the necessary components (kafka, elastic, etc.) the first time and run the components. 
-Alerts and logs index in Elastic will be created when you first send logs and alerts (see below)
-
-# Stop the prototype
-
-Run the following command:
-```bash
-make down
-```
-
-# Clean the prototype
-
-Run the following command:
-```bash
-make clean
-```
+Make up will install all the necessary components (kafka, elastic, etc.) the first time and run the components. 
+At first installation Elastic has no index. You can try to connect to the GUI but it will raise errors as you can't access the Alerts and Logs GUI. Alerts and logs index in Elastic will be created when you first send logs and alerts (see below)
 
 # Exposed services
 
@@ -93,7 +79,37 @@ The following services are exposed with their primary purpose:
   - Kafka broker: `http://localhost:9092` (Main Kafka message bus)
   - NGINX test Webserver: `http://localhost:8080` (Test webserver for generating logs)
 
-# Test your prototype system
+# Check containers are running
+
+The following command will list all the :
+```bash
+make ps
+```
+The first container (proto_setup_1) should be exited and all other containers up:
+- proto_postgres_1
+- proto_es01_1
+- proto_zoo1_1
+- proto_kafka1_1
+- proto_kafdrop_1
+- proto_gui_1
+- proto_logstash_1
+
+# Stop Cocncerto SIEM
+
+Run the following command:
+```bash
+make down
+```
+
+# Clean the installation
+
+Run the following command:
+```bash
+make clean
+```
+
+
+# Test your Concerto installation
 
 Before connecting to all Concerto views you must fill some alerts and some logs (so Elastic index will be created)
 
