@@ -96,14 +96,14 @@ The first container (proto_setup_1) should be exited and all other containers up
 
 # Stop Cocncerto SIEM
 
-Run the following command:
+You can stop all your SIEM by running the following command:
 ```bash
 make down
 ```
 
 # Clean the installation
 
-Run the following command:
+If you want to clean all the installation for a fresh startup, run the following command:
 ```bash
 make clean
 ```
