@@ -72,11 +72,12 @@ The following services are exposed with their primary purpose:
 
   - Web interface: [http://localhost](http://localhost) or [http://localhost:8000](http://localhost:8000) (SIEM user interface)
   - Elastic database: [http://elastic:elastic@localhost:9200](http://elastic:elastic@localhost:9200) (Elasticsearch for alert & log storage)
+  -  Kafka status: [http://localhost:9201](http://localhost:9201) (Kafdrop UI for Kafka monitoring)
+    
   - Syslog input: `tcp://localhost:6514` (For receiving syslog messages)
   - IDMEFv2 input: `http://localhost:4690` (For receiving IDMEFv2 alerts)
-  - Kafka status: [http://localhost:9201](http://localhost:9201) (Kafdrop UI for Kafka monitoring)
   - Kafka broker: `http://localhost:9092` (Main Kafka message bus)
-  - NGINX test Webserver: `http://localhost:8080` (Test webserver for generating logs)
+  - NGINX test Webserver: [http://localhost:8080](http://localhost:8080) (Test webserver for generating logs)
 
 # Check containers are running
 
