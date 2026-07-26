@@ -191,6 +191,9 @@ or
 ```bash
 make clean-test
 ```
+# Detection rules
+
+Alerts can be created by Probes (IDS, AV, FW, CCTVs, etc) and sent to IDMEFv2. Concerto SIEM can also analyse syslog messages and identify potential incidents based on preconfigured "Detection rules". Thos rules are composed of two part (in two separate files) a parsing rule detecting "incident" logs and parsing the content and an idmefv2 rule creation an IDMEFv2 message with the data previously parsed. Those two rules are identfied by the same ID.
 
 ## Write your own parsing rule
 
@@ -266,7 +269,11 @@ ruleset:
 
 At this stage, all extracted fields are available within the log and can be found in the "ARCHIVE" section of the web interface.
 
-To generate an alert from this parsed data, create a corresponding file (e.g., `<my_file>.yml`) in the `logstash/to_idmef/` directory.
+## Writing IDMEFv2 Rules
+
+To generate an alert from this parsed data, create a corresponding file (e.g., `<my_file>.yml`) in the `logstash/idmef/` directory.
+
+This rule will use the parsed data to create an IDMEFv2 alert.
 
 The file format is similar:
 ```
