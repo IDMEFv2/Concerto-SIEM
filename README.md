@@ -113,6 +113,47 @@ make clean
 
 Before connecting to all Concerto views you must fill some alerts and some logs (so Elastic index will be created)
 
+## Manually
+
+### Manualy send alerts to Concerto with curl
+
+Your prototype is listening on port `4690` for IDMEFv2 alerts. You can use curl command to send IDMEFv2 alerts.
+
+First get some examples on Github IDMEFv2 examples repo so you will have last draft version compatible :
+
+Examples can be found at: [https://github.com/IDMEFv2/IDMEFv2-Examples](https://github.com/IDMEFv2/IDMEFv2-Examples)
+
+Save your example in `/tmp/test.json` for example, then run the command bellow:
+
+```bash
+curl -X POST -sSv http://127.0.0.1:4690 -H "Content-Type: application/json" --data @/tmp/test.json
+```
+When done you should be able to connect to the "Alerts" view and see your alert. Make sure to configure the viewing period in the control menu if your alert is "old".
+
+### Manually send logs to Concerto with netcat
+
+For example, to send a log entry indicating a failed SSH login:
+```
+Mar  11 11:00:35 itguxweb2 sshd[24541]: Failed password for root from 12.34.56.78 port 1806
+```
+You can use the `netcat` tool:
+```bash
+echo 'Mar  11 11:00:35 itguxweb2 sshd[24541]: Failed password for root from 12.34.56.78 port 1806' | nc -N localhost 6514
+
+## Use included srcipts to send logs and alerts (Makefile)
+```
+Alternatively, use the embedded test container:
+```bash
+make tests_logs
+```
+Note: Example logs are located in the `tests/example_logs` file.
+
+You can also send an IDMEFv2 alert using the embedded test container:
+```bash
+make tests_idmefv2
+```
+Note: Example IDMEFv2 alerts are in the `tests/example_idmefv2` file.
+
 ## Configure your system to send logs to your prototype
 
 By default, the prototype listens on `localhost` on port `6514` for logs over TCP (no SSL) and UDP.
@@ -150,45 +191,6 @@ or
 ```bash
 make clean-test
 ```
-
-## Manualy send alerts to Concerto with curl
-
-Your prototype is listening on port `4690` for IDMEFv2 alerts. You can use curl command to send IDMEFv2 alerts.
-
-First get some examples here so you will have last draft version compatible :
-
-Examples can be found at: [https://github.com/IDMEFv2/IDMEFv2-Examples](https://github.com/IDMEFv2/IDMEFv2-Examples)
-
-Save your example in `/tmp/test.json` for example, then run the command bellow:
-
-```bash
-curl -X POST -sSv http://127.0.0.1:4690 -H "Content-Type: application/json" --data @/tmp/test.json
-```
-When done you should be able to connect to the "Alerts" view and see your alert. Make sure to configure the viewing period in the control menu if your alert is "old".
-
-## Manually send logs to Concerto with netcat
-
-For example, to send a log entry indicating a failed SSH login:
-```
-Mar  11 11:00:35 itguxweb2 sshd[24541]: Failed password for root from 12.34.56.78 port 1806
-```
-You can use the `netcat` tool:
-```bash
-echo 'Mar  11 11:00:35 itguxweb2 sshd[24541]: Failed password for root from 12.34.56.78 port 1806' | nc -N localhost 6514
-
-## Use included srcipts to send logs and alerts (Makefile)
-```
-Alternatively, use the embedded test container:
-```bash
-make tests_logs
-```
-Note: Example logs are located in the `tests/example_logs` file.
-
-You can also send an IDMEFv2 alert using the embedded test container:
-```bash
-make tests_idmefv2
-```
-Note: Example IDMEFv2 alerts are in the `tests/example_idmefv2` file.
 
 ## Write your own parsing rule
 
