@@ -20,23 +20,21 @@ index 2fbcce1..b823176 100644
          )
  
 diff --git a/sigma/pipelines/elasticsearch/__init__.py b/sigma/pipelines/elasticsearch/__init__.py
-index 614e008..df7f901 100644
+index 78ef2fa..519d148 100644
 --- a/sigma/pipelines/elasticsearch/__init__.py
 +++ b/sigma/pipelines/elasticsearch/__init__.py
-@@ -1,6 +1,7 @@
- from .windows import ecs_windows, ecs_windows_old
+@@ -2,6 +2,7 @@ from .windows import ecs_windows, ecs_windows_old
  from .zeek import ecs_zeek_beats, ecs_zeek_corelight, zeek_raw
  from .kubernetes import ecs_kubernetes
+ from .macos import ecs_macos_esf
 +from .concerto import concerto
  
  pipelines = {
      "ecs_windows": ecs_windows,
-@@ -8,5 +9,6 @@ pipelines = {
-     "ecs_zeek_beats": ecs_zeek_beats,
-     "ecs_zeek_corelight": ecs_zeek_corelight,
+@@ -11,4 +12,5 @@ pipelines = {
      "zeek": zeek_raw,
--    "ecs_kubernetes": ecs_kubernetes, 
-+    "ecs_kubernetes": ecs_kubernetes,
+     "ecs_kubernetes": ecs_kubernetes,
+     "ecs_macos_esf": ecs_macos_esf,
 +    "concerto": concerto,
  }
 diff --git a/sigma/pipelines/elasticsearch/concerto.py b/sigma/pipelines/elasticsearch/concerto.py
@@ -66,7 +64,3 @@ index 0000000..fd07130
 +            ),
 +        ]
 +    )
-\ No newline at end of file
--- 
-2.47.3
-

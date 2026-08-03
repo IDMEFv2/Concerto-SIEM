@@ -52,7 +52,7 @@ down: check_bin
 
 .PHONY: clean_podman
 clean_podman: check_bin down
-	sudo podman rmi localhost/proto_es01 localhost/proto_logstash localhost/proto_kafka1 localhost/proto_zoo1 localhost/proto_kafdrop localhost/proto_gui localhost/proto_postgres
+	sudo podman rmi localhost/proto_es01 localhost/proto_logstash localhost/proto_kafka1 localhost/proto_zoo1 localhost/proto_kafdrop localhost/proto_gui localhost/proto_postgres localhost/proto_correlator
 
 .PHONY: clean
 clean: clean_podman check_bin down

@@ -6,8 +6,8 @@ run_every:
 buffer_time:
   minutes: 15
 
-es_host: 192.168.49.2
-es_port: 30292
+es_host: es01
+es_port: 9200
 es_username: elastic
 es_password: elastic
 

@@ -57,6 +57,19 @@ services:
         timeout: 5s
         retries: 5
   
+    correlator:
+      build:
+        context: correlator/
+      volumes:
+        - ./correlator/kafka.yaml:/opt/kafka.yaml:ro,Z
+        - ./correlator/config.yaml:/opt/elastalert/config.yaml:ro,Z
+        - ./correlator/rules:/opt/sigma_rules:ro,Z
+      networks:
+        - proto
+      restart: on-failure
+      depends_on:
+        - es01
+
     es01:
       build:
         context: elasticsearch/

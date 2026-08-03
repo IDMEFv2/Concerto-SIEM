@@ -3,7 +3,7 @@ USER root
 RUN apt update && apt -y upgrade && apt -y install git && rm -rf /var/lib/apt/lists/* && apt -y autoremove
 RUN pip install --no-cache-dir sigma-cli kafka-python
 WORKDIR /opt
-RUN git clone https://github.com/SigmaHQ/pySigma-backend-elasticsearch.git
+RUN git clone --branch v2.0.3 --single-branch https://github.com/SigmaHQ/pySigma-backend-elasticsearch.git
 WORKDIR /opt/pySigma-backend-elasticsearch
 COPY ./*.patch /opt/
 RUN for i in /opt/*.patch; do patch -p1 < "$i"; done
