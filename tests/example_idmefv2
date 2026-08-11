@@ -1,13 +1,15 @@
 [  {
-     "Description": "Potential intruder detected",
+     "Description": "Potential intruder detected updated",
      "Severity": "Low",
      "Status": "Incident",
      "Cause": "Malicious",
-     "CreateTime": "2023-03-24T16:52:13.075994+00:00",
+     "CreateTime": "2026-07-19T13:10:13.075994+00:00",
      "StartTime": "2023-03-24T16:52:13+00:00",
+     "PredID": ["2b93eb3d-024d-49f1-8139-eca440dab1f1", "1fea82e8-b34b-42a5-b8d4-d7ed9ffe5ac6","0d4958f2-ff79-444c-890e-78facf2944bc","257d81e3-c1bf-4531-aa30-cf81c96b4eea","23387c07-41e7-4f37-814c-1c2e40195662","85ac30c9-2561-48bc-ad73-8ef264cb1628"],
      "Category": [
-       "Intrusion.Burglary"
+       "Access.Other"
      ],
+     "Type": ["Cyber", "Physical"],
      "Analyzer": {
        "Name": "BigBrother",
        "Hostname": "bb.example.com",
@@ -37,36 +39,18 @@
      ],
      "Source": [
        {
-         "Note": "Black Organization, aka. APT 4869"
+         "Note": "Black Organization, aka. APT 4869",
+        "Protocol": ["tcp"],
+    "User":"Test_Max",
+"IP": "192.168.12.12"
        }
      ],
-     "Vector": [
-       {
-         "Category": ["Man"],
-         "TI": ["Name:FBI-Wanted"],
-         "Name": "John Doe",
-         "Note": "Codename Vodka, known henchman for APT 4869",
-         "Size": "Medium",
-         "Location": "Hallway to server room A1",
-         "Attachment": ["pic01", "wanted"]
-       }
-     ],
-     "Attachment": [
-       {
-         "Name": "wanted",
-         "FileName": "fbi-wanted-poster.jpg",
-         "Size": 1234567,
-         "Ref": ["https://www.fbi.gov/wanted/topten"],
-         "ContentType": "image/jpg",
-         "ContentEncoding": "base64",
-         "Content": "..."
-       },
-       {
-         "Name": "pic01",
-         "Note": "Hi-res picture showing John Doe near server room A1",
-         "ExternalURI": ["ftps://192.0.2.1/cam23/20210510165211.jpg"],
-         "ContentType": "image/jpg"
-       }
-     ]
+    "Target": [
+        {
+            "IP": "192.0.0.1",
+            "Port": [24,25],
+    "Service": "SSH"
+        }
+    ]
    }
 ]
