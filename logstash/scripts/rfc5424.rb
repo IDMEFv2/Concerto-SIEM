@@ -115,7 +115,11 @@ end
 
 def filter(event)
   # Remove the UTF-8 BOM if necessary.
-  event.set(@message, event.get(@message).delete_prefix("\xEF\xBB\xBF"))
+  message = event.get(@message)
+
+  if message
+    event.set(@message, message.delete_prefix("\xEF\xBB\xBF"))
+  end
 
   raw_sd = event.remove(@source)
   if raw_sd.nil?

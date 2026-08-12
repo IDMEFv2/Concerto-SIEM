@@ -12,6 +12,20 @@ services:
         - ./setup/config:/config:ro,Z
       networks:
         - proto
+      depends_on:
+        logstash:
+          condition: service_healthy
+        postgres:
+          condition: service_healthy
+      healthcheck:
+        test:
+          [
+            "CMD-SHELL",
+            "test -f /state/.done && curl --user elastic:elastic -fs http://es01:9200/_cat/indices?h=index | grep -q alerts"
+          ]
+        interval: 15s
+        timeout: 10s
+        retries: 30
 
     gui:
       build:
@@ -31,10 +45,6 @@ services:
       restart: on-failure
       depends_on:
         setup:
-          condition: service_started
-        es01:
-          condition: service_started
-        postgres:
           condition: service_healthy
 
     postgres:
@@ -53,8 +63,8 @@ services:
       restart: on-failure
       healthcheck:
         test: ["CMD-SHELL", "pg_isready -U postgres"]
-        interval: 5s
-        timeout: 5s
+        interval: 15s
+        timeout: 10s
         retries: 5
   
     correlator:
@@ -68,7 +78,8 @@ services:
         - proto
       restart: on-failure
       depends_on:
-        - es01
+        setup:
+          condition: service_healthy
 
     es01:
       build:
@@ -91,6 +102,11 @@ services:
           hard: -1
       networks:
         - proto
+      healthcheck:
+        test: ["CMD-SHELL", "curl --user elastic:elastic -fs http://localhost:9200/_cluster/health || exit 1"]
+        interval: 15s
+        timeout: 10s
+        retries: 30
   
     logstash:
       build:
@@ -109,6 +125,7 @@ services:
         - ./logstash/pipeline:/usr/share/logstash/config/pipeline:ro,Z
         - ./logstash/scripts:/usr/share/logstash/config/scripts:ro,Z
         - ./logstash/rulesets:/usr/share/logstash/config/rulesets:ro,Z
+        - ./logstash/idmef:/usr/share/logstash/config/idmef:ro,Z
       ports:
         - 127.0.0.1:6514:6514
         - 127.0.0.1:4690:4690
@@ -135,9 +152,20 @@ services:
         INDEX_LOGS: logs
       networks:
         - proto
+      healthcheck:
+        test:
+          [
+            "CMD-SHELL",
+            "curl -fs http://localhost:9600/_node >/dev/null"
+          ]
+        interval: 15s
+        timeout: 10s
+        retries: 30
       depends_on:
-        - es01
-        - kafka1
+        es01:
+          condition: service_healthy
+        kafka1:
+          condition: service_healthy
 
     kafdrop:
       build:
@@ -154,7 +182,8 @@ services:
         - proto
       restart: on-failure
       depends_on:
-        - kafka1
+        kafka1:
+          condition: service_healthy
 
     zoo1:
       build:
@@ -168,7 +197,17 @@ services:
         ZOOKEEPER_CLIENT_PORT: 2181
         ZOOKEEPER_SERVER_ID: 1
         ZOOKEEPER_SERVERS: zoo1:2888:3888
+        KAFKA_OPTS: "-Dzookeeper.4lw.commands.whitelist=ruok"
       restart: on-failure
+      healthcheck:
+        test:
+          [
+            "CMD-SHELL",
+            "echo ruok | nc localhost 2181 | grep imok"
+          ]
+        interval: 15s
+        timeout: 10s
+        retries: 30
   
     kafka1:
       build:
@@ -198,8 +237,18 @@ services:
         KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
         KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
       restart: on-failure
+      healthcheck:
+        test:
+          [
+            "CMD-SHELL",
+            "bash -c '</dev/tcp/localhost/9092'"
+          ]
+        interval: 15s
+        timeout: 10s
+        retries: 30
       depends_on:
-        - zoo1
+        zoo1:
+          condition: service_healthy
 
 networks:
   proto:

@@ -45,7 +45,7 @@ class ConcertoAlerter(Alerter):
         return ret
 
     def alert(self, matches):
-        with open("/opt/kafka.yaml", "r+") as f:
+        with open("/opt/kafka.yaml", "r") as f:
             conf = yaml.safe_load(f.read())
         k = KafkaProducer(bootstrap_servers=[conf['bootstrapserver']])
         

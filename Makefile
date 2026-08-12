@@ -46,13 +46,17 @@ ps: check_bin
 up: check_bin $(ELASTIC_MMC) $(PROTO_DIRS)
 	(sudo podman-compose -p proto -f docker-compose.yml up 2>&1 1>>logs &)
 
+.PHONY: up-build
+up-build: check_bin $(ELASTIC_MMC) $(PROTO_DIRS)
+	(sudo podman-compose -p proto -f docker-compose.yml build --no-cache 2>&1 1>>logs && sudo podman-compose -p proto -f docker-compose.yml up --build --force-recreate 2>&1 1>>logs &)
+
 .PHONY: down
 down: check_bin
 	sudo podman-compose -p proto -f docker-compose.yml down
 
 .PHONY: clean_podman
 clean_podman: check_bin down
-	sudo podman rmi localhost/proto_es01 localhost/proto_logstash localhost/proto_kafka1 localhost/proto_zoo1 localhost/proto_kafdrop localhost/proto_gui localhost/proto_postgres localhost/proto_correlator
+	sudo podman rmi localhost/proto_setup localhost/proto_es01 localhost/proto_logstash localhost/proto_kafka1 localhost/proto_zoo1 localhost/proto_kafdrop localhost/proto_gui localhost/proto_postgres localhost/proto_correlator || true
 
 .PHONY: clean
 clean: clean_podman check_bin down
