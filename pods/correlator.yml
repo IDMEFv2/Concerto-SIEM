@@ -17,8 +17,7 @@ spec:
         app: correlator-tmpl
     spec:
       containers:
-      - image: localhost/idmefv2-correlator
-        imagePullPolicy: Never
+      - image: idmefv2prototype/idmefv2-correlator
         name: correlator
         volumeMounts:
           - name: config
