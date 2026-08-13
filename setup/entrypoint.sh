@@ -66,7 +66,9 @@ echo "Elasticsearch is ready"
 
 echo "Logstash: Send first log and first IDMEFv2 ..."
 
-printf '<34>1 %s itguxweb2 sshd 24541 - - Failed password for root from 12.34.56.78 port 1806\n' "$(date -u '+%Y-%m-%dT%H:%M:%S.%3NZ')" | nc -q 2 localhost 6514
+until `curl --user elastic:elastic -fs 'http://es01:9200/_cat/indices?h=index' | grep -q alerts`; do
+       printf '<34>1 %s itguxweb2 sshd 24541 - - Failed password for root from 12.34.56.78 port 1806\n' "$(date -u '+%Y-%m-%dT%H:%M:%S.%3NZ')" | nc -q 5 logstash 6514
+done
 
 echo "Logstash is ready"
 
