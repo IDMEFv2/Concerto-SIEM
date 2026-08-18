@@ -93,8 +93,9 @@ The first container (proto_setup_1) should be exited and all other containers up
 - proto_kafdrop_1
 - proto_gui_1
 - proto_logstash_1
+- proto_correlator_1
 
-# Stop Cocncerto SIEM
+# Stop Concerto SIEM
 
 You can stop all your SIEM by running the following command:
 ```bash
