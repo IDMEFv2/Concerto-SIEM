@@ -33,11 +33,26 @@ services:
 
 # Prerequisite
 
-You need :
+Software needed :
   - podman version 4 or higher
   - podman-compose version 1 or higher
   - make , git
   - Optional: net-tools
+
+Hardware (minimum): Concerto SIEM/Podman has been succefully installed tested with:
+   - CPU: 6 vCores
+   - RAM: 12 Go
+   - Disk: 100 G
+
+Make sure to adapt Elastic and Logstash memory in .env file, if only 12 Go available:
+    - ELASTIC_JVM=-Xms2g -Xmx2g
+    - LOGSTASH_JVM=-Xm2g -Xmx2g
+
+Mind that there is an overhead added to those numbers. As shown on this example from the 12Go server:
+
+Container	Heap Setting	Actual RAM   Used	Overhead
+ES	      2 GB	        2.77 GB	     38%
+Logstash	2 GB	        3.53 GB	     76%
 
 # WARNING (2026) 
 Concerto SIEM is still under developemnt as well as IDMEFv2. Make sure when you test to use the last version of the IDMEFv2 format.
