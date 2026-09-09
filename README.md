@@ -33,11 +33,24 @@ services:
 
 # Prerequisite
 
-Software needed :
+Podman software needed :
   - podman version 4 or higher
   - podman-compose version 1 or higher
   - make , git
   - Optional: net-tools
+
+BETA: UBUNTU DOCKER INSTALL with Makefile (see details and files here : https://github.com/IDMEFv2/Concerto-SIEM/issues/44)
+ 1. Install Docker Engine
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+2. Install Docker Compose Plugin
+sudo apt-get install docker-compose-plugin
+3. Verify
+docker compose version
+4. Set kernel parameter
+sudo sysctl -w vm.max_map_count=262144
+5. Add user to docker group (to avoid sudo)
+sudo usermod -aG docker $USER
+newgrp docker
 
 Hardware (minimum): Concerto SIEM/Podman has been succefully installed tested with:
    - CPU: 6 vCores
