@@ -10,12 +10,15 @@ ruleset:
         operands: "clussvc"
   rules:
     - id: 4900
+      category: Availability.Failure
       pattern: "The node cannot join the cluster because it cannot communicate with node %{NOTSPACE:[Attachment][RawLog][Content][user][name]} over any network configured for internal cluster communication."
       samples:
         - "Oct 22 04:15:01 smf-syslog-02 smf-exchange-06/smf-exchange-06 clussvc[error] 1079  The node cannot join the cluster because it cannot communicate with node SMF-EXCHANGE-05 over any network configured for internal cluster communication. Check the network configuration of the node and the cluster."
     - id: 4901
+      category: Access.Unauthorized
       pattern: "Cluster node \\S+ was removed from the active cluster membership"
       samples:
         - "Oct 22 04:16:04 smf-syslog-02 smf-exchange-05/smf-exchange-05 clussvc[warning] 1135  Cluster node SMF-EXCHANGE-06 was removed from the active cluster membership. The Clustering Service may have been stopped on the node, the node may have failed, or the node may have lost communication with the other active cluster nodes"
     - id: 4902
+      category: Availability.HeartBeat
       pattern: "Cluster network '(?<networkName>.+)' is operational \\(up\\)"

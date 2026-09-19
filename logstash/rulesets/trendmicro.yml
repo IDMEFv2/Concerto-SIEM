@@ -10,10 +10,12 @@ ruleset:
         operands: "GMT"
   rules:
     - id: 24301
+      category: Malware.Other
       pattern: "%{NOTSPACE:id} %{NOTSPACE:name} VIRUS FOUND in attached file"
       samples:
         - "2007/05/11 11:13:16 GMT+05:30 40B7897C-0975-4F54-919E-3197D735F141 HTML_Netsky.P VIRUS FOUND in attached file no filename [aa8:d44]"
     - id: 24302
+      category: Malware.Other
       pattern: "License:\\s+(\\S+)\\s+([^.]+)\\.\\s+([^.]+)"
       samples:
         - "2008/07/22 18:40:22 GMT+00:00   [13749:1] License: General: License is activated. Virus and non-spam filters are enabled."

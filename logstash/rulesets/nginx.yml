@@ -10,6 +10,7 @@ ruleset:
         operands: "nginx"
   rules:
     - id: 5643
+      category: Operational.Process Failure
       pattern: "%{IPORHOST:[Attachment][RawLog][Content][source][address]} .* \"GET /[^\"]*\" (?<[Attachment][RawLog][Content][service][err_num]>(403|404|500))"
       samples:
         - "80.214.18.98 - - [18/Jul/2024:06:09:30 +0000] \"GET /favicon.ico HTTP/1.1\" 404 555 \"http://141.95.158.49:8080/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36\""

@@ -10,14 +10,18 @@ ruleset:
         operands: "Info:"
   rules:
     - id: 24501
+      category: Abuse.Other
       pattern: "Info: New SMTP ICID \\d+ interface [^\\)]+\\(%{NOTSPACE:nodeAddr}\\) address %{IP:[Attachment][RawLog][Content][destination][address]} reverse dns host unknown"
       samples:
         - "Nov 24 00:06:25 mailcleaner1.pp.com Info: New SMTP ICID 30481570 interface Data 1 (22.4.4.8) address 7.15.16.10 reverse dns host unknown verified no"
     - id: 24502
+      category: Access.Unauthorized
       pattern: "Info:\\s+ICID %{INT:Num} REJECT SG (BLACKLIST|None)"
       samples:
         - "Oct 20 16:11:05 195.88.94.253 Original Address=195.88.94.10 Oct 20 16:11:05 Syslog-Test: Info: ICID 3604683 REJECT SG None match ALL SBRS not enabled"
     - id: 24503
+      category: Abuse.Other
       pattern: "Info: MID %{INT:Num} .*using engine: CASE spam positive"
     - id: 24504
+      category: Abuse.Other
       pattern: "Info:\\s+ICID %{INT:Num} ACCEPT SG (SUSPECTLIST|WHITELIST|UNKNOWNLIST)"

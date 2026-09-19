@@ -10,32 +10,45 @@ ruleset:
         operands: "sendmail"
   rules:
     - id: 3700
+      category: Access.Unauthorized
       pattern: "ruleset=check_relay, arg1=(?<argument>[\\[\\]\\w\\-.]+), arg2=%{IP:ip}, relay=(?<uid>.*)\\[%{IP:[Attachment][RawLog][Content][source][address]}\\], reject=550 5\\.7\\.1 %{DATA:data}"
       samples:
         - "Jun 20 04:21:33 mail sendmail[28792]: ruleset=check_relay, arg1=c-67-181-100-174.client.comcast.net, arg2=67.181.100.174, relay=c-67-181-100-174.client.comcast.net [67.181.100.174], reject=550 5.7.1 Mail from 67.181.100.174 refused - see http://dsbl.org/"
     - id: 3701
+      category: Access.Unauthorized
       pattern: "%{NOTSPACE:id}: ruleset=check_rcpt, arg1=\\<%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}@%{NOTSPACE:domain}\\>, relay=(?<uid>.*)\\[%{IP:[Attachment][RawLog][Content][source][address]}\\], reject=550 5\\.7\\.1 %{DATA:data}"
       samples:
         - "Jun 19 23:20:27 mail sendmail[28096]: i5K6KJmk028096: ruleset=check_rcpt, arg1=<support@microsoft.com>, relay=[211.243.40.167], reject=550 5.7.1 <support@microsoft.com>... Relaying denied. IP name lookup failed [211.243.40.167]"
     - id: 3702
+      category: Access.Unauthorized
       pattern: "%{NOTSPACE:id}: ruleset=check_mail, arg1=\\<%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}@%{NOTSPACE:domain}\\>, relay=(?<uid>.*)\\[%{IP:[Attachment][RawLog][Content][source][address]}\\], reject=553 5\\.1\\.8 %{DATA:data}"
     - id: 3703
+      category: Availability.Failure
       pattern: "sendmail shutdown succeeded"
     - id: 3704
+      category: Abuse.Other
       pattern: "sendmail startup succeeded"
     - id: 3705
+      category: Abuse.Other
       pattern: "%{NOTSPACE:id}: (?<argument>[\\w\\-.]+) \\[%{IP:[Attachment][RawLog][Content][source][address]}\\] did not issue MAIL/EXPN/VRFY/ETRN during connection to MTA"
     - id: 3706
+      category: Abuse.Other
       pattern: "%{NOTSPACE:id}: \\<%{NOTSPACE:user}@%{NOTSPACE:domain}\\>... User unknown"
     - id: 3707
+      category: Abuse.Other
       pattern: "%{NOTSPACE:id}: Authentication-Warning: (?<domain>[\\w\\-.]+): %{NOTSPACE:name} set sender to %{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}@%{NOTSPACE:domain} using"
     - id: 3708
+      category: Access.Unauthorized
       pattern: "%{NOTSPACE:id}: (?<domain>[\\w\\-.]+) \\[%{IP:[Attachment][RawLog][Content][source][address]}\\]: VRFY %{NOTSPACE:name} \\[rejected\\]"
     - id: 3709
+      category: Access.Unauthorized
       pattern: "%{NOTSPACE:id}: (?<domain>[\\w\\-.]+) \\[%{IP:[Attachment][RawLog][Content][source][address]}\\]: EXPN %{NOTSPACE:name} \\[rejected\\]"
     - id: 3710
+      category: Abuse.Other
       pattern: "%{NOTSPACE:id}: from=%{NOTSPACE:[Attachment][RawLog][Content][user][name]}, size=\\d+, class=\\d+, nrcpts=\\d+, msgid=\\<%{NOTSPACE:user}@%{NOTSPACE:domain}\\>, relay=%{NOTSPACE:user_}@%{NOTSPACE:domain_}"
     - id: 3711
+      category: Abuse.Other
       pattern: "%{NOTSPACE:id}: from=%{NOTSPACE:[Attachment][RawLog][Content][user][name]}, size=\\d+, class=\\d+, nrcpts=%{INT:id}, msgid=%{NOTSPACE:user} proto=ESMTP, daemon=MTA, relay=(?<data>\\S+ )?\\[%{IP:[Attachment][RawLog][Content][source][address]}\\]"
     - id: 3712
+      category: Abuse.Other
       pattern: "%{NOTSPACE:id}: to=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}, delay=%{NOTSPACE:delay}, xdelay=%{NOTSPACE:xdelay}, mailer=%{NOTSPACE:mailer}, pri=%{INT:class_id}, relay=(?<relay>\\S+?) \\[%{IP:[Attachment][RawLog][Content][source][address]}\\], dsn=%{NOTSPACE:dsn}, stat=%{NOTSPACE:stat} \\(%{NOTSPACE:status}: queued as %{NOTSPACE:data}\\)?"

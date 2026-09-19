@@ -10,12 +10,15 @@ ruleset:
         operands: "rsyncd"
   rules:
     - id: 23401
+      category: Availability.HeartBeat
       pattern: "rsyncd version (?<version>.+) starting, listening on port %{POSINT:[Attachment][RawLog][Content][source][port]:int}"
       samples:
         - "Apr 26 14:15:04 exabench2 rsyncd[16164]: rsyncd version 2.5.7 starting, listening on port 873"
     - id: 23402
+      category: Access.Unauthorized
       pattern: "auth failed on module (?<module>[\\w-]+) from (?<source>[\\w.-]+) \\(%{IP:[Attachment][RawLog][Content][source][address]}\\)"
       samples:
         - "Jul 27 15:03:15 exanaconda rsyncd[28023]: auth failed on module rpm_repository from eas-update (192.168.11.103)"
     - id: 23403
+      category: Operational.Process Failure
       pattern: "rsync on (?<module>.+) from %{USER:user}@%{NOTSPACE:domain} \\(%{IP:[Attachment][RawLog][Content][source][address]}\\)"

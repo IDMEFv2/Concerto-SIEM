@@ -10,12 +10,15 @@ ruleset:
         operands: "slapd"
   rules:
     - id: 23101
+      category: Availability.HeartBeat
       pattern: "slapd starting"
       samples:
         - "Mar 29 12:56:07 duke slapd[26484]: slapd starting"
     - id: 23102
+      category: Availability.Failure
       pattern: "slapd stopped"
       samples:
         - "Mar 29 12:56:06 duke slapd[8788]: slapd stopped"
     - id: 23103
+      category: Availability.Failure
       pattern: "conn=%{INT:connection_id} fd=%{INT:fd_number} ACCEPT from IP=%{IP:[Attachment][RawLog][Content][source][address]}:(%{POSINT:[Attachment][RawLog][Content][source][port]:int}) \\(IP=%{IP:[Attachment][RawLog][Content][destination][address]}:(%{POSINT:[Attachment][RawLog][Content][destination][port]})\\)"

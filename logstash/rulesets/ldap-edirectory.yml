@@ -10,12 +10,15 @@ ruleset:
         operands: "\\d+ (AUTH|LDAP): \\[\\d{4}/\\d{2}/\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d+\\]"
   rules:
     - id: 25700
+      category: Availability.Failure
       pattern: "AUTH: \\[%{YEAR}/%{MONTHNUM}/%{MONTHDAY} %{HOUR}:?%{MINUTE}(?::?%{SECOND})\\]\\s\\[%{DATA:[Attachment][RawLog][Content][user][target][name]}\\]\\s+<\\.(?<Name1>.+)\\.(?<Name2>[^\\.]+)\\.(?<Name3>[^\\.]+)\\.(?<Name4>[^\\.]+)\\.>\\s+LocalLoginRequest\\. Error\\s+success,\\sconn:\\s+%{INT:number}"
       samples:
         - "1235184560 AUTH: [2009/09/23 13:56:16.202] [00008995] <.group.employees.country.company.com.HOST.> LocalLoginRequest. Error success, conn: 33."
     - id: 25701
+      category: Operational.Process Failure
       pattern: "LDAP: \\[%{YEAR}/%{MONTHNUM}/%{MONTHDAY} %{HOUR}:?%{MINUTE}(?::?%{SECOND})\\]\\s+Illegal ndsname\\s\"%{USER:[Attachment][RawLog][Content][user][target][name]}\"\\sin\\s(?<path>[^,]+),\\s+err\\s=\\s\\d+"
       samples:
         - "1130294192 LDAP: [2009/09/23 13:57:55.270] Illegal ndsname \"toto\" in ldap2uNDSDN, err = 34 (0x22)"
     - id: 25702
+      category: Access.Unauthorized
       pattern: "AUTH: \\[%{YEAR}/%{MONTHNUM}/%{MONTHDAY} %{HOUR}:?%{MINUTE}(?::?%{SECOND})\\]\\s\\[%{USER:[Attachment][RawLog][Content][user][target][name]}\\]\\s+<\\.(?<Name1>.+)\\.(?<Name2>[^\\.]+)\\.(?<Name3>[^\\.]+)\\.(?<Name4>[^\\.]+)\\.>\\s+LocalLoginRequest\\. Error\\s+failed\\sauthentication\\s\\(-%{INT:Size}\\),\\sconn:\\s\\d+"

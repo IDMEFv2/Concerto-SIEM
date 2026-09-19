@@ -10,20 +10,27 @@ ruleset:
         operands: "ha-eventmgr"
   rules:
     - id: 175000100
+      category: Operational.Process Failure
       pattern: "User %{USER:[Attachment][RawLog][Content][user][name]}@%{IPORHOST:[Attachment][RawLog][Content][source][address]} logged in"
       samples:
         - "Mar  6 13:18:03 esx Hostd: [699FDB90 info 'ha-eventmgr' opID=C21902B5-00000003] Event 1723 : User root@172.25.251.224 logged in as VMware VI Client/4.0.0"
     - id: 175000101
+      category: Access.Unauthorized
       pattern: "Cannot login %{USER:[Attachment][RawLog][Content][user][name]}@%{IPORHOST:[Attachment][RawLog][Content][source][address]}"
       samples:
         - "Mar  6 13:19:32 esx Hostd: [695C2B90 info 'ha-eventmgr' opID=D7206888-00000003] Event 1727 : Cannot login jdupont@172.25.251.224"
     - id: 175000102
+      category: Operational.Process Failure
       pattern: "User %{USER:[Attachment][RawLog][Content][user][name]}@%{IPORHOST:[Attachment][RawLog][Content][source][address]} logged out"
     - id: 175000200
+      category: Operational.Process Failure
       pattern: "Host is rebooting"
     - id: 175000201
+      category: Operational.Process Failure
       pattern: "%{NOTSPACE:process_name} on\\s*%{NOTSPACE:nodename} in %{NOTSPACE:classification} is (suspended|resumed)"
     - id: 175000202
+      category: Operational.Process Failure
       pattern: "%{NOTSPACE:process_name} on\\s*%{NOTSPACE:nodename} in %{NOTSPACE:classification} is powered (on|off)"
     - id: 175000300
+      category: Operational.Process Failure
       pattern: "Firewall configuration has changed. Operation '\\w+' for rule set %{WORD:service} succeeded"

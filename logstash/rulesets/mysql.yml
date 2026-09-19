@@ -10,16 +10,21 @@ ruleset:
         operands: "mysqld"
   rules:
     - id: 23601
+      category: Availability.Failure
       pattern: "\\[\\w+\\] /usr/libexec/mysqld: Shutdown complete"
       samples:
         - "070823 20:58:09 [Note] /usr/libexec/mysqld: Shutdown complete"
     - id: 23602
+      category: Availability.HeartBeat
       pattern: "mysqld_safe Starting mysqld daemon with databases from %{NOTSPACE:filePath}"
       samples:
         - "140902 13:31:04 mysqld_safe Starting mysqld daemon with databases from /var/lib/mysql"
     - id: 23603
+      category: Availability.Failure
       pattern: "\\[\\w+\\] Fatal error: Can't open privilege tables: Table '%{NOTSPACE:tableName}' doesn't exist"
     - id: 23604
+      category: Access.Unauthorized
       pattern: "Connect\\s*Access denied for user '%{WORD:[Attachment][RawLog][Content][user][target][name]}'@'%{NOTSPACE:hostname}'"
     - id: 23605
+      category: Availability.Failure
       pattern: "Connect\\s*%{WORD:[Attachment][RawLog][Content][user][target][name]}@%{NOTSPACE:domain} on %{NOTSPACE:inerface}"

@@ -10,18 +10,24 @@ ruleset:
         operands: "syslog-ng"
   rules:
     - id: 23001
+      category: Availability.Failure
       pattern: "syslog-ng version ([\\d.]+) going down"
       samples:
         - "Nov 29 12:14:25 icare syslog-ng[5798]: syslog-ng version 1.6.4 going down"
     - id: 23002
+      category: Availability.HeartBeat
       pattern: "syslog-ng version ([\\d.]+) starting"
       samples:
         - "Nov 29 12:14:27 icare syslog-ng[5807]: syslog-ng version 1.6.4 starting"
     - id: 23003
+      category: Availability.Failure
       pattern: "[nN]ew configuration initialized"
     - id: 23004
+      category: Availability.Failure
       pattern: "STATS: dropped ([0-9]\\d*)"
     - id: 23005
+      category: Availability.Failure
       pattern: "Error connecting to remote host \\w+\\(%{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]:int}\\), (.+)"
     - id: 23006
+      category: Availability.Failure
       pattern: "Connection broken to \\w+\\(%{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]:int}\\), reopening in \\d+ seconds"

@@ -10,10 +10,12 @@ ruleset:
         operands: "preludecorrelator.main"
   rules:
     - id: 100080
+      category: Availability.Failure
       pattern: "INFO: %{INT:numPlugin} plugins have been loaded"
       samples:
         - "Oct  6 10:36:18 CentOS preludecorrelator.main: INFO: 31 plugins have been loaded."
     - id: 100081
+      category: Availability.Failure
       pattern: "INFO: caught signal %{INT:signalId}"
       samples:
         - "Oct  6 10:36:13 CentOS preludecorrelator.main: INFO: caught signal 15"

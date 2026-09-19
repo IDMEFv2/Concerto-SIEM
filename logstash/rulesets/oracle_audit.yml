@@ -10,16 +10,21 @@ ruleset:
         operands: "Oracle Audit"
   rules:
     - id: 130001
+      category: Access.Authorized
       pattern: "LENGTH: %{NOTSPACE} SESSIONID:\\[%{INT:sessionId}\\] %{NOTSPACE} ENTRYID:.+ STATEMENT:\\[\\d+\\] \\S+ USERID:\\[\\d+\\] \"%{DATA:[Attachment][RawLog][Content][user][target][name]}\" USERHOST:\\[\\d+\\] \"%{IPORHOST:[Attachment][RawLog][Content][host][address]}\" TERMINAL:\\[\\d+\\] %{NOTSPACE} ACTION:\\[\\d+\\] %{NOTSPACE} RETURNCODE:\\[\\d+\\] \"0\" COMMENT\\$TEXT:\\[\\d+\\] \"Authenticated by: %{DATA}; Client address: \\(ADDRESS=\\(PROTOCOL=%{DATA:[Attachment][RawLog][Content][network][transport]}\\)\\(HOST=%{IPORHOST:[Attachment][RawLog][Content][source][address]}\\)\\(PORT=%{POSINT:[Attachment][RawLog][Content][source][port]:int}\\)\\)\" OS\\$USERID:\\[\\d+\\] \"%{USER:[Attachment][RawLog][Content][client][user][name]}\" DBID:\\[\\d+\\] \\S+ PRIV\\$USED:\\[\\d\\] %{NOTSPACE}"
       samples:
         - "Jan 18 10:51:54 server1 Oracle Audit[24492]: LENGTH: \"360\" SESSIONID:[7] \"2190838\" ENTRYID:[1] \"1\" STATEMENT:[1] \"1\" USERID:[6] \"DBSNMP\" USERHOST:[22] \"server.test.com\" TERMINAL:[7] \"unknown\" ACTION:[3] \"100\" RETURNCODE:[1] \"0\" COMMENT$TEXT:[98] \"Authenticated by: DATABASE; Client address: (ADDRESS=(PROTOCOL=tcp)(HOST=10.9.96.132)(PORT=24776))\" OS$USERID:[6] \"oracle\" DBID:[10] \"1865345007\" PRIV$USED:[1] \"5\""
     - id: 130002
+      category: Operational.Process Failure
       pattern: "LENGTH: \\S+ SESSIONID:\\[\\d+\\] \\S+ ENTRYID:\\[\\d+\\] \\S+ USERID:\\[\\d+\\] \"%{DATA:[Attachment][RawLog][Content][user][target][name]}\" ACTION:\\[\\d+\\] \\S+ RETURNCODE:\\[\\d+\\] \"0\" LOGOFF\\$PREAD:\\[\\d+\\] \\S+ LOGOFF\\$LREAD:\\[\\d+\\] \\S+ LOGOFF\\$LWRITE:\\[\\d+\\] \\S+ LOGOFF\\$DEAD:\\[\\d+\\] \\S+ DBID:\\[\\d+\\] \\S+ SESSIONCPU:\\[\\d+\\] \\S+"
       samples:
         - "Jan 18 10:51:54 server1 Oracle Audit[24492]: LENGTH: \"224\" SESSIONID:[7] \"2190838\" ENTRYID:[1] \"1\" USERID:[6] \"DBSNMP\" ACTION:[3] \"102\" RETURNCODE:[1] \"0\" LOGOFF$PREAD:[1] \"0\" LOGOFF$LREAD:[2] \"11\" LOGOFF$LWRITE:[1] \"0\" LOGOFF$DEAD:[1] \"0\" DBID:[10] \"1865345007\" SESSIONCPU:[1] \"0\""
     - id: 130003
+      category: Operational.Process Failure
       pattern: "LENGTH : \\S+ ACTION :\\[\\d+\\] 'CONNECT' DATABASE USER:\\[\\d+\\] '%{DATA}' PRIVILEGE :\\[\\d+\\] 'SYSDBA' CLIENT USER:\\[\\d+\\] '%{DATA:[Attachment][RawLog][Content][user][target][name]}' CLIENT TERMINAL:\\[\\d+\\] '%{DATA}' STATUS:\\[\\d+\\] '0' DBID:\\[\\d+\\] \\S+"
     - id: 130004
+      category: Operational.Process Failure
       pattern: "LENGTH : \\S+ ACTION :\\[\\d+\\] '(?<data>.+)' DATABASE USER:\\[\\d+\\] '%{DATA}' PRIVILEGE :\\[\\d+\\] '%{DATA}' CLIENT USER:\\[\\d+\\] '%{USER:[Attachment][RawLog][Content][user][target][name]}' CLIENT TERMINAL:\\[\\d+\\] '%{DATA}' STATUS:\\[\\d+\\] '0' DBID:\\[\\d+\\] \\S+"
     - id: 130005
+      category: Operational.Process Failure
       pattern: "LENGTH: \\S+ SESSIONID:\\[\\d+\\] \\S+ ENTRYID:\\[\\d+\\] \\S+ STATEMENT:\\[\\d+\\] \\S+ USERID:\\[\\d+\\] \"%{DATA:[Attachment][RawLog][Content][user][target][name]}\" USERHOST:\\[\\d+\\] \"%{IPORHOST:[Attachment][RawLog][Content][host][address]}\" TERMINAL:\\[\\d+\\] %{NOTSPACE} ACTION:\\[\\d+\\] %{NOTSPACE} RETURNCODE:\\[\\d+\\] \"1031\" OBJ\\$NAME:\\[\\d+\\] \\S+ OS\\$USERID:\\[\\d+\\] \"%{USER:[Attachment][RawLog][Content][client][user][name]}\" DBID:\\[\\d+\\] \\S+"

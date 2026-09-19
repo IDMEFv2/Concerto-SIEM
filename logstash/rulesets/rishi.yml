@@ -10,12 +10,15 @@ ruleset:
         operands: "rishi"
   rules:
     - id: 30000
+      category: Operational.Process Failure
       pattern: "(?<rule_30000>)%{IP:[Attachment][RawLog][Content][source][address]}\\s+srcPort: %{POSINT:[Attachment][RawLog][Content][source][port]:int}\\s+dstIP: %{IP:[Attachment][RawLog][Content][destination][address]}\\s+dstPort: %{POSINT:[Attachment][RawLog][Content][destination][port]}\\s+Nick: %{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}\\s+Value: (?!0|1|2|3|4)(?<calcValue>\\d)"
       samples:
         - "2007-05-20 12:49:57,644 INFO srcIP: 129.13.x.y      srcPort: 1312   dstIP: 80.64.x.y    dstPort: 6666     Nick: myFunnyNick        Value: 5"
     - id: 30001
+      category: Operational.Process Failure
       pattern: "(?<rule_30001>)%{NOTSPACE:[Attachment][RawLog][Content][source][address]}\\s+srcPort: %{POSINT:[Attachment][RawLog][Content][source][port]:int}\\s+dstIP: %{NOTSPACE:[Attachment][RawLog][Content][destination][address]}\\s+dstPort: (?!6665|6666|6667|6668)%{POSINT:[Attachment][RawLog][Content][destination][port]}\\s+Nick: %{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}\\s+Value: (?<calcValue>0$|1$|2$|3$|4$)"
       samples:
         - "2007-05-20 12:49:57,644 INFO srcIP: 129.13.x.y      srcPort: 1312   dstIP: 80.64.x.y    dstPort: 1501   Nick: myFunnyNick        Value: 3"
     - id: 30002
+      category: Operational.Process Failure
       pattern: "(?<rule_30002>)%{NOTSPACE:[Attachment][RawLog][Content][source][address]}\\s+srcPort: %{POSINT:[Attachment][RawLog][Content][source][port]:int}\\s+dstIP: %{NOTSPACE:[Attachment][RawLog][Content][destination][address]}\\s+dstPort: (?!6665|6666|6667|6668)%{POSINT:[Attachment][RawLog][Content][destination][port]}\\s+Nick: %{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}\\s+Value: (?!0$|1$|2$|3$|4$|5$|6$|7$|8$|9$)(?<calcValue>\\d+)"

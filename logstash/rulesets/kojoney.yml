@@ -10,16 +10,21 @@ ruleset:
         operands: "SSH"
   rules:
     - id: 20000
+      category: Recon.Network
       pattern: "\\[SSHService ssh-userauth on SSHServerTransport,%{INT},%{IP:[Attachment][RawLog][Content][source][address]}\\] %{NOTSPACE:[Attachment][RawLog][Content][user][target][name]} trying auth password"
       samples:
         - "2007/04/12 21:57 CEST [SSHService ssh-userauth on SSHServerTransport,3,88.64.180.35] root trying auth password"
     - id: 20001
+      category: Access.Authorized
       pattern: "\\[SSHService ssh-userauth on SSHServerTransport,%{INT},%{IP:[Attachment][RawLog][Content][source][address]}\\] %{NOTSPACE:[Attachment][RawLog][Content][user][target][name]} authenticated with password"
       samples:
         - "2007/04/12 21:57 CEST [SSHService ssh-userauth on SSHServerTransport,3,88.64.180.35] root authenticated with password"
     - id: 20002
+      category: Recon.Network
       pattern: "\\[SSHChannel session \\(%{INT}\\) on SSHService ssh-connection on SSHServerTransport,%{INT:Id},%{IP:[Attachment][RawLog][Content][source][address]}\\] (executing .*|COMMAND .*)"
     - id: 20003
+      category: Recon.Network
       pattern: "\\[SSHChannel session \\(%{INT}\\) on SSHService ssh-connection on SSHServerTransport,%{INT:Id},%{IP:[Attachment][RawLog][Content][source][address]}\\] Saved the file (?<Path>.*) requested by the attacker"
     - id: 20004
+      category: Availability.Failure
       pattern: "\\[SSHChannel session \\(%{INT}\\) on SSHService ssh-connection on SSHServerTransport,%{INT},%{IP:[Attachment][RawLog][Content][source][address]}\\] Error downloading file (?<Path>.*) request by attacker"

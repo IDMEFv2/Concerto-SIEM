@@ -10,22 +10,30 @@ ruleset:
         operands: "ipfw"
   rules:
     - id: 800
+      category: Access.Unauthorized
       pattern: "\\d+ Deny (?=TCP|UDP)%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]} in via %{WORD:[Attachment][RawLog][Content][interface]}"
       samples:
         - "Feb  3 16:02:18 lhotse /kernel: ipfw: 65000 Deny UDP 200.65.7.49:1033 12.34.56.78:137 in via tun0"
     - id: 801
+      category: Access.Unauthorized
       pattern: "\\d+ Deny (?=TCP|UDP)%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]} out via %{WORD:[Attachment][RawLog][Content][interface]}"
       samples:
         - "Aug  4 10:57:26 r40e kernel: ipfw: 299 Deny TCP 1.2.3.4:49312 5.6.7.8:80 out via bge0"
     - id: 802
+      category: Access.Unauthorized
       pattern: "\\d+ Deny ICMP:%{INT:[Attachment][RawLog][Content][icmp][type1]}.%{INT:[Attachment][RawLog][Content][icmp][type2]} %{IP:[Attachment][RawLog][Content][source][address]} %{IP:[Attachment][RawLog][Content][destination][address]} in via %{WORD:[Attachment][RawLog][Content][interface]}"
     - id: 803
+      category: Access.Unauthorized
       pattern: "\\d+ Deny ICMP:%{INT:[Attachment][RawLog][Content][icmp][type1]}.%{INT:[Attachment][RawLog][Content][icmp][type2]} %{IP:[Attachment][RawLog][Content][source][address]} %{IP:[Attachment][RawLog][Content][destination][address]} out via %{WORD:[Attachment][RawLog][Content][interface]}"
     - id: 804
+      category: Access.Unauthorized
       pattern: "\\d+ Accept (?=TCP|UDP)%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]} in via %{WORD:[Attachment][RawLog][Content][interface]}"
     - id: 805
+      category: Access.Unauthorized
       pattern: "\\d+ Accept (?=TCP|UDP)%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]} out via %{WORD:[Attachment][RawLog][Content][interface]}"
     - id: 806
+      category: Access.Unauthorized
       pattern: "\\d+ Accept ICMP:%{INT:[Attachment][RawLog][Content][icmp][id1]}.%{INT:[Attachment][RawLog][Content][icmp][id2]} %{IP:[Attachment][RawLog][Content][source][address]} %{IP:[Attachment][RawLog][Content][destination][address]} in via %{WORD:[Attachment][RawLog][Content][interface]}"
     - id: 807
+      category: Access.Unauthorized
       pattern: "\\d+ Accept ICMP:%{INT:[Attachment][RawLog][Content][icmp][id1]}.%{INT:[Attachment][RawLog][Content][icmp][id2]} %{IP:[Attachment][RawLog][Content][source][address]} %{IP:[Attachment][RawLog][Content][destination][address]} out via %{WORD:[Attachment][RawLog][Content][interface]}"

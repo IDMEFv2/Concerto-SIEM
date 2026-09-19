@@ -18,10 +18,12 @@ ruleset:
             operands: "VIM-"
   rules:
     - id: 25200
+      category: Access.Unauthorized
       pattern: "-SYSTEM_MSG: pam_aaa:Authentication failed for user %{NOTSPACE:[Attachment][RawLog][Content][user][name]} from %{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}"
       samples:
         - "2012 Apr 14 02:05:09 ROUTER01901 %AUTHPRIV-3-SYSTEM_MSG: pam_aaa:Authentication failed for user admin from 10.10.27.222 – sshd[13983]"
     - id: 25201
+      category: Operational.Process Failure
       pattern: "-IF_ATTACHED: (Interface %{NOTSPACE:interface}.*)"
       samples:
         - "2011 Aug 03 10:21:02 BRA %VIM-5-IF_ATTACHED: Interface Vethernet44 is attached to Network Adapter 1 of BR-CIS-MOAG-06 on #port 20 of module 5 with dvport id 438"

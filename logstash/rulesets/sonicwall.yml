@@ -10,18 +10,24 @@ ruleset:
         operands: "id=firewall"
   rules:
     - id: 4600
+      category: Access.Unauthorized
       pattern: "fw=%{IP:ipAddr} pri=%{INT:priority} c=%{INT:category} m=%{INT:Id} msg=\"(?<message>.+)\" n=%{INT:Id1} usr=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]} src=%{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int}(?::%{NOTSPACE:port})?(?: dst=%{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}(?::%{NOTSPACE:port_})?)?$"
       samples:
         - "Mar 10 13:44:49 192.168.30.10 id=firewall sn=0006B11302A2 time=\"2006-03-10 13:44:50\" fw=216.123.166.2 pri=6 c=16 m=29 msg=\"Administrator login allowed\" n=40 usr=netadm src=192.168.30.57:0:X0 dst=192.168.30.10:443:X0"
     - id: 4601
+      category: Access.Unauthorized
       pattern: "fw=%{IP:ipAddr} pri=%{INT:priority} c=%{INT:category} m=%{INT:Id} msg=\"(?<message>.+)\" n=%{INT:Id1} src=%{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int}:%{NOTSPACE:Src} dst=%{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}:%{NOTSPACE:Dst1} mac=%{MAC:macAddr}$"
       samples:
         - "Mar 10 16:14:21 192.168.30.10 id=firewall sn=0006B11302A2 time=\"2006-03-10 16:14:22\" fw=216.123.166.2 pri=1 c=32 m=23 msg=\"IP spoof dropped\" n=64224 src=192.168.85.94:123:X0 dst=192.5.41.209:123:X1 mac=00:d0:ff:8b:8f:fc"
     - id: 4602
+      category: Access.Unauthorized
       pattern: "fw=%{IP:ipAddr} pri=%{INT:priority} c=%{INT:category} m=%{INT:Id} msg=\"(?<message>.+)\" n=%{INT:Id1} src=%{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int}:%{NOTSPACE:Src} dst=%{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]} dstname=\"(?<dstName>.+)\""
     - id: 4603
+      category: Access.Unauthorized
       pattern: "fw=%{IP:ipAddr} pri=%{INT:priority} c=%{INT:category} m=%{INT:Id} msg=\"(?<message>.+)\" n=%{INT:Id1} src=%{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int}:%{NOTSPACE:Src} dst=%{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}:%{NOTSPACE:Dst1} proto=(\\S+)$"
     - id: 4604
+      category: Availability.DoS
       pattern: "fw=%{IP:ipAddr} pri=%{INT:priority} c=%{INT:category} m=%{INT:Id} msg=\"Possible SYN Flood on IF %{NOTSPACE:name} - src: %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} dst: %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}\" n=%{NOTSPACE:id}$"
     - id: 4605
+      category: Recon.Network
       pattern: "fw=%{IP:ipAddr} pri=%{INT:priority} c=%{INT:category} m=%{INT:Id} msg=\"Possible port scan dropped\" n=%{NOTSPACE:id} src=%{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int}:%{NOTSPACE:idSrc} dst=%{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}:%{NOTSPACE:idDst}$"

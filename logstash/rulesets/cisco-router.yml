@@ -10,16 +10,21 @@ ruleset:
         operands: "^[A-Z0-9_]+-\\.+-[A-Z0-9_]$"
   rules:
     - id: 5600
+      category: Access.Unauthorized
       pattern: "SEC-6-IPACCESSLOGP: list %{DATA:data} denied (udp|tcp) %{IP:[Attachment][RawLog][Content][source][address]}\\.%{INT:number}\\. -> %{IP:[Attachment][RawLog][Content][destination][address]}\\.%{POSINT:[Attachment][RawLog][Content][destination][port]:int}\\., %{INT:count} %{GREEDYDATA:text}"
       samples:
         - "Sep 23 07:30:41 gate 301270: 5d17h: %SEC-6-IPACCESSLOGP: list 101 denied tcp 1.2.3.4(1929) -> 5.6.7.8(80), 1 packet"
     - id: 5601
+      category: Malware.Other
       pattern: "RCMD-4-RSHPORTATTEMPT:.* from %{IP:[Attachment][RawLog][Content][source][address]}$"
       samples:
         - "Apr 11 20:13:49 wormhole.flash.net 2279: %RCMD-4-RSHPORTATTEMPT: Attempted to connect to RSHELL from 1.2.3.4"
     - id: 5602
+      category: Availability.Failure
       pattern: "%LINEPROTO-5-UPDOWN: Line protocol on Interface %{NOTSPACE:interface_name}, changed state to (down|up)"
     - id: 5603
+      category: Operational.Process Failure
       pattern: "%CRYPTO-6-IKMP_UNK_EXCHANGE: IKE peer at %{IP:[Attachment][RawLog][Content][source][address]} %{GREEDYDATA:data} sent a message with unknown %{GREEDYDATA:text}"
     - id: 5604
+      category: Operational.Process Failure
       pattern: "%IDS-4-(\\.+)_SIG: Sig:%{INT:port}:%{DATA:data} - from %{IP:[Attachment][RawLog][Content][source][address]} to %{IP:[Attachment][RawLog][Content][destination][address]}"

@@ -10,18 +10,24 @@ ruleset:
         operands: "ulogd"
   rules:
     - id: 700
+      category: Access.Unauthorized
       pattern: "%{WORD:status} DENY (.*) PROTO=6 %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}"
       samples:
         - "May 14 11:03:57 gateway kernel: Packet log: input DENY eth0 PROTO=6 1.2.3.4:3894 5.6.7.8:10008 L=60 S=0x00 I=50210 F=0x4000 T=48"
     - id: 701
+      category: Access.Unauthorized
       pattern: "%{WORD:status} DENY (.*) PROTO=17 %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}"
       samples:
         - "May 14 11:03:57 gateway kernel: Packet log: input DENY eth0 PROTO=17 1.2.3.4:67 5.6.7.8:68 L=328 S=0x01 I=35569 F=0x4000 T=64 (#3)"
     - id: 702
+      category: Access.Unauthorized
       pattern: "%{WORD:ruleid} DENY (.*) PROTO=1 %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}"
     - id: 703
+      category: Access.Unauthorized
       pattern: "%{WORD:ruleid} ACCEPT (.*) PROTO=6 %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}"
     - id: 704
+      category: Access.Unauthorized
       pattern: "%{WORD:ruleid} ACCEPT (.*) PROTO=17 %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}"
     - id: 705
+      category: Access.Unauthorized
       pattern: "%{WORD:ruleid} ACCEPT (.*) PROTO=1 %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}"

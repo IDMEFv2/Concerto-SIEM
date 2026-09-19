@@ -10,10 +10,12 @@ ruleset:
         operands: "@Group:"
   rules:
     - id: 2000
+      category: Access.Unauthorized
       pattern: "(?<interface>[wl]an) @Group:Rule=(?<acl>\\d+:\\d+) b %{IP:[Attachment][RawLog][Content][source][address]},%{WORD:size} -> %{IP:[Attachment][RawLog][Content][destination][address]},%{WORD:dstsize}    PR %{NOTSPACE:[Attachment][RawLog][Content][network][transport]} len %{INT:id1} %{INT:id2} %{NOTSPACE:data} %{INT:id3} %{INT:id4} %{INT:id5} (IN|OUT)"
       samples:
         - "Apr 27 02:55:31 81.2.127.129 r00t3r: 295:34:52.730 lan @Group:Rule=0:10 b 200.187.15.1,18775 -> 81.2.127.129,www    PR tcp len 20 48 -S 895123185 0 16384 IN"
     - id: 2001
+      category: Access.Unauthorized
       pattern: "([wl]an) @Group:Rule=(?<acl>\\d+:\\d+) b %{IP:[Attachment][RawLog][Content][source][address]} -> %{IP:[Attachment][RawLog][Content][destination][address]}\\s+PR icmp len %{INT:id1} %{INT:id2} icmp %{INT:id1}/%{INT:id2} (IN|OUT)"
       samples:
         - "Apr 27 00:38:25 81.2.127.129 r00t3r: 293:17:47.390 lan @Group:Rule=0:10 b 66.112.44.26 -> 81.2.127.142    PR icmp len 20 28 icmp 8/0 IN"

@@ -14,7 +14,7 @@ ruleset:
       author: ["CS GROUP - France"]
       license: LGPL
       version: '1.0'
-      category: Authentication
+      category: Access.Unauthorized
       description: Failure SSH login
       outcome: failure
       pattern: "Failed password for %{USERNAME:[Attachment][RawLog][Content][destination][user][name]} from %{IPORHOST:[Attachment][RawLog][Content][source][address]} port %{POSINT:[Attachment][RawLog][Content][source][port]:int}"
@@ -23,46 +23,55 @@ ruleset:
       copy:
         "[Attachment][RawLog][Content][related][user]": "[Attachment][RawLog][Content][destination][user][name]"
     - id: 1904
+      category: Access.Unauthorized
       pattern: "(Illegal|Invalid) user (?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][destination][user][name]} from %{IPORHOST:[Attachment][RawLog][Content][source][address]}"
       outcome: "failure"
       samples:
         - "Jan 20 14:10:02 blah sshd[25443]: Invalid user admin from 213.201.222.134"
     - id: 1905
+      category: Access.Unauthorized
       pattern: "User (?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][destination][user][name]} not allowed because"
       outcome: "failure"
       samples:
         - "Jan  6 22:50:24 localhost sshd[15489]: User nobody not allowed because none of user's groups are listed in AllowGroups"
     - id: 1906
+      category: Recon.Network
       pattern: "Did not receive identification string from %{IPORHOST:[Attachment][RawLog][Content][source][address]}"
       samples:
         - "Jun 10 09:51:57 server sshd[9100]: Did not receive identification string from 1.2.3.4"
     - id: 1908
+      category: Access.Authorized
       pattern: "Accepted %{NOTSPACE:[Attachment][RawLog][Content][SSH][auth_method]} for (?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][destination][user][name]} from %{IPORHOST:[Attachment][RawLog][Content][source][address]} port %{POSINT:[Attachment][RawLog][Content][source][port]:int} ssh2"
       outcome: "success"
       samples:
         - "Dec  8 14:45:17 itguxweb1 sshd[32112]: Accepted publickey for root from 12.34.56.78 port 56634 ssh2"
     - id: 1909
+      category: Access.Unauthorized
       pattern: "(?=ROOT)(?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][destination][user][name]} LOGIN REFUSED FROM %{IPORHOST:[Attachment][RawLog][Content][source][address]}"
       outcome: "failure"
       samples:
         - "Jan  5 01:31:41 www sshd[1643]: ROOT LOGIN REFUSED FROM 1.2.3.4"
     - id: 1910
+      category: Access.Unauthorized
       pattern: "input_userauth_request: (invalid|illegal) user (?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][destination][user][name]}"
       outcome: "failure"
       samples:
         - "Jan 14 08:19:21 ras sshd[22774]: input_userauth_request: invalid user remote-mail"
     - id: 1911
+      category: Access.Unauthorized
       pattern: "input_userauth_request: %{GREEDYDATA:[Attachment][RawLog][Content][event][reason]}"
       outcome: "failure"
       samples:
         - "Jan 14 08:19:21 ras sshd[22774]: input_userauth_request: invalid user remote-mail"
     - id: 1912
+      category: Access.Unauthorized
       pattern: "Failed %{NOTSPACE:[Attachment][RawLog][Content][SSH][auth_method]} for (invalid|illegal) user (?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][destination][user][name]} from %{IPORHOST:[Attachment][RawLog][Content][source][address]} port %{POSINT:[Attachment][RawLog][Content][source][port]:int} ssh2"
       outcome: "failure"
       samples:
         - "Mar  1 12:13:22 rhel7 sshd[70149]: Failed password for invalid user goro from 192.168.133.128 port 55662 ssh2"
         - "Jan 14 11:29:17 ras sshd[18163]: Failed publickey for invalid user fred from fec0:0:201::3 port 62788 ssh2"
     - id: 1914
+      category: Access.Unauthorized
       pattern: "error: PAM: Authentication failure for (?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][destination][user][name]} from %{IPORHOST:[Attachment][RawLog][Content][source][address]}"
       outcome: "failure"
       samples:

@@ -10,28 +10,39 @@ ruleset:
         operands: "honeyd"
   rules:
     - id: 2600
+      category: Recon.Network
       pattern: "Killing attempted connection: (?=tcp|udp)%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} \\(%{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} - %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}\\)"
       samples:
         - "Dec 30 20:09:03 hacklab honeyd[5711]: Killing attempted connection: tcp (127.0.0.1:46190 - 192.168.1.20:646)"
     - id: 2601
+      category: Recon.Network
       pattern: "Connection to closed port: (?=tcp|udp)%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} \\(%{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} - %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}\\)"
       samples:
         - "Dec 30 20:09:05 hacklab honeyd[5711]: Connection to closed port: udp (127.0.0.1:37806 - 192.168.1.20:1)"
     - id: 2602
+      category: Recon.Network
       pattern: "Killing unknown connection: (?=tcp|udp)%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} \\(%{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} - %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}\\)"
     - id: 2603
+      category: Recon.Network
       pattern: "Sending ICMP Echo Reply: %{IP:[Attachment][RawLog][Content][source][address]} -> %{IP:[Attachment][RawLog][Content][destination][address]}"
     - id: 2604
+      category: Recon.Network
       pattern: "Connection established: %{IP:[Attachment][RawLog][Content][source][address]} -> proxy to %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]:int}"
     - id: 2605
+      category: Recon.Network
       pattern: "Connection established: %{IP:[Attachment][RawLog][Content][source][address]} -> subsystem \\\"(?<dst>.*)\\\""
     - id: 2606
+      category: Recon.Network
       pattern: "Connection established: subsystem \\\"(?<Src>.*)\\\" -> %{IP:[Attachment][RawLog][Content][destination][address]}"
     - id: 2607
+      category: Recon.Network
       pattern: "Switching to polling mode"
     - id: 2608
+      category: Recon.Network
       pattern: "Subsystem \\\"(.*)\\\" died"
     - id: 2609
+      category: Recon.Network
       pattern: "Subsystem (?<System>.*) on (?<interface>.*) attempts illegal bind %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]:int}"
     - id: 2610
+      category: Availability.HeartBeat
       pattern: "listening on %{NOTSPACE:interface}:"

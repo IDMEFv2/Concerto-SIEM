@@ -10,14 +10,18 @@ ruleset:
         operands: "MSM-A"
   rules:
     - id: 20101
+      category: Access.Authorized
       pattern: "Login passed for user %{NOTSPACE:[Attachment][RawLog][Content][user][name]} through %{NOTSPACE:[Attachment][RawLog][Content][network][protocol]} \\(%{IPORHOST:[Attachment][RawLog][Content][destination][address]}\\)"
       samples:
         - "Oct 23 04:06:16 192.168.1.1 AAA: MSM-A: Login passed for user userName through telnet (192.168.1.2)"
     - id: 20102
+      category: Operational.Process Failure
       pattern: "User %{NOTSPACE:[Attachment][RawLog][Content][user][name]} logout from %{NOTSPACE:[Attachment][RawLog][Content][network][protocol]} \\(%{IPORHOST:[Attachment][RawLog][Content][source][address]}\\)"
       samples:
         - "Oct 25 07:59:48 192.168.1.1 AAA: MSM-A: User userName logout from telnet (192.168.1.2)"
     - id: 20103
+      category: Availability.Failure
       pattern: "Port %{NOTSPACE:interfaceport} link down"
     - id: 20104
+      category: Operational.Process Failure
       pattern: "%{IPORHOST:[Attachment][RawLog][Content][source][address]} \\(%{DATA:[Attachment][RawLog][Content][network][protocol]}\\) %{WORD:[Attachment][RawLog][Content][user][name]}: upload configuration %{NOTSPACE} %{NOTSPACE:file}"

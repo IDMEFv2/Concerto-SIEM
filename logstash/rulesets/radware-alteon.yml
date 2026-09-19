@@ -10,20 +10,27 @@ ruleset:
         operands: "WebOS"
   rules:
     - id: 168000100
+      category: Access.Unauthorized
       pattern: "Failed login attempt via %{NOTSPACE:[Attachment][RawLog][Content][network][protocol]} from host %{NOTSPACE:[Attachment][RawLog][Content][source][address]}"
       samples:
         - "Mar 16  7:26:32 223.88.134.6 NOTICE  WebOS <telnet/ssh-1>: Failed login attempt via TELNET from host 223.88.134.6"
     - id: 168000101
+      category: Access.Unauthorized
       pattern: "%{NOTSPACE:[Attachment][RawLog][Content][user][name]} login from host %{NOTSPACE:[Attachment][RawLog][Content][source][address]}"
       samples:
         - "Mar 16  7:26:32 223.88.134.6 NOTICE  WebOS <telnet/ssh-1>: Failed login attempt via TELNET from host 223.88.134.6"
     - id: 168000200
+      category: Operational.Process Failure
       pattern: "virtual router\\s+%{NOTSPACE:[Attachment][RawLog][Content][destination][address]} is now MASTER"
     - id: 168000201
+      category: Operational.Process Failure
       pattern: "real service %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} operational"
     - id: 168000202
+      category: Operational.Process Failure
       pattern: "real server %{IP:[Attachment][RawLog][Content][destination][address]} operational"
     - id: 168000203
+      category: Operational.Process Failure
       pattern: "cannot contact real service %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]:int}"
     - id: 168000204
+      category: Operational.Process Failure
       pattern: "cannot contact real server %{IP:[Attachment][RawLog][Content][destination][address]}"

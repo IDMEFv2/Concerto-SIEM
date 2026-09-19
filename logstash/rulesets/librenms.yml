@@ -18,10 +18,12 @@ ruleset:
             operands: "poller.php"
   rules:
     - id: 25500
+      category: Availability.Failure
       pattern: "new \\S+ \\S+ - (?<id>[1-9]\\d*) devices discovered"
       samples:
         - "/opt/librenms/discovery.php new 2015-12-17 02:05:01 - 0 devices discovered in 0.015 secs"
     - id: 25501
+      category: Availability.Failure
       pattern: "\\d+ \\S+ \\S+ - (?<id>[1-9]\\d*) devices polled"
       samples:
         - "/opt/librenms/poller.php 2 2015-12-17 02:05:03 - 1 devices polled in 1.647 secs"

@@ -18,22 +18,30 @@ ruleset:
             operands: "ulogd"
   rules:
     - id: 4800
+      category: Availability.HeartBeat
       pattern: "bonding:\\s%{WORD:[Attachment][RawLog][Content][bonding][belong]}:\\s%{WORD:[Attachment][RawLog][Content][bonding][type]}\\sinterface\\s%{WORD:[Attachment][RawLog][Content][bonding][interfaceName]}\\sis\\snow\\s%{WORD:[Attachment][RawLog][Content][bonding][status]}"
       samples:
         - "Aug 24 00:54:18 blah kernel: bonding: bond0: backup interface eth0 is now up"
     - id: 4801
+      category: Availability.Failure
       pattern: "bonding:\\s%{WORD:[Attachment][RawLog][Content][bonding][belong]}:\\slink\\sstatus\\s%{WORD:[Attachment][RawLog][Content][bonding][status]}\\sfor\\s%{WORD:[Attachment][RawLog][Content][bonding][action]}\\sinterface\\s%{WORD:[Attachment][RawLog][Content][bonding][interfaceName]},\\s%{WORD:[Attachment][RawLog][Content][bonding][level]}\\sit"
       samples:
         - "Aug 24 00:54:18 blah kernel: bonding: bond0: link status down for active interface eth0, disabling it"
     - id: 4802
+      category: Availability.Failure
       pattern: "bonding:\\s%{WORD:[Attachment][RawLog][Content][bonding][Src]}:\\smaking\\sinterface\\s%{WORD:[Attachment][RawLog][Content][bonding][interfaceName]}\\sthe\\snew\\s%{WORD:[Attachment][RawLog][Content][bonding][status]}\\sone"
     - id: 4803
+      category: Availability.Failure
       pattern: "bonding:\\s%{WORD:[Attachment][RawLog][Content][bonding][Src]}:\\s%{WORD:[Attachment][RawLog][Content][bonding][interfaceName]}\\sis\\s%{WORD:[Attachment][RawLog][Content][bonding][action]}\\sand\\snow\\sthe\\s%{WORD:[Attachment][RawLog][Content][bonding][status]}\\sinterface"
     - id: 4804
+      category: Recon.Network
       pattern: "bonding:\\sARP\\smonitoring\\sset\\sto\\s%{INT:[Attachment][RawLog][Content][bonding][arp_interval]}\\sms\\swith\\s(\\d)\\starget\\(s\\):\\s%{IP:[Attachment][RawLog][Content][destination][address]}"
     - id: 4805
+      category: Availability.Failure
       pattern: "bonding:\\s%{WORD:[Attachment][RawLog][Content][bonding][src]}:\\senslaving\\s%{WORD:[Attachment][RawLog][Content][bonding][Interface]}\\sas\\san?\\s%{WORD:[Attachment][RawLog][Content][bonding][status]}\\sinterface\\swith\\san\\s%{WORD:[Attachment][RawLog][Content][bonding][action]}\\slink"
     - id: 4806
+      category: Availability.Failure
       pattern: "bonding:\\s%{WORD:[Attachment][RawLog][Content][bonding][Interface]}:\\sreleased\\sall\\sslaves"
     - id: 4807
+      category: Access.Unauthorized
       pattern: "bonding:\\sWarning:\\sfailed\\sto\\sget\\sspeed/duplex\\sfrom\\s%{WORD:[Attachment][RawLog][Content][bonding][Interface]},\\sspeed\\sforced\\sto\\s%{WORD:[Attachment][RawLog][Content][bonding][speed]},\\sduplex\\sforced\\sto\\s%{WORD:[Attachment][RawLog][Content][bonding][duplex]}"

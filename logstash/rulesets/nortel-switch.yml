@@ -18,164 +18,243 @@ ruleset:
             operands: "SNMP"
   rules:
     - id: 16001
+      category: Operational.Process Failure
       pattern: "smltRemote\\sis\\sFalse\\sfor\\sthis\\smac\\s=%{MAC:macAddr}<000>"
       samples:
         - "MLT INFO smltRemote is False for this mac =00:e0:00:c5:1f:26<000>"
     - id: 16002
+      category: Access.Unauthorized
       pattern: "request\\s+received\\sfrom\\s(?<srcAddr>[\\w\\.-]+)\\s+with\\sinvalid\\sauthorization\\s(.*)\\s<000>"
       samples:
         - "SNMP INFO request  received from 10.10.31.254  with invalid authorization <NULL> <000>"
     - id: 16003
+      category: Operational.Process Failure
       pattern: "request\\s+received\\sfrom\\s(?<srcAddr>[\\w\\.-]+)\\s+with\\sunknown\\scommunity\\sstring\\spublic\\s<000>"
     - id: 16004
+      category: Operational.Process Failure
       pattern: "SSH.*\\sNew\\sconnection\\sfrom\\sip\\s%{IP:[Attachment][RawLog][Content][source][address]}\\sport\\s%{POSINT:[Attachment][RawLog][Content][source][port]:int}<000>"
     - id: 16005
+      category: Operational.Process Failure
       pattern: "kex:chosen\\salgorithms\\sfor\\s\\(client->server\\):\\sencryption:(?<encr>.*)\\smac:(?<smac>.*)\\scompression:(?<comp>.*)<000>"
     - id: 16006
+      category: Operational.Process Failure
       pattern: "kex:chosen\\salgorithms\\sfor\\s\\(server->client\\):\\sencryption:(.*)\\smac:(.*)\\scompression:(.*)<000>"
     - id: 16007
+      category: Access.Authorized
       pattern: "Accepted\\spassword\\sfor\\sROOT\\sfrom\\s%{IP:[Attachment][RawLog][Content][source][address]}\\sport\\s%{POSINT:[Attachment][RawLog][Content][source][port]:int}\\s*"
     - id: 16008
+      category: Operational.Process Failure
       pattern: "User\\s(?<userName>.*)\\slogout<000>"
     - id: 16009
+      category: Operational.Process Failure
       pattern: "User\\s%{NOTSPACE:user}\\slogin\\s(?<tty>.*)\\sfrom\\s%{IP:[Attachment][RawLog][Content][source][address]}<000>"
     - id: 16010
+      category: Operational.Process Failure
       pattern: "SMLT\\s%{INT:id}\\sUP<000>"
     - id: 16011
+      category: Availability.Failure
       pattern: "SMLT\\s%{INT:id}\\sDOWN<000>"
     - id: 16012
+      category: Operational.Process Failure
       pattern: "Smlt\\sLink\\sUp\\sTrap\\(SmltId=%{INT:Id}\\)<000>"
     - id: 16013
+      category: Availability.Failure
       pattern: "Smlt\\sLink\\sDown\\sTrap\\(SmltId=%{INT:Id}\\)<000>"
     - id: 16014
+      category: Operational.Process Failure
       pattern: "WARNING\\s2k\\stemperature\\(Temperature=%{INT:degreTemp}\\)<000>"
     - id: 16015
+      category: Operational.Process Failure
       pattern: "INFO\\s2k\\stemperature\\(Temperature=%{INT:degreTemp}\\)<000>"
     - id: 16016
+      category: Operational.Process Failure
       pattern: "Link\\sUp\\((?<interfaceId>[\\d/]+)\\)<000>"
     - id: 16017
+      category: Availability.Failure
       pattern: "Link\\sDown\\((?<interfaceId>[\\d/]+)\\)<000>"
     - id: 16018
+      category: Operational.Process Failure
       pattern: "Port\\s(?<port>[\\d/]+)\\sis\\sa\\strunk\\sport<000>"
     - id: 16019
+      category: Operational.Process Failure
       pattern: "new\\ssession\\slogin<000>"
     - id: 16020
+      category: Operational.Process Failure
       pattern: "session\\slogout<000>"
     - id: 16021
+      category: Access.Authorized
       pattern: "Save\\sconfig\\ssuccessful.<000>"
     - id: 16022
+      category: Access.Authorized
       pattern: "Save\\sconfig\\sfile\\s%{NOTSPACE:filePath}\\s*successful.<000>"
     - id: 16023
+      category: Access.Unauthorized
       pattern: "HwCheck:\\sFad\\sCRR\\sFailed,\\sReset\\sswip.\\sTotal=%{INT:totalId}<000>"
     - id: 16024
+      category: Access.Authorized
       pattern: "Save\\sconfig\\sto\\sfile\\s%{NOTSPACE:filePath}\\ssuccessful.<000>"
     - id: 16025
+      category: Access.Authorized
       pattern: "Save\\sto\\sstandby\\sfile\\s(.*)\\s+successful.<000>"
     - id: 16026
+      category: Availability.HeartBeat
       pattern: "Restarting\\sTCP\\sslow\\stimer.<000>"
     - id: 16027
+      category: Access.Unauthorized
       pattern: "Authentication\\sFailure\\sTrap"
     - id: 16028
+      category: Operational.Process Failure
       pattern: "Stack Mgr:\\sNon-Ring:\\s(.*)"
     - id: 16029
+      category: Operational.Process Failure
       pattern: "Stack Mgr:\\sRing:\\s(.*)"
     - id: 16030
+      category: Operational.Process Failure
       pattern: "Link\\sUp\\sTrap\\sfor\\sUnit/Port:\\s*(?<port>[\\d/\\s]+)"
     - id: 16031
+      category: Operational.Process Failure
       pattern: "Link\\sUp\\sTrap\\sfor\\sPort:\\s*(?<port>[\\d/\\s]+)"
     - id: 16032
+      category: Operational.Process Failure
       pattern: "Link\\sUp\\sTrap\\sfor\\sMLT/LAG\\s*%{INT:trap}\\s*\\(ifIndex\\):\\s%{INT:Id}"
     - id: 16033
+      category: Availability.Failure
       pattern: "Link\\sDown\\sTrap\\sfor\\sUnit/Port:\\s*(?<portUnit>[\\d/\\s]+)"
     - id: 16034
+      category: Availability.Failure
       pattern: "Link Down Trap for Port: *(?<port>[\\d/\\s]+)"
     - id: 16035
+      category: Availability.Failure
       pattern: "Link Down Trap for MLT/LAG *%{INT:Number} *(ifIndex): %{INT:indexId}"
     - id: 16036
+      category: Operational.Process Failure
       pattern: "PoE Port Detection Status: Port (?<port>[\\d/]+) Status: (?<status>.*)"
     - id: 16037
+      category: Operational.Process Failure
       pattern: "Trap: bsnConfigurationSavedToNvram"
     - id: 16038
+      category: Access.Authorized
       pattern: "Successful connection from IP address: %{IP:[Attachment][RawLog][Content][source][address]}"
     - id: 16039
+      category: Access.Authorized
       pattern: "Session opened from IP address: %{IP:[Attachment][RawLog][Content][source][address]}, access mode: (?<mode>.*)"
     - id: 16040
+      category: Operational.Process Failure
       pattern: "Session closed \\((.*)\\), IP address: %{IP:[Attachment][RawLog][Content][source][address]}, access mode: (?<mode>.*)"
     - id: 16041
+      category: Operational.Process Failure
       pattern: "Connection closed \\((?<desc>.*)\\), IP address: %{IP:[Attachment][RawLog][Content][source][address]}"
     - id: 16042
+      category: Operational.Process Failure
       pattern: "ssh\\((?<srcAddr>[\\w\\.-]*)\\): %{INT:Num} days, (?<date>[\\d:]+): (?<status>.*)"
     - id: 16043
+      category: Operational.Process Failure
       pattern: "Web server starts service on port %{INT:port}."
     - id: 16044
+      category: Operational.Process Failure
       pattern: "AUR - Info: (?<desc>.*)"
     - id: 16045
+      category: Operational.Process Failure
       pattern: "AUR - Warning: (?<desc>.*)"
     - id: 16046
+      category: Availability.Failure
       pattern: "Stack port (?<port>[\\d/]+) DOWN"
     - id: 16047
+      category: Availability.HeartBeat
       pattern: "Stack port (?<port>[\\d/]+) UP"
     - id: 16048
+      category: Operational.Process Failure
       pattern: "Trap: pethPsePortOnOffNotification"
     - id: 16049
+      category: Operational.Process Failure
       pattern: "Trap: s5CtrProblem"
     - id: 16050
+      category: Access.Unauthorized
       pattern: "Trap: bsnLoginFailure"
     - id: 16051
+      category: Access.Unauthorized
       pattern: "Unauthorized connection attempt from IP address: %{IP:[Attachment][RawLog][Content][source][address]} by (?<status>.*)."
     - id: 16052
+      category: Operational.Process Failure
       pattern: "Disallowed connection attempt from IP address: %{IP:[Attachment][RawLog][Content][source][address]}"
     - id: 16053
+      category: Access.Unauthorized
       pattern: "Failed login from IP address: (?<srcAddr>[\\w\\.-]+)"
     - id: 16054
+      category: Operational.Process Failure
       pattern: "stack manager event JOIN_STACK \\(module id = %{INT:Id}\\)"
     - id: 16055
+      category: Operational.Process Failure
       pattern: "IGMP: Unknown Multicast Filter disabled"
     - id: 16056
+      category: Operational.Process Failure
       pattern: "MODULE_INACTIVE event sent, unit mask (?<unitMask>.*), appl mask (?<applMask>.*)"
     - id: 16057
+      category: Operational.Process Failure
       pattern: "BECOME_TEMP_BU event sent, unit mask (?<unitMask>.*), appl mask (?<applMask>.*)"
     - id: 16058
+      category: Operational.Process Failure
       pattern: "Trap: s5CtrUnitUp"
     - id: 16059
+      category: Operational.Process Failure
       pattern: "Trap: entConfigChange"
     - id: 16060
+      category: Operational.Process Failure
       pattern: "SSL server reset"
     - id: 16061
+      category: Operational.Process Failure
       pattern: "SSL certificate expired"
     - id: 16062
+      category: Access.Unauthorized
       pattern: "TLS handshake failure"
     - id: 16063
+      category: Access.Unauthorized
       pattern: "Unauthorized SSH key detected"
     - id: 16064
+      category: Operational.Process Failure
       pattern: "Hardware temperature exceeded threshold"
     - id: 16065
+      category: Access.Unauthorized
       pattern: "Fan failure detected in unit (?<unit>[\\d]+)"
     - id: 16066
+      category: Operational.Process Failure
       pattern: "CPU utilization exceeded (?<percent>[\\d]+)%"
     - id: 16067
+      category: Operational.Process Failure
       pattern: "Memory usage exceeded (?<percent>[\\d]+)%"
     - id: 16068
+      category: Availability.Failure
       pattern: "Disk space critical: (?<space>[\\d]+)MB remaining"
     - id: 16069
+      category: Access.Unauthorized
       pattern: "Power supply failure in unit (?<unit>[\\d]+)"
     - id: 16070
+      category: Availability.HeartBeat
       pattern: "SNMP agent restarted"
     - id: 16071
+      category: Operational.Process Failure
       pattern: "Configuration rollback initiated"
     - id: 16072
+      category: Availability.HeartBeat
       pattern: "Firmware upgrade started"
     - id: 16073
+      category: Access.Authorized
       pattern: "Firmware upgrade completed successfully"
     - id: 16074
+      category: Access.Unauthorized
       pattern: "Firmware upgrade failed"
     - id: 16075
+      category: Operational.Process Failure
       pattern: "System reboot initiated by (?<source>.*)"
     - id: 16076
+      category: Access.Authorized
       pattern: "System reboot completed successfully"
     - id: 16077
+      category: Access.Unauthorized
       pattern: "NTP synchronization failed"
     - id: 16078
+      category: Operational.Process Failure
       pattern: "Clock drift detected, offset: (?<offset>[\\d]+) seconds"
     - id: 16079
+      category: Access.Unauthorized
       pattern: "License validation failed"

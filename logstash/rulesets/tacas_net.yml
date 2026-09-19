@@ -10,24 +10,33 @@ ruleset:
         operands: "tacacs"
   rules:
     - id: 120001
+      category: Operational.Policy Violation
       pattern: "\\[%{IP:src}:%{INT:srcPort}\\] No authorization entry found for %{IP:[Attachment][RawLog][Content][source][address]} %{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}"
       samples:
         - "Mar 14 11:17:02 server1 tacacs_system: <94> 2016-03-14 11:17:00 [10.9.182.70:39266] No authorization entry found for 10.9.182.70 user1"
     - id: 120002
+      category: Access.Unauthorized
       pattern: "\\[%{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int}\\] AD:The credentials are incorrect\\-%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}: %{NOTSPACE:Ident} LdapErr: %{NOTSPACE:status}, comment: AcceptSecurityContext error"
       samples:
         - "Mar 14 11:17:50 server1 tacacs_system: <94> 2016-03-14 11:17:49 [10.9.182.70:38813] AD:The credentials are incorrect-user1: 80090308: LdapErr: DSID-0C0903A9, comment: AcceptSecurityContext error, data 52e, v1db1"
     - id: 120003
+      category: Operational.Policy Violation
       pattern: "\\[%{IP:src}:%{INT:srcPort}\\] %{NOTSPACE:srcAddr} %{NOTSPACE:dstAddr} NAS_IP=%{NOTSPACE:[Attachment][RawLog][Content][source][address]} Port=%{NOTSPACE:port} rem_addr=%{IP:[Attachment][RawLog][Content][destination][address]} User=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]} Flags=Start start_time=%{NOTSPACE:time} service=%{NOTSPACE:service}"
     - id: 120004
+      category: Operational.Policy Violation
       pattern: "\\[%{IP:src}:%{INT:srcPort}\\] %{NOTSPACE:srcAddr} %{NOTSPACE:dstAddr} NAS_IP=%{IP:[Attachment][RawLog][Content][source][address]} Port=%{NOTSPACE:port} rem_addr=%{IP:ipAddr} User=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]} Flags=Stop service=%{NOTSPACE:service} cmd=(?<command>.+)"
     - id: 120005
+      category: Access.Unauthorized
       pattern: "User=The command '(?<data>.+)' is not authorized for user %{NOTSPACE:user} and client %{IP:[Attachment][RawLog][Content][source][address]}"
     - id: 120006
+      category: Access.Unauthorized
       pattern: "\\[%{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int}\\] Local file Authentication result: user\\-%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]} specified in  group DEFAULT=InvalidUserOrPassword"
     - id: 120007
+      category: Operational.Policy Violation
       pattern: "\\[%{IP:src}:%{INT:srcPort}\\] %{NOTSPACE:srcAddr} %{NOTSPACE:dstAddr} NAS_IP=%{IP:[Attachment][RawLog][Content][source][address]} Port=%{NOTSPACE:port} rem_addr=%{IP:[Attachment][RawLog][Content][destination][address]} User=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]} Flags=%{NOTSPACE:flag} protocol=%{NOTSPACE:[Attachment][RawLog][Content][network][transport]} start_time=%{NOTSPACE:time}"
     - id: 120008
+      category: Operational.Policy Violation
       pattern: "\\[%{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int}\\] Command (?<data>.+) passed  expression .+, Allow=True"
     - id: 120009
+      category: Operational.Policy Violation
       pattern: "\\[%{IP:src}:%{INT:srcPort}\\] %{NOTSPACE:srcAddr} %{NOTSPACE:dstAddr} NAS_IP=%{IP:[Attachment][RawLog][Content][source][address]} Port=%{NOTSPACE:port} rem_addr=%{IP:[Attachment][RawLog][Content][destination][address]} User=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]} Flags=%{NOTSPACE:flag} task_id=%{NOTSPACE:task_id} timezone=%{NOTSPACE:time} service=%{NOTSPACE:[Attachment][RawLog][Content][network][protocol]}"

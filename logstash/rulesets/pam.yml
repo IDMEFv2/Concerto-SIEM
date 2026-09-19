@@ -18,16 +18,19 @@ ruleset:
             operands: "PAM"
   rules:
     - id: 1
+      category: Access.Authorized
       pattern: "session opened for user (?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][user][effective][name]} by (?:(?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][user][name]]})?\\(uid=%{NONNEGINT:[Attachment][RawLog][Content][user][id]}\\)"
       samples:
         - "Aug 14 17:32:19 blah su(pam_unix)[17944]: session opened for user root by (uid=123)"
         - "Dec  9 18:47:10 devel5 sshd(pam_unix)[13189]: session opened for user yyyy by xxxx(uid=0)"
     - id: 2
+      category: Access.Unauthorized
       pattern: "authentication failures?; logname=([^ ]*)[ ]*uid=([^ ]*)[ ]*euid=.* tty=%{NOTSPACE}[ ]*ruser=(?:(?=%{USERNAME:[Attachment][RawLog][Content][related][user]})(?=%{USERNAME:[Attachment][RawLog][Content][source][user][name]})%{USERNAME:[Attachment][RawLog][Content][user][name]})?[ ]*rhost=(?:%{IPORHOST:[Attachment][RawLog][Content][source][address]})?[ ]*user=(?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][user][effective][name]}"
       samples:
         - "Dec 21 21:18:46 share2 sshd(pam_unix)[15525]: authentication failure; logname= uid=0 euid=0 tty=NODEVssh ruser= rhost=a.b.c.d  user=root"
         - "Dec 21 21:18:46 share2 sshd(pam_unix)[15525]: 2 more authentication failures; logname= uid=0 euid=0 tty=NODEVssh ruser= rhost=a.b.c.d  user=root"
     - id: 3
+      category: Operational.Policy Violation
       pattern: "(?:no such user|User unknown)"
       samples:
         - "Dec 21 21:18:46 share2 sshd[15525]: pam_tally(sshd:auth): pam_get_uid; no such user"

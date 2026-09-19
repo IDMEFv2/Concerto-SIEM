@@ -10,14 +10,18 @@ ruleset:
         operands: "aua"
   rules:
     - id: 50000
+      category: Access.Unauthorized
       pattern: "id=\"%{INT:id}\" severity=\"warn\" sys=\"System\" sub=\"auth\" name=\"Authentication failed\" srcip=\"%{IP:[Attachment][RawLog][Content][source][address]}\" host=\"%{HOSTNAME:[Attachment][RawLog][Content][source][hostname]}\" user=\"%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}\" caller=\"webadmin\" reason=\"DENIED\""
       samples:
         - "Aug 30 17:10:09 psm-srvlin aua[25177]: id=\"3005\" severity=\"warn\" sys=\"System\" sub=\"auth\" name=\"Authentication failed\" srcip=\"172.17.87.11\" host=\"\" user=\"pcs_satt@services\" caller=\"webadmin\" reason=\"DENIED\""
     - id: 50001
+      category: Access.Authorized
       pattern: "id=\"%{INT:id}\" severity=\"info\" sys=\"System\" sub=\"auth\" name=\"Authentication successful\" srcip=\"%{IP:[Attachment][RawLog][Content][source][address]}\" host=\"%{HOSTNAME:[Attachment][RawLog][Content][source][hostname]}\" user=\"%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}\" caller=\"webadmin\" engine=\"%{NOTSPACE:engine}\""
       samples:
         - "Aug 30 17:10:09 psm-srvlin26 aua[25380]: id=\"3004\" severity=\"info\" sys=\"System\" sub=\"auth\" name=\"Authentication successful\" srcip=\"172.17.87.17\" host=\"\" user=\"pc_oben\" caller=\"webadmin\" engine=\"adirectory\""
     - id: 50002
+      category: Access.Authorized
       pattern: "id=\"%{NOTSPACE:id}\" severity=\"info\" sys=\"system\" sub=\"up2date\" name=\"Successfully installed Up2Date package\" status=\"success\" action=\"install\" package_version=\"%{NOTSPACE:pkg_version}\" package=\"%{NOTSPACE:package}\""
     - id: 50003
+      category: Availability.Failure
       pattern: "== %{NOTSPACE} R=dnslookup T=remote_smtp defer \\(\\-%{INT:number}\\): SMTP error from remote mail server after RCPT TO:<%{NOTSPACE:dstAddr}>: host %{IPORHOST:[Attachment][RawLog][Content][server][address]} \\[%{IP:[Attachment][RawLog][Content][server][ip]}\\]: %{INT:id} %{NOTSPACE:data} <%{NOTSPACE:email}>: %{GREEDYDATA:[Attachment][RawLog][Content][event][reason]}"

@@ -10,14 +10,18 @@ ruleset:
         operands: "aceserver"
   rules:
     - id: 24801
+      category: Availability.Failure
       pattern: "(?=User)%{DATA:[Attachment][RawLog][Content][event][reason]} \\(Login:'%{DATA:[Attachment][RawLog][Content][user][target][name]}'; User Name:'(?<usrName>[^']*)'; Token:'(?<token>[^']*)'; Group:'(?<group>[^']*)'; Site:'(?<Site>[^']*)'; Agent Host:'%{IPORHOST:[Attachment][RawLog][Content][source][address]}'; Server:'%{IPORHOST:[Attachment][RawLog][Content][destination][address]}'\\)"
       samples:
         - "May  5 11:03:17 172.20.2.130 aceserver[error] 1121  User not in database (Login:'toto'; User Name:''; Token:'---->'; Group:''; Site:''; Agent Host:'spirou.e-xpertsolutions.com'; Server:'snoopy.gva.ch.e-xpertsolutions.com')."
     - id: 24802
+      category: Access.Unauthorized
       pattern: "(?=ACCESS DENIED)%{DATA:[Attachment][RawLog][Content][event][reason]} \\(Login:'%{DATA:[Attachment][RawLog][Content][user][target][name]}'; User Name:'(?<usrName>[^']*)'; Token:'(?<token>[^']*)'; Group:'(?<group>[^']*)'; Site:'(?<Site>[^']*)'; Agent Host:'%{IPORHOST:[Attachment][RawLog][Content][source][address]}'; Server:'%{IPORHOST:[Attachment][RawLog][Content][destination][address]}'\\)"
       samples:
         - "May  5 11:11:49 172.20.2.130 aceserver[warning] 1004  ACCESS DENIED, token disabled (Login:'smaret'; User Name:'Sylvain Maret'; Token:'---->'; Group:''; Site:''; Agent Host:'spirou.e-xpertsolutions.com'; Server:'snoopy.gva.ch.e-xpertsolutions.com')."
     - id: 24803
+      category: Operational.Process Failure
       pattern: "(?=PASSCODE REUSE ATTACK)%{DATA:[Attachment][RawLog][Content][event][reason]} detected \\(Login:'%{DATA:[Attachment][RawLog][Content][user][target][name]}'; User Name:'(?<usrName>[^']*)'; Token:'(?<token>[^']*)'; Group:'(?<group>[^']*)'; Site:'(?<Site>[^']*)'; Agent Host:'%{IPORHOST:[Attachment][RawLog][Content][source][address]}'; Server:'%{IPORHOST:[Attachment][RawLog][Content][destination][address]}'\\)"
     - id: 24804
+      category: Operational.Process Failure
       pattern: "(?=Token disabled, suspect stolen)%{DATA:[Attachment][RawLog][Content][event][reason]} \\(Login:'%{DATA:[Attachment][RawLog][Content][user][target][name]}'; User Name:'(?<usrName>[^']*)'; Token:'(?<token>[^']*)'; Group:'(?<group>[^']*)'; Site:'(?<Site>[^']*)'; Agent Host:'%{IPORHOST:[Attachment][RawLog][Content][source][address]}'; Server:'%{IPORHOST:[Attachment][RawLog][Content][destination][address]}'\\)"

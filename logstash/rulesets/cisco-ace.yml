@@ -10,58 +10,84 @@ ruleset:
         operands: "ACE-"
   rules:
     - id: 5101
+      category: Recon.Network
       pattern: "-442002: Health probe %{DATA:classification} detected %{DATA:target} \\(interface %{DATA:interface}\\) in serverfarm %{DATA:server} changed state to DOWN"
       samples:
         - "Sep 25 11:53:19 x.x.x.x ACE_NAME %ACE-4-442002: Health probe CHECK_NAME detected SERVER_NAME (interface vlanXX) in serverfarm SF_NAME changed state to DOWN"
     - id: 5102
+      category: Recon.Network
       pattern: "-442001: Health probe %{DATA:classification} detected %{DATA:target} \\(interface %{DATA:interface}\\) in serverfarm %{DATA:server} changed state to UP"
       samples:
         - "Sep 25 11:53:19 x.x.x.x ACE_NAME %ACE-4-442001: Health probe CHECK_NAME detected SERVER_NAME (interface vlanXX) in serverfarm SF_NAME changed state to UP"
     - id: 5103
+      category: Operational.Process Failure
       pattern: "-442007: VIP in class: '%{DATA:vipname}' changed state from %{NOTSPACE:src} to %{NOTSPACE:dst}"
     - id: 5104
+      category: Operational.Process Failure
       pattern: "-441002: Serverfarm \\(%{NOTSPACE:name}\\) is now back in service %{GREEDYDATA:data}"
     - id: 5105
+      category: Access.Unauthorized
       pattern: "-441001: Serverfarm \\(%{NOTSPACE:server}\\) failed over to backup"
     - id: 5106
+      category: Availability.HeartBeat
       pattern: "-727017: HA: FT Track Interface (?<interface_id>\\d+) is UP"
     - id: 5107
+      category: Availability.Failure
       pattern: "-727018: HA: FT Track Interface (?<interface_id>\\d+) is DOWN"
     - id: 5108
+      category: Operational.Process Failure
       pattern: "-727012: HA: FT Group (?<groupid>\\d+) changed state to %{NOTSPACE:status} %{GREEDYDATA:data}"
     - id: 5109
+      category: Operational.Process Failure
       pattern: "-211001"
     - id: 5110
+      category: Operational.Process Failure
       pattern: "-254001"
     - id: 5111
+      category: Operational.Process Failure
       pattern: "-411001"
     - id: 5112
+      category: Operational.Process Failure
       pattern: "-411002"
     - id: 5113
+      category: Operational.Process Failure
       pattern: "-411003"
     - id: 5114
+      category: Operational.Process Failure
       pattern: "-411004"
     - id: 5115
+      category: Operational.Process Failure
       pattern: "-727011"
     - id: 5116
+      category: Operational.Process Failure
       pattern: "-727014"
     - id: 5117
+      category: Operational.Process Failure
       pattern: "-727018"
     - id: 5118
+      category: Operational.Process Failure
       pattern: "-727015"
     - id: 5119
+      category: Operational.Process Failure
       pattern: "-322001"
     - id: 5120
+      category: Operational.Process Failure
       pattern: "-322002"
     - id: 5121
+      category: Operational.Process Failure
       pattern: "-322003"
     - id: 5122
+      category: Operational.Process Failure
       pattern: "-4000(\\d+): IDS:(\\d+)"
     - id: 5123
+      category: Recon.Network
       pattern: "-405001: Received ARP (\\S+) collision from %{IP:[Attachment][RawLog][Content][source][address]}"
     - id: 5124
+      category: Operational.Process Failure
       pattern: "-410001"
     - id: 5125
+      category: Operational.Process Failure
       pattern: "-412001"
     - id: 5126
+      category: Operational.Process Failure
       pattern: "-111008"

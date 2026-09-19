@@ -10,6 +10,7 @@ ruleset:
         operands: "spamd"
   rules:
     - id: 5202
+      category: Abuse.Other
       pattern: "result: Y %{INT:id} - %{NOTSPACE:data} scantime=(?<time>[\\d+.]+),size=%{INT:size},user=%{NOTSPACE:[Attachment][RawLog][Content][user][name]},uid=%{NOTSPACE:uid},required_score=(?<score>[\\d+.]+)(?<descr>\\S+)mid=<%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}@%{NOTSPACE:domain}>"
       samples:
         - "Apr  5 16:59:44 vm-mail spamd[1819]: spamd: result: Y 999 - ALL_TRUSTED,GTUBE,NO_REAL_NAME"

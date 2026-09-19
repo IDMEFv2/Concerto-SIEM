@@ -10,14 +10,18 @@ ruleset:
         operands: "server administrator"
   rules:
     - id: 3800
+      category: Availability.Failure
       pattern: "1306  Redundancy lost Redundancy unit: (?<description>.+?) Chassis location: (?<chassisLocation>.+?) Previous redundancy state was: (?<device>.+?) Number of devices required for full redundancy: %{INT:id}"
       samples:
         - "Jun  8 18:12:44 12.34.56.78 server administrator[warning] 1306  Redundancy lost Redundancy unit: System Power Unit Chassis location: Main System Chassis Previous redundancy state was: FULL Number of devices required for full redundancy: 2"
     - id: 3801
+      category: Access.Unauthorized
       pattern: "1352  Power supply returned to normal Sensor location: (?<description>.+?) Chassis location: (?<chassisLocation>.*) Previous state was: (?<status>.+)"
       samples:
         - "Jun 24 08:56:25 neo server administrator[info] 1352  Power supply returned to normal Sensor location: Power supply 2 Chassis location: Main System Chassis Previous state was: Critical (Failed)"
     - id: 3802
+      category: Availability.Failure
       pattern: "1353  Power supply detected a warning Sensor location: (?<description>.+?) Chassis location: (?<chassisLocation>.*) Previous state was: (%{WORD:status} \\(%{WORD:level}\\)|Unknown) (?<data>.+)"
     - id: 3803
+      category: Access.Unauthorized
       pattern: "1354  Power supply detected a failure Sensor location: (?<description>.+?) Chassis location: (?<chassisLocation>.*) Previous state was: (%{WORD:status} \\(%{WORD:level}\\)|Unknown) (?<data>.+)"

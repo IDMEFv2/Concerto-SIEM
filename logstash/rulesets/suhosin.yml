@@ -10,14 +10,18 @@ ruleset:
         operands: "suhosin"
   rules:
     - id: 8001
+      category: Operational.Process Failure
       pattern: "ALERT - configured request variable name length limit exceeded - dropped variable '\\S+' \\(attacker '%{NOTSPACE:[Attachment][RawLog][Content][source][address]}', file '\\S+'\\)"
       samples:
         - "Dec 30 05:18:11 zoubida suhosin[15086]: ALERT - configured request variable name length limit exceeded - dropped variable 'article2/include/engine/MakeXML4statusCounter_php?fileOreonConf' (attacker '192.168.3.4', file '/var/www/zorglub/www/htdocs/spip.php')"
     - id: 8002
+      category: Operational.Process Failure
       pattern: "ALERT - tried to register forbidden variable '\\S+' through (.*) variables \\(attacker '%{NOTSPACE:[Attachment][RawLog][Content][source][address]}', file '\\S+'\\)"
       samples:
         - "Jan  2 12:36:27 zoubida suhosin[2258]: ALERT - tried to register forbidden variable '_REQUEST' through GET variables (attacker '62.193.236.107', file '/var/www/zorglub/www/htdocs/index.php')"
     - id: 8003
+      category: Operational.Process Failure
       pattern: "ALERT - configured \\S+ variable value length limit exceeded - dropped variable '\\S+' \\(attacker '%{NOTSPACE:[Attachment][RawLog][Content][source][address]}', file '\\S+'\\)"
     - id: 8004
+      category: Access.Unauthorized
       pattern: "ALERT - ASCII-NUL chars not allowed within request variables - dropped variable '\\S+' \\(attacker '%{NOTSPACE:[Attachment][RawLog][Content][source][address]}', file '\\S+'\\)"

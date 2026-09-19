@@ -18,18 +18,23 @@ ruleset:
             operands: "firstSeen"
   rules:
     - id: 4300
+      category: Availability.DoS
       pattern: "anomaly ([a-zA-Z_-]+) id %{INT:[Attachment][RawLog][Content][id]} status %{NOTSPACE:[Attachment][RawLog][Content][status]} severity %{INT:[Attachment][RawLog][Content][severity]} src %{IP:[Attachment][RawLog][Content][source][address]}/%{INT} \\w+ dst %{IP:[Attachment][RawLog][Content][destination][address]}/%{INT} \\w+ start (?<date>[\\d\\- :\\+]+) duration %{INT:[Attachment][RawLog][Content][duration]} percent %{NUMBER:[Attachment][RawLog][Content][percent]} rate (?<rate>[\\de\\+\\-]+) rateUnit %{WORD:[Attachment][RawLog][Content][rateunit]} protocol %{WORD:[Attachment][RawLog][Content][proto]} flags %{WORD:[Attachment][RawLog][Content][flag]} url %{NOTSPACE:[Attachment][RawLog][Content][url]}"
       samples:
         - "Apr 17 06:52:57 arbordos.mynetwork.net pfDoS: anomaly Protocol id 92480 status ongoing severity 5 src 0.0.0.0/0 All dst 2.2.0.0/16 Intellig_ start 2005-04-17 06:45:41 +0200 duration 360 percent 214.27 rate 5e+06 rateUnit bps protocol tcp flags nil url https://doscont/anomaly/?attack_id=92480"
     - id: 4301
+      category: Availability.DoS
       pattern: "anomaly ([a-zA-Z_-]+) id %{INT:[Attachment][RawLog][Content][id]} status %{NOTSPACE:[Attachment][RawLog][Content][status]} severity %{INT:[Attachment][RawLog][Content][severity]} router (?<address>[\\d\\.\\/]+) interface %{NOTSPACE:[Attachment][RawLog][Content][interface]} %{NOTSPACE:[Attachment][RawLog][Content][data]}"
       samples:
         - "Apr 17 06:52:57 arbordos.mynetwork.net pfDoS: anomaly Protocol id 92480 status ongoing severity 5 router 1.2.3.4 interface 14 incoming"
     - id: 4302
+      category: Operational.Process Failure
       pattern: "collector %{NOTSPACE:[Attachment][RawLog][Content][collector]} %{NOTSPACE:[Attachment][RawLog][Content][status]} since %{DATA:[Attachment][RawLog][Content][since]} duration %{INT:[Attachment][RawLog][Content][duration]}"
     - id: 4303
+      category: Availability.Failure
       pattern: "internalError location %{NOTSPACE:[Attachment][RawLog][Content][location]} reason %{GREEDYDATA:[Attachment][RawLog][Content][reason]} since %{DATA:[Attachment][RawLog][Content][since]} duration %{INT:[Attachment][RawLog][Content][duration]}"
     - id: 4304
+      category: Operational.Process Failure
       pattern: "rtr %{IP:[Attachment][RawLog][Content][rtr][ip]} rtrSampleRate %{INT:[Attachment][RawLog][Content][rtrSampleRate]} proto %{INT:[Attachment][RawLog][Content][proto]} src %{IP:[Attachment][RawLog][Content][source][address]} dst %{IP:[Attachment][RawLog][Content][destination][address]} dstPort %{POSINT:[Attachment][RawLog][Content][destination][port]:int} firstSeen (?<date1>[\\d\\- :\\+]+) lastSeen (?<datelast>[\\d\\- :\\+]+) bytes \\d+ pkts \\d+ flows \\d+"
       samples:
         - "Apr 17 07:31:22 arbordos.mynetwork.net pfDoS: rtr 1.2.3.4 rtrSampleRate 1000 proto 17 src 192.168.0.69 dst 1.2.3.4 dstPort 11328 firstSeen 2005-04-17 06:31:46 +0200 lastSeen 2005-04-17 06:31:46 +0200 bytes 53 pkts 1 flows 1"

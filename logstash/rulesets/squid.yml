@@ -10,22 +10,30 @@ ruleset:
         operands: "Squid"
   rules:
     - id: 1801
+      category: Availability.HeartBeat
       pattern: "Starting Squid Cache version %{DATA:version} for %{DATA:distribution}..."
       samples:
         - "2005/11/28 06:00:42| Starting Squid Cache version 2.5.STABLE1 for i386-redhat-linux-gnu..."
     - id: 1802
+      category: Availability.Failure
       pattern: "Accepting HTTP connections at %{IP:[Attachment][RawLog][Content][destination][address]}, port %{POSINT:[Attachment][RawLog][Content][destination][port]:int}, FD \\d+"
       samples:
         - "2005/11/28 06:00:44| Accepting HTTP connections at 0.0.0.0, port 3128, FD 12."
     - id: 1803
+      category: Availability.Failure
       pattern: "Accepting ICP messages at %{IP:[Attachment][RawLog][Content][destination][address]}, port %{POSINT:[Attachment][RawLog][Content][destination][port]:int}, FD \\d+"
     - id: 1804
+      category: Availability.Failure
       pattern: "Accepting HTCP messages on port %{POSINT:[Attachment][RawLog][Content][destination][port]:int}, FD \\d+"
     - id: 1805
+      category: Availability.Failure
       pattern: "Accepting WCCP messages on port %{POSINT:[Attachment][RawLog][Content][destination][port]:int}, FD \\d+"
     - id: 1806
+      category: Availability.Failure
       pattern: "HTCP Disabled"
     - id: 1807
+      category: Availability.Failure
       pattern: "WCCP Disabled"
     - id: 1808
+      category: Availability.Failure
       pattern: "Squid Parent: child process %{INT:process_id} exited due to signal %{INT:signal_id}"

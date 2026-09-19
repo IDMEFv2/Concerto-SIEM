@@ -10,12 +10,15 @@ ruleset:
         operands: "(LOG|FATAL): {2}"
   rules:
     - id: 23701
+      category: Access.Unauthorized
       pattern: "\\[%{DATA}\\] (?:%{IP:[Attachment][RawLog][Content][source][address]}: )?FATAL:\\s*%{NOTSPACE} authentication failed for user \"%{USERNAME:[Attachment][RawLog][Content][user][target][name]}\""
       samples:
         - "[2007-09-01 19:08:49.869 ADT] 192.168.2.99: FATAL:  password authentication failed for user \"test_user\""
     - id: 23702
+      category: Availability.Failure
       pattern: "\\[%{DATA}\\] (.*) LOG:\\s*connection received: host=%{IP:[Attachment][RawLog][Content][source][address]} port=%{POSINT:[Attachment][RawLog][Content][source][port]:int}"
       samples:
         - "[2007-08-31 19:22:21.469 ADT] :[unknown] LOG:  connection received: host=192.168.2.99 port=52136"
     - id: 23703
+      category: Availability.Failure
       pattern: "\\[%{DATA}\\] %{IP:[Attachment][RawLog][Content][source][address]}:\\S+ LOG:\\s*connection authorized: user=%{USERNAME:[Attachment][RawLog][Content][user][target][name]} database=%{NOTSPACE:db_name}"

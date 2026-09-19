@@ -10,6 +10,8 @@ ruleset:
         operands: "ftpd"
   rules:
     - id: 2300
+      category: Operational.Process Failure
       pattern: "ANONYMOUS FTP LOGIN FROM ([\\w\\-\\.]+) \\[%{IP:[Attachment][RawLog][Content][source][address]}\\], %{NOTSPACE:[Attachment][RawLog][Content][user][name]}"
     - id: 2301
+      category: Access.Unauthorized
       pattern: "FTP LOGIN FAILED \\((.+)\\) for ([\\w\\-\\.]+) \\[%{IP:[Attachment][RawLog][Content][source][address]}\\], %{NOTSPACE:[Attachment][RawLog][Content][user][name]}"

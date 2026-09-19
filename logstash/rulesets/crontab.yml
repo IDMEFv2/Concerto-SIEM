@@ -10,6 +10,7 @@ ruleset:
         operands: "crontab"
   rules:
     - id: 23801
+      category: Operational.Policy Violation
       pattern: "\\(%{USERNAME:[Attachment][RawLog][Content][user][name]}\\) BEGIN EDIT \\(%{USERNAME:[Attachment][RawLog][Content][user][target][name]}\\)"
       samples:
         - "Sep 11 09:46:33 sys1 crontab[20601]: (root) BEGIN EDIT (root)"

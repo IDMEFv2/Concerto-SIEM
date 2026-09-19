@@ -10,10 +10,12 @@ ruleset:
         operands: "chan_sip.c"
   rules:
     - id: 6000
+      category: Access.Unauthorized
       pattern: "Registration from '<sip:%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}>' failed for '%{NOTSPACE:[Attachment][RawLog][Content][source][address]}' - (?<data>.*)"
       samples:
         - "Nov 29 09:44:15 NOTICE[23701] chan_sip.c: Registration from '<sip:dmc@asterisk-server>' failed for '192.168.33.180' - Wrong password"
     - id: 6001
+      category: Access.Unauthorized
       pattern: "(?<desc>.*): '%{DATA:[Attachment][RawLog][Content][user][target][name]}' from %{IP:[Attachment][RawLog][Content][source][address]} \\((?<data>.*)\\) trying to use anyway..."
       samples:
         - "Dec  3 10:32:10 NOTICE[23701] chan_sip.c: Invalid to address: '' from 192.168.33.180 (missing sip:) trying to use anyway..."

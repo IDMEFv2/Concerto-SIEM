@@ -10,10 +10,12 @@ ruleset:
         operands: "sudo"
   rules:
     - id: 2700
+      category: Operational.Policy Violation
       pattern: "(?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][target][user][name]} : TTY=%{GREEDYDATA} ; PWD=%{DATA:[Attachment][RawLog][Content][process][working_directory]} ; USER=(?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][target][user][effective][name]} ; COMMAND=%{GREEDYDATA:[Attachment][RawLog][Content][process][command_line]}"
       samples:
         - "Feb 11 06:52:09 12.34.56.78 sudo:   cpatel : TTY=pts/0 ; PWD=/etc/rc.d/init.d ; USER=root ; COMMAND=./resin start"
     - id: 2701
+      category: Access.Unauthorized
       pattern: "(?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][target][user][name]} : user NOT in sudoers ; TTY=%{GREEDYDATA} ; PWD=%{DATA:[Attachment][RawLog][Content][process][working_directory]} ; USER=(?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][target][user][effective][name]} ; COMMAND=%{GREEDYDATA:[Attachment][RawLog][Content][process][command_line]}"
       samples:
         - "Mar  2 11:33:17 rhel7 sudo:  rajoul : user NOT in sudoers ; TTY=pts/6 ; PWD=/var/log ; USER=root ; COMMAND=/bin/su"

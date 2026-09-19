@@ -10,10 +10,12 @@ ruleset:
         operands: "webmin"
   rules:
     - id: 2900
+      category: Access.Authorized
       pattern: "Successful login as %{NOTSPACE:[Attachment][RawLog][Content][user][name]} from %{IP:[Attachment][RawLog][Content][source][address]}"
       samples:
         - "Mar 14 15:18:22 gtsproduxlvs1 webmin[27244]: Successful login as root from 12.34.56.78"
     - id: 2901
+      category: Access.Unauthorized
       pattern: "Invalid login as %{NOTSPACE:[Attachment][RawLog][Content][user][name]} from %{IP:[Attachment][RawLog][Content][source][address]}"
       samples:
         - "Mar 17 19:18:32 gtsdmzuxids1 webmin[28655]: Invalid login as root from 10.100.17.38"

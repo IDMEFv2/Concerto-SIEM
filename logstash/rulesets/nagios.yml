@@ -10,10 +10,12 @@ ruleset:
         operands: "nagios"
   rules:
     - id: 1100
+      category: Access.Unauthorized
       pattern: "SERVICE ALERT: %{IPORHOST:[Attachment][RawLog][Content][host][name]};%{DATA:[Attachment][RawLog][Content][service][name]};%{DATA:[Attachment][RawLog][Content][service][state]};HARD;%{INT};%{GREEDYDATA:[Attachment][RawLog][Content][event][reason]}"
       samples:
         - "Oct 27 23:22:53 host nagios: SERVICE ALERT: app2.test.domain.com;TCPPORT_8009_ajp13;CRITICAL;HARD;5;Connection refused"
     - id: 1101
+      category: Availability.HeartBeat
       pattern: "HOST ALERT: %{IPORHOST:[Attachment][RawLog][Content][host][name]};%{DATA:[Attachment][RawLog][Content][service][state]};HARD;%{INT};%{GREEDYDATA:[Attachment][RawLog][Content][event][reason]}"
       samples:
         - "Oct 28 11:42:33 shadowcat nagios: HOST ALERT: rcts2;UP;HARD;2;PING OK - Packet loss = 0%, RTA = 0.26 ms"

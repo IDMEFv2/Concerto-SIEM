@@ -10,16 +10,21 @@ ruleset:
         operands: "imapd"
   rules:
     - id: 25605
+      category: Access.Unauthorized
       pattern: "Login failure user=%{USER:[Attachment][RawLog][Content][user][target][name]} host=(?:%{HOSTNAME:[Attachment][RawLog][Content][source][hostname]} )?\\[%{IP:[Attachment][RawLog][Content][source][address]}\\]"
       samples:
         - "Jul 31 15:33:10 server imapd[1557]: Login failure user=amanda host=[192.168.1.233]"
     - id: 25606
+      category: Operational.Process Failure
       pattern: "Command stream end of file while reading line user=\\?\\?\\? host=(?:%{HOSTNAME:[Attachment][RawLog][Content][source][hostname]} )?\\[%{IP:[Attachment][RawLog][Content][source][address]}\\]"
       samples:
         - "Jul 22 17:11:49 fw-var.peavar ipop3d[8526]: Command stream end of file while reading line user=??? host=[10.2.2.2]"
     - id: 25607
+      category: Operational.Process Failure
       pattern: "Command stream end of file while reading line user=%{USER:[Attachment][RawLog][Content][user][name]} host=(?:%{HOSTNAME:[Attachment][RawLog][Content][source][hostname]} )?\\[%{IP:[Attachment][RawLog][Content][source][address]}\\]"
     - id: 25608
+      category: Operational.Process Failure
       pattern: "Login user=%{USER:[Attachment][RawLog][Content][user][name]} host=(?:%{HOSTNAME:[Attachment][RawLog][Content][source][hostname]} )?\\[%{IP:[Attachment][RawLog][Content][source][address]}\\]"
     - id: 25609
+      category: Operational.Process Failure
       pattern: "Logout user=%{USER:[Attachment][RawLog][Content][user][name]} host=(?:%{HOSTNAME:[Attachment][RawLog][Content][source][hostname]} )?\\[%{IP:[Attachment][RawLog][Content][source][address]}\\]"

@@ -10,24 +10,33 @@ ruleset:
         operands: "avc:"
   rules:
     - id: 4000
+      category: Access.Unauthorized
       pattern: "denied  \\{ (?<desc>[\\w ]+) \\} for  pid=%{INT:[Attachment][RawLog][Content][process][pid]} exe=%{DATA:[Attachment][RawLog][Content][process][command]} name=(shadow|passwd|group) dev=%{NOTSPACE:[Attachment][RawLog][Content][device]} ino=%{NOTSPACE:[Attachment][RawLog][Content][id_user]} scontext=%{NOTSPACE:[Attachment][RawLog][Content][user][name]}:%{NOTSPACE:ruser}:%{NOTSPACE:tuser} tcontext=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}:%{NOTSPACE:obj}:"
       samples:
         - "Nov 18 10:12:08 new-selinux2 kernel: avc:  denied  { relabelto } for  pid=12296 exe=/usr/bin/chcon name=shadow dev=03:02 ino=230036 scontext=takeuchi:user_r:user_t tcontext=system_u:object_r:shadow_t tclass=file"
     - id: 4001
+      category: Access.Unauthorized
       pattern: "denied  \\{ (?<desc>[\\w ]+) \\} for  pid=%{INT:[Attachment][RawLog][Content][process][pid]} exe=%{DATA:[Attachment][RawLog][Content][process][command]} path=(?<path>\\S*)bin(?<shell>\\S*)sh dev=%{NOTSPACE:[Attachment][RawLog][Content][device]} ino=%{NOTSPACE:[Attachment][RawLog][Content][id_user]} scontext=%{NOTSPACE:[Attachment][RawLog][Content][user][name]}:%{NOTSPACE:ruser}:%{NOTSPACE:tuser} tcontext=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}:%{NOTSPACE:obj}:"
       samples:
         - "Aug  3 17:53:22 192 kernel: avc:  denied  { execute } for  pid=1007 exe=/usr/sbin/httpd path=/bin/bash dev=08:02 ino=162980 scontext=system_u:system_r:httpd_t tcontext=system_u:object_r:shell_exec_t tclass=file"
     - id: 4002
+      category: Access.Unauthorized
       pattern: "denied  \\{ (?<desc>[\\w ]+) \\} for  pid=%{INT:[Attachment][RawLog][Content][process][pid]} exe=%{DATA:[Attachment][RawLog][Content][process][command]} name=(?<shell>\\S*)sh dev=%{NOTSPACE:[Attachment][RawLog][Content][device]} ino=%{NOTSPACE:[Attachment][RawLog][Content][id_user]} scontext=%{NOTSPACE:[Attachment][RawLog][Content][user][name]}:%{NOTSPACE:ruser}:%{NOTSPACE:tuser} tcontext=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}:%{NOTSPACE:obj}:"
     - id: 4003
+      category: Access.Unauthorized
       pattern: "denied  \\{ (?<desc>[\\w ]+) \\} for  pid=%{INT:[Attachment][RawLog][Content][process][pid]} exe=%{DATA:[Attachment][RawLog][Content][process][command]} path=/var/log/(?<file>\\S*) dev=%{NOTSPACE:[Attachment][RawLog][Content][device]} ino=%{NOTSPACE:[Attachment][RawLog][Content][id_user]} scontext=%{NOTSPACE:[Attachment][RawLog][Content][user][name]}:%{NOTSPACE:ruser}:%{NOTSPACE:tuser} tcontext=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}:%{NOTSPACE:obj}:"
     - id: 4005
+      category: Access.Unauthorized
       pattern: "denied  \\{ (?<desc>[\\w ]+) \\} for  pid=%{INT:[Attachment][RawLog][Content][process][pid]} exe=%{DATA:[Attachment][RawLog][Content][process][command]} path=(?<path>\\S*) dev=%{NOTSPACE:[Attachment][RawLog][Content][device]} ino=%{NOTSPACE:[Attachment][RawLog][Content][id_user]} scontext=%{NOTSPACE:[Attachment][RawLog][Content][user][name]}:%{NOTSPACE:ruser}:%{NOTSPACE:tuser} tcontext=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}:%{NOTSPACE:obj}:"
     - id: 4006
+      category: Access.Unauthorized
       pattern: "denied  \\{ (?<desc>[\\w ]+) \\} for  pid=%{INT:[Attachment][RawLog][Content][process][pid]} path=%{NOTSPACE:[Attachment][RawLog][Content][file][path]} dev=%{NOTSPACE:[Attachment][RawLog][Content][device]} ino=%{NOTSPACE:[Attachment][RawLog][Content][id_user]} scontext=%{NOTSPACE:[Attachment][RawLog][Content][user][name]}:%{NOTSPACE:ruser}:%{NOTSPACE:tuser} tcontext=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}:%{NOTSPACE:obj}:"
     - id: 4007
+      category: Access.Unauthorized
       pattern: "denied  \\{ (?<desc>[\\w ]+) \\} for  pid=%{INT:[Attachment][RawLog][Content][process][pid]} exe=%{DATA:[Attachment][RawLog][Content][process][command]} capability=%{NOTSPACE:[Attachment][RawLog][Content][capability][id]}(\\s+)scontext=%{NOTSPACE:[Attachment][RawLog][Content][user][name]}:%{NOTSPACE:ruser}:%{NOTSPACE:tuser}\\s+tcontext=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}:%{NOTSPACE:obj}:"
     - id: 4008
+      category: Access.Unauthorized
       pattern: "denied  \\{ (?<desc>[\\w ]+) \\} for  pid=%{INT:[Attachment][RawLog][Content][process][pid]} exe=%{NOTSPACE:[Attachment][RawLog][Content][process][command]} name=%{NOTSPACE:[Attachment][RawLog][Content][file][name]} dev=%{NOTSPACE:[Attachment][RawLog][Content][device]} ino=%{NOTSPACE:[Attachment][RawLog][Content][id_user]} scontext=%{NOTSPACE:[Attachment][RawLog][Content][user][name]}:%{NOTSPACE:ruser}:%{NOTSPACE:tuser} tcontext=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}:%{NOTSPACE:obj}:"
     - id: 4009
+      category: Access.Unauthorized
       pattern: "denied  \\{ (?<desc>[\\w ]+) \\} for  pid=%{INT:[Attachment][RawLog][Content][process][pid]} exe=%{GREEDYDATA:[Attachment][RawLog][Content][process][command]} name=%{GREEDYDATA:[Attachment][RawLog][Content][file][name]} dev=%{GREEDYDATA:[Attachment][RawLog][Content][device]} ino=%{GREEDYDATA:[Attachment][RawLog][Content][id_user]} scontext=%{NOTSPACE:[Attachment][RawLog][Content][user][name]}:%{NOTSPACE:ruser}:%{NOTSPACE:tuser} tcontext=%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}:%{NOTSPACE:obj}:"

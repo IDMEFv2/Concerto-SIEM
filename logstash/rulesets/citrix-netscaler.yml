@@ -10,16 +10,21 @@ ruleset:
         operands: "\\<[^>]+\\> .* (UI CMD_EXECUTED|TRAP_SENT|STATECHANGE|DEVICEUP)"
   rules:
     - id: 25100
+      category: Operational.Policy Violation
       pattern: "\\<[^>]+\\> %{IP:[Attachment][RawLog][Content][destination][address]} [^ ]+ [^:]+: UI CMD_EXECUTED \\d+ :  User %{NOTSPACE:[Attachment][RawLog][Content][user][name]} - Remote_ip %{IP:[Attachment][RawLog][Content][source][address]} - Command \"(?<command>[^\"]+)\" - Status \"Success\""
       samples:
         - "Apr 15 17:43:58 <local0.info> 10.0.110.8 04/16/2013:00:43:58 GMT NETSCALER01A PPE-4 : UI CMD_EXECUTED 338 :  User nsroot - Remote_ip 10.0.0.68 - Command \"show ssl fipsKey\" - Status \"Success\""
     - id: 25101
+      category: Access.Unauthorized
       pattern: "\\<[^>]+\\> %{IP:[Attachment][RawLog][Content][destination][address]} [^ ]+ [^:]+: UI CMD_EXECUTED \\d+ [^:]+:  User %{NOTSPACE:[Attachment][RawLog][Content][user][name]} - Remote_ip %{IP:[Attachment][RawLog][Content][source][address]} - Command \"(?<command>[^\"]+)\" - Status \"ERROR"
       samples:
         - "Oct 22 10:29:14 <local0.info> 10.112.79.21 10/22/2014:08:29:14 GMT netscaler-vpx 0-PPE-0 : UI CMD_EXECUTED 5096 0 :  User test_user - Remote_ip 127.0.0.1 - Command \"shell\" - Status \"ERROR: Not authorized to execute this command\""
     - id: 25102
+      category: Operational.Process Failure
       pattern: "\\<[^>]+\\> %{IP:[Attachment][RawLog][Content][source][address]} \\S+ \\S+ \\S+ \\S+ : SNMP TRAP_SENT \\d+ : %{NOTSPACE:type} (?<descr>[^)]+\\))"
     - id: 25103
+      category: Operational.Process Failure
       pattern: "\\<[^>]+\\> %{IP:[Attachment][RawLog][Content][source][address]} \\S+ \\S+ \\S+ \\S+ : EVENT STATECHANGE \\d+ : (?<data>.*)"
     - id: 25104
+      category: Operational.Process Failure
       pattern: "\\<[^>]+\\> %{IP:[Attachment][RawLog][Content][source][address]} \\S+ \\S+ \\S+ \\S+ : EVENT DEVICEUP \\d+ : (?<data>.*)"

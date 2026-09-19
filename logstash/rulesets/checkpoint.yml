@@ -10,16 +10,22 @@ ruleset:
         operands: "product:"
   rules:
     - id: 100
+      category: Access.Unauthorized
       pattern: "drop %{IPORHOST} (<|>)([\\w-]+) product: VPN-1 & FireWall-1; src: %{IPORHOST:[Attachment][RawLog][Content][source][address]}; s_port: %{DATA:[Attachment][RawLog][Content][source][port]}; dst: %{IPORHOST:[Attachment][RawLog][Content][destination][address]}; service: %{DATA:[Attachment][RawLog][Content][destination][port]}; proto: %{NOTSPACE:[Attachment][RawLog][Content][network][transport]};"
     - id: 104
+      category: Access.Unauthorized
       pattern: "accept %{IPORHOST} (<|>)([\\w-]+) product: VPN-1 & FireWall-1; src: %{IPORHOST:[Attachment][RawLog][Content][source][address]}; s_port: %{DATA:[Attachment][RawLog][Content][source][port]}; dst: %{IPORHOST:[Attachment][RawLog][Content][destination][address]}; service: %{DATA:[Attachment][RawLog][Content][destination][port]}; proto: %{NOTSPACE:[Attachment][RawLog][Content][network][transport]};"
     - id: 112
+      category: Recon.Network
       pattern: "product: SmartDefense;( service: %{DATA:[Attachment][RawLog][Content][destination][port]};)?%{DATA}attack: %{DATA:[Attachment][RawLog][Content][event][reason]}; dst: %{IPORHOST:[Attachment][RawLog][Content][destination][address]}; src: %{IPORHOST:[Attachment][RawLog][Content][source][address]}"
       samples:
         - "14Aug2006 16:39:44        12.34.56.78 >    alert product: SmartDefense; cpmad: CPMAD; attack: Port Scanning; dst: 90.12.34.56; src: 78.90.12.34;"
     - id: 115
+      category: Access.Unauthorized
       pattern: "product: SmartDefense;%{DATA}attack: %{DATA:[Description]}; src: %{IPORHOST:[Attachment][RawLog][Content][source][address]}; s_port: %{DATA:[Attachment][RawLog][Content][source][port]}; dst: %{IPORHOST:[Attachment][RawLog][Content][destination][address]}; service: %{DATA:[Attachment][RawLog][Content][destination][port]}; proto: %{NOTSPACE:[Attachment][RawLog][Content][network][transport]}"
     - id: 119
+      category: Access.Unauthorized
       pattern: "product: SmartDefense;%{DATA}attack: %{DATA:[Description]}; src: %{IPORHOST:[Attachment][RawLog][Content][source][address]}; dst: %{IPORHOST:[Attachment][RawLog][Content][destination][address]}"
     - id: 127
+      category: Access.Unauthorized
       pattern: "System Alert message: %{DATA:[Description]}; Object: %{IPORHOST:[Attachment][RawLog][Content][destination][address]};%{DATA}product: System Monitor"

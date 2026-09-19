@@ -11,18 +11,22 @@ ruleset:
         operands: "EMU"
   rules:
     - id: 2800
+      category: Recon.Network
       pattern: "Probe %{INT:[Attachment][RawLog][Content][APC-EMU][probe][number]:int} '%{DATA:[Attachment][RawLog][Content][APC-EMU][probe][name]}' high  humidity violation, '%{INT:[Attachment][RawLog][Content][APC-EMU][humidity]:int}%"
       samples:
         - "Mar 28 04:22:18 enviro1 12.34.56.78 EMU: Probe 2 'Loc Env Probe 2' high  humidity violation, '40%RH'. 0x101C"
     - id: 2801
+      category: Recon.Network
       pattern: "Probe %{INT:[Attachment][RawLog][Content][APC-EMU][probe][number]:int} '%{DATA:[Attachment][RawLog][Content][APC-EMU][probe][name]}' high  humidity violation cleared, '%{INT:[Attachment][RawLog][Content][APC-EMU][humidity]:int}%"
       samples:
         - "Mar 28 04:06:27 enviro1 12.34.56.78 EMU: Probe 2 'Loc Env Probe 2' high  humidity violation cleared, '39%RH'. 0x101D"
     - id: 2802
+      category: Operational.Process Failure
       pattern: "Input Contact %{INT:[Attachment][RawLog][Content][APC-EMU][contact][number]:int} '%{DATA}:[Attachment][RawLog][Content][APC-EMU][contact][name]' opened, abnormal condition"
       samples:
         - "Mar 22 16:27:50 enviro1 12.34.56.78 EMU: Input Contact 4 'Rack 4 Front Door' opened, abnormal condition. 0x1013"
     - id: 2803
+      category: Operational.Process Failure
       pattern: "Input Contact %{INT:[Attachment][RawLog][Content][APC-EMU][contact][number]:int} '%{DATA:[Attachment][RawLog][Content][APC-EMU][contact][name]}' closed, abnormal condition cleared"
       samples:
         - "Mar 22 16:28:51 enviro1 10.100.17.252 EMU: Input Contact 4 'Rack 4 Front Door' closed, abnormal condition cleared. 0x1014"

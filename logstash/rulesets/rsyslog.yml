@@ -10,10 +10,12 @@ ruleset:
         operands: "rsyslogd"
   rules:
     - id: 101000
+      category: Availability.HeartBeat
       pattern: "\\[.*software=\"rsyslogd\".*\\] exiting on signal %{INT:signal_number}"
       samples:
         - "Oct  6 10:30:47 CentOS rsyslogd: [origin software=\"rsyslogd\" swVersion=\"5.8.10\" x-pid=\"1630\" x-info=\"http://www.rsyslog.com\"] exiting on signal 15."
     - id: 101001
+      category: Availability.HeartBeat
       pattern: "\\[.*software=\"rsyslogd\".*\\] start"
       samples:
         - "Oct  6 10:30:47 CentOS rsyslogd: [origin software=\"rsyslogd\" swVersion=\"5.8.10\" x-pid=\"6062\" x-info=\"http://www.rsyslog.com\"] start"

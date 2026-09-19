@@ -10,16 +10,21 @@ ruleset:
         operands: "CONNECT_DATA"
   rules:
     - id: 16101
+      category: Operational.Process Failure
       pattern: "\\(CONNECT_DATA=\\(SID=(?<sid>[^)]*)\\)\\(CID=\\(PROGRAM=(?<program>[^)]*)\\)\\(HOST=([^)]*)\\)\\(USER=%{USER:[Attachment][RawLog][Content][user][target][name]}\\)\\)\\)\\s+\\*\\s+\\(ADDRESS=\\(PROTOCOL=%{DATA:[Attachment][RawLog][Content][network][transport]}\\)\\(HOST=(?:%{IPORHOST:[Attachment][RawLog][Content][source][address]})?\\)\\(PORT=(?:%{POSINT:[Attachment][RawLog][Content][source][port]:int})?\\)\\)\\s+\\*\\s+establish\\s+%{DATA}\\s+0$"
       samples:
         - "12-OCT-2001 18:00:17 * (CONNECT_DATA=(SID=CDS)(CID=(PROGRAM=)(HOST=__jdbc__)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=10.0.0.1)(PORT=3342)) * establish * CDS * 0"
     - id: 16102
+      category: Operational.Process Failure
       pattern: "\\(CONNECT_DATA=(\\(SID=(?<sid>[^)]*)\\))?\\(CID=\\(PROGRAM=(?<program>[^)]*)\\)\\(HOST=(?<program>[^)]*)\\)\\(USER=%{DATA:[Attachment][RawLog][Content][user][name]}\\)\\)(\\(SERVICE_NAME=%{DATA:[Attachment][RawLog][Content][service][name]}\\))?\\)\\s+\\*\\s+\\(ADDRESS=\\(PROTOCOL=%{DATA:[Attachment][RawLog][Content][network][transport]}\\)\\(HOST=(?:%{IPORHOST:[Attachment][RawLog][Content][source][address]})?\\)\\(PORT=(?:%{POSINT:[Attachment][RawLog][Content][source][port]:int})?\\)\\)\\s+\\*\\s+establish"
       samples:
         - "05-JAN-2010 15:46:47 * (CONNECT_DATA=(CID=(PROGRAM=)(HOST=__jdbc__)(USER=))(SERVICE_NAME=ora200864)) * (ADDRESS=(PROTOCOL=tcp)(HOST=10.60.0.50)(PORT=49365)) * establish * ora200864 * 12528"
     - id: 16103
+      category: Operational.Process Failure
       pattern: "<unknown connect data>\\s+\\*\\s+\\(ADDRESS=\\(PROTOCOL=%{DATA:[Attachment][RawLog][Content][network][transport]}\\)\\(HOST=(?:%{IPORHOST:[Attachment][RawLog][Content][source][address]})?\\)\\(PORT=(?:%{POSINT:[Attachment][RawLog][Content][source][port]:int})?\\)\\)\\s+\\*\\s+establish\\s+%{DATA}\\s+0$"
     - id: 16104
+      category: Operational.Process Failure
       pattern: "<unknown connect data>\\s+\\*\\s+\\(ADDRESS=\\(PROTOCOL=%{DATA:[Attachment][RawLog][Content][network][transport]}\\)\\(HOST=(?:%{IPORHOST:[Attachment][RawLog][Content][source][address]})?\\)\\(PORT=(?:%{POSINT:[Attachment][RawLog][Content][source][port]:int})?\\)\\)\\s+\\*\\s+establish"
     - id: 16105
+      category: Availability.HeartBeat
       pattern: "\\(CONNECT_DATA=\\(CID=\\(PROGRAM=(?<program>[^)]*)\\)\\(HOST=%{IPORHOST:[Attachment][RawLog][Content][source][address]}\\)\\(USER=(?<user>[^)]*)\\)\\)\\(COMMAND=(?<command>[^)]*)\\)\\(ARGUMENTS=(?<argument>[^)]*)\\)\\(SERVICE=%{DATA:[Attachment][RawLog][Content][service][name]}(\\(ADDRESS=\\(PROTOCOL=%{DATA:[Attachment][RawLog][Content][network][transport]}\\)\\(HOST=([^)]*)\\)\\(PORT=(?<port>[^)]*)\\)\\))?\\)\\(VERSION=(?<version>[^)]*)\\)\\)\\s+\\*\\s+[^\\*]+\\*\\s+0"
