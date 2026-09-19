@@ -14,8 +14,8 @@ ruleset:
         "[Category][0]": "Access.Other"
         "[Analyzer][Data]": 
           - "Log"
-          - "Auth"
-        "[Analyzer][Type]": "Cyber"
+          - "Authentication"
+        "[Type][0]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"
@@ -29,7 +29,7 @@ ruleset:
         "[Category][0]": "Access.Other"
         "[Analyzer][Data]":
           - "Log"
-          - "Auth"
+          - "Authentication"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"
@@ -41,13 +41,11 @@ ruleset:
       fields:
         "[@metadata][IDMEFv2][source]": "source"
         "[@metadata][IDMEFv2][target]": "host"
-        "[Category]":
-          - "Intrusion.UserCompromise"
-          - "Login.Attempt"
+        "[Category][0]": "Access.Other"
         "[Analyzer][Data]":
           - "Log"
-          - "Auth"
-        "[Analyzer][Type]": "Cyber"
+          - "Authentication"
+        "[Type][0]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"
@@ -59,8 +57,8 @@ ruleset:
       fields:
         "[@metadata][IDMEFv2][source]": "source"
         "[@metadata][IDMEFv2][target]": "host"
-        "[Category][0]": "Recon.Scanning"
-        "[Analyzer][Type]": "Cyber"
+        "[Category][0]": "Recon.Network"
+        "[Type][0]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"
@@ -78,8 +76,8 @@ ruleset:
         "[@metadata][IDMEFv2][source]": "source"
         "[@metadata][IDMEFv2][target]": "host"
         "[Category][0]": "Access.Other"
-        "[Analyzer][Data]": ["Log", "Auth"]
-        "[Analyzer][Type]": "Cyber"
+        "[Analyzer][Data]": ["Log", "Authentication"]
+        "[Type][0]": "Cyber"
         "[Source][0][Protocol]": ["tcp", "ssh"]
         "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
         "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
@@ -91,8 +89,8 @@ ruleset:
         "[Category][0]": "Access.Other"
         "[Analyzer][Data]":
           - "Log"
-          - "Auth"
-        "[Analyzer][Type]": "Cyber"
+          - "Authentication"
+        "[Type][0]": "Cyber"
         "[Source][0][IP]": "%{[Attachment][RawLog][Content][source][address]}"
         "[Source][0][Protocol]":
           - "tcp"
@@ -109,8 +107,8 @@ ruleset:
         "[Category][0]": "Access.Other"
         "[Analyzer][Data]":
           - "Log"
-          - "Auth"
-        "[Analyzer][Type]": "Cyber"
+          - "Authentication"
+        "[Type][0]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"
@@ -125,8 +123,8 @@ ruleset:
         "[Category][0]": "Access.Other"
         "[Analyzer][Data]":
           - "Log"
-          - "Auth"
-        "[Analyzer][Type]": "Cyber"
+          - "Authentication"
+        "[Type][0]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"
@@ -146,8 +144,8 @@ ruleset:
         "[Category][0]": "Access.Other"
         "[Analyzer][Data]":
           - "Log"
-          - "Auth"
-        "[Analyzer][Type]": "Cyber"
+          - "Authentication"
+        "[Type][0]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"
@@ -166,8 +164,8 @@ ruleset:
         "[Category][0]": "Access.Other"
         "[Analyzer][Data]":
           - "Log"
-          - "Auth"
-        "[Analyzer][Type]": "Cyber"
+          - "Authentication"
+        "[Type][0]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"

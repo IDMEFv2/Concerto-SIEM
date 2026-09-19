@@ -10,15 +10,15 @@ ruleset:
           fallback: "Medium"
       fields:
         "[Target][0][Hostname]": "%{[Attachment][RawLog][Content][host][hostname]}"
-        "[Severity]": "Info"
+        "[Priority]": "Info"
         "[Description]": "User %{[Attachment][RawLog][Content][target][user][name]} successfully executed the command '%{[Attachment][RawLog][Content][process][command_line]}' as %{[Attachment][RawLog][Content][target][user][name]}"
     - id: 2701
       translate:
         - source: "[Attachment][RawLog][Content][target][user][name]"
           target: "[Category][0]"
           dictionary:
-           "root": "Defense.Other"
-          fallback: "Defense.Other"
+           "root": "Access.Unauthorized"
+          fallback: "Access.Unauthorized"
         - source: "[Attachment][RawLog][Content][target][user][name]"
           target: "[Priority]"
           dictionary:
@@ -28,8 +28,8 @@ ruleset:
         "[@metadata][IDMEFv2][target]": "host"
         "[Analyzer][Data]":
           - "Log"
-          - "Auth"
-        "[Analyzer][Type]": "Cyber"
+          - "Authentication"
+        "[Type][0]": "Cyber"
         "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
         "[Target][0][User]": "%{[Attachment][RawLog][Content][target][user][name]}"
         "[Target][0][Hostname]": "%{[Attachment][RawLog][Content][host][hostname]}"
