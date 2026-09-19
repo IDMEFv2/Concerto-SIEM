@@ -1,174 +1,183 @@
 ruleset:
   name: ssh
   rules:
-    - id: 1902
-      translate:
-        - source: "[Attachment][RawLog][Content][destination][user][name]"
-          target: "[Priority]"
-          dictionary:
-            root: "Medium"
-          fallback: "Low"
-      fields:
-        "[@metadata][IDMEFv2][source]": "source"
-        "[@metadata][IDMEFv2][target]": "host"
-        "[Category][0]": "Access.Other"
-        "[Analyzer][Data]": 
-          - "Log"
-          - "Authentication"
-        "[Type][0]": "Cyber"
-        "[Source][0][Protocol]":
-          - "tcp"
-          - "ssh"
-        "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
-        "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
-        "[Description]": "Someone tried to log in as '%{[Attachment][RawLog][Content][destination][user][name]}' from %{[Attachment][RawLog][Content][source][address]} port %{[Attachment][RawLog][Content][source][port]} and failed"
-    - id: 1904
-      fields:
-        "[@metadata][IDMEFv2][source]": "source"
-        "[@metadata][IDMEFv2][target]": "host"
-        "[Category][0]": "Access.Other"
-        "[Analyzer][Data]":
-          - "Log"
-          - "Authentication"
-        "[Source][0][Protocol]":
-          - "tcp"
-          - "ssh"
-        "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
-        "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
-        "[Priority]": "Medium"
-        "[Description]": "Someone tried to log in with an invalid username '%{[Attachment][RawLog][Content][destination][user][name]}' from %{[Attachment][RawLog][Content][source][address]}"
-    - id: 1905
-      fields:
-        "[@metadata][IDMEFv2][source]": "source"
-        "[@metadata][IDMEFv2][target]": "host"
-        "[Category][0]": "Access.Other"
-        "[Analyzer][Data]":
-          - "Log"
-          - "Authentication"
-        "[Type][0]": "Cyber"
-        "[Source][0][Protocol]":
-          - "tcp"
-          - "ssh"
-        "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
-        "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
-        "[Priority]": "Medium"
-        "[Description]": "%{[Attachment][RawLog][Content][message]}"
-    - id: 1906
-      fields:
-        "[@metadata][IDMEFv2][source]": "source"
-        "[@metadata][IDMEFv2][target]": "host"
-        "[Category][0]": "Recon.Network"
-        "[Type][0]": "Cyber"
-        "[Source][0][Protocol]":
-          - "tcp"
-          - "ssh"
-        "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
-        "[Priority]": "Medium"
-        "[Description]": "%{[Attachment][RawLog][Content][source][address]} is probably making a server recognition"
-    - id: 1908
-      translate:
-        - source: "[Attachment][RawLog][Content][destination][user][name]"
-          target: "[Priority]"
-          dictionary:
-            "root": "Medium"
-          fallback: "Info"
-      fields:
-        "[@metadata][IDMEFv2][source]": "source"
-        "[@metadata][IDMEFv2][target]": "host"
-        "[Category][0]": "Access.Other"
-        "[Analyzer][Data]": ["Log", "Authentication"]
-        "[Type][0]": "Cyber"
-        "[Source][0][Protocol]": ["tcp", "ssh"]
-        "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
-        "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
-        "[Description]": "User %{[Attachment][RawLog][Content][destination][user][name]} logged in from %{[Attachment][RawLog][Content][source][address]} port %{[Attachment][RawLog][Content][source][port]} using the %{[Attachment][RawLog][Content][SSH][auth_method]} method"
-    - id: 1909
-      fields:
-        "[@metadata][IDMEFv2][source]": "source"
-        "[@metadata][IDMEFv2][target]": "host"
-        "[Category][0]": "Access.Other"
-        "[Analyzer][Data]":
-          - "Log"
-          - "Authentication"
-        "[Type][0]": "Cyber"
-        "[Source][0][IP]": "%{[Attachment][RawLog][Content][source][address]}"
-        "[Source][0][Protocol]":
-          - "tcp"
-          - "ssh"
-        "[Target][0][Hostname]": "%{[Attachment][RawLog][Content][host][hostname]}"
-        "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
-        "[Target][0][User]": "root"
-        "[Priority]": "Medium"
-        "[Description]": "Someone tried to log in as root while it is forbidden"
-    - id: 1910
-      fields:
-        "[@metadata][IDMEFv2][source]": "source"
-        "[@metadata][IDMEFv2][target]": "host"
-        "[Category][0]": "Access.Other"
-        "[Analyzer][Data]":
-          - "Log"
-          - "Authentication"
-        "[Type][0]": "Cyber"
-        "[Source][0][Protocol]":
-          - "tcp"
-          - "ssh"
-        "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
-        "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
-        "[Priority]": "Medium"
-        "[Description]": "General purpose authentication request was blocked. Reason: invalid user %{[Attachment][RawLog][Content][destination][user][name]}"
-    - id: 1911
-      fields:
-        "[@metadata][IDMEFv2][source]": "source"
-        "[@metadata][IDMEFv2][target]": "host"
-        "[Category][0]": "Access.Other"
-        "[Analyzer][Data]":
-          - "Log"
-          - "Authentication"
-        "[Type][0]": "Cyber"
-        "[Source][0][Protocol]":
-          - "tcp"
-          - "ssh"
-        "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
-        "[Priority]": "Medium"
-        "[Description]": "General purpose authentication request was blocked. Reason: %{[Attachment][RawLog][Content][event][reason]}"
-    - id: 1912
-      translate:
-        - source: "[Attachment][RawLog][Content][destination][user][name]"
-          target: "[Priority]"
-          dictionary:
-            "root": "Medium"
-          fallback: "Low"
-      fields:
-        "[@metadata][IDMEFv2][source]": "source"
-        "[@metadata][IDMEFv2][target]": "host"
-        "[Category][0]": "Access.Other"
-        "[Analyzer][Data]":
-          - "Log"
-          - "Authentication"
-        "[Type][0]": "Cyber"
-        "[Source][0][Protocol]":
-          - "tcp"
-          - "ssh"
-        "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
-        "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
-        "[Description]": "Someone tried to log in as '%{[Attachment][RawLog][Content][destination][user][name]}' from %{[Attachment][RawLog][Content][source][address]} port %{[Attachment][RawLog][Content][source][port]} using the %{[Attachment][RawLog][Content][SSH][auth_method]} method"
-    - id: 1914
-      translate:
-        - source: "[Attachment][RawLog][Content][destination][user][name]"
-          target: "[Priority]"
-          dictionary:
-            "root": "Medium"
-          fallback: "Low"
-      fields:
-        "[@metadata][IDMEFv2][target]": "host"
-        "[Category][0]": "Access.Other"
-        "[Analyzer][Data]":
-          - "Log"
-          - "Authentication"
-        "[Type][0]": "Cyber"
-        "[Source][0][Protocol]":
-          - "tcp"
-          - "ssh"
-        "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
-        "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
-        "[Description]": "Someone tried to log in as '%{[Attachment][RawLog][Content][destination][user][name]}' from %{[Attachment][RawLog][Content][source][address]}"
+  - id: 1902
+    translate:
+    - source: '[Attachment][RawLog][Content][destination][user][name]'
+      target: '[Priority]'
+      dictionary:
+        root: Medium
+      fallback: Low
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[@metadata][IDMEFv2][target]': host
+      '[Category][0]': Access.Other
+      '[Analyzer][Data]':
+      - Log
+      - Authentication
+      '[Type][0]': Cyber
+      '[Source][0][Protocol]':
+      - tcp
+      - ssh
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][destination][user][name]}'
+      '[Description]': Someone tried to log in as '%{[Attachment][RawLog][Content][destination][user][name]}'
+        from %{[Attachment][RawLog][Content][source][address]} port %{[Attachment][RawLog][Content][source][port]}
+        and failed
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'
+  - id: 1904
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[@metadata][IDMEFv2][target]': host
+      '[Category][0]': Access.Other
+      '[Analyzer][Data]':
+      - Log
+      - Authentication
+      '[Source][0][Protocol]':
+      - tcp
+      - ssh
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][destination][user][name]}'
+      '[Priority]': Medium
+      '[Description]': Someone tried to log in with an invalid username '%{[Attachment][RawLog][Content][destination][user][name]}'
+        from %{[Attachment][RawLog][Content][source][address]}
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'
+  - id: 1905
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[@metadata][IDMEFv2][target]': host
+      '[Category][0]': Access.Other
+      '[Analyzer][Data]':
+      - Log
+      - Authentication
+      '[Type][0]': Cyber
+      '[Source][0][Protocol]':
+      - tcp
+      - ssh
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][destination][user][name]}'
+      '[Priority]': Medium
+      '[Description]': '%{[Attachment][RawLog][Content][message]}'
+  - id: 1906
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[Category][0]': Recon.Network
+      '[Type][0]': Cyber
+      '[Source][0][Protocol]':
+      - tcp
+      - ssh
+      '[Priority]': Medium
+      '[Description]': '%{[Attachment][RawLog][Content][source][address]} is probably
+        making a server recognition'
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'
+  - id: 1908
+    translate:
+    - source: '[Attachment][RawLog][Content][destination][user][name]'
+      target: '[Priority]'
+      dictionary:
+        root: Medium
+      fallback: Info
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[@metadata][IDMEFv2][target]': host
+      '[Category][0]': Access.Other
+      '[Analyzer][Data]':
+      - Log
+      - Authentication
+      '[Type][0]': Cyber
+      '[Source][0][Protocol]':
+      - tcp
+      - ssh
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][destination][user][name]}'
+      '[Description]': User %{[Attachment][RawLog][Content][destination][user][name]}
+        logged in from %{[Attachment][RawLog][Content][source][address]} port %{[Attachment][RawLog][Content][source][port]}
+        using the %{[Attachment][RawLog][Content][SSH][auth_method]} method
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'
+  - id: 1909
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[@metadata][IDMEFv2][target]': host
+      '[Category][0]': Access.Other
+      '[Analyzer][Data]':
+      - Log
+      - Authentication
+      '[Type][0]': Cyber
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'
+      '[Source][0][Protocol]':
+      - tcp
+      - ssh
+      '[Priority]': Medium
+      '[Description]': Someone tried to log in as root while it is forbidden
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][destination][user][name]}'
+  - id: 1910
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[@metadata][IDMEFv2][target]': host
+      '[Category][0]': Access.Other
+      '[Analyzer][Data]':
+      - Log
+      - Authentication
+      '[Type][0]': Cyber
+      '[Source][0][Protocol]':
+      - tcp
+      - ssh
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][destination][user][name]}'
+      '[Priority]': Medium
+      '[Description]': 'General purpose authentication request was blocked. Reason:
+        invalid user %{[Attachment][RawLog][Content][destination][user][name]}'
+  - id: 1911
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[Category][0]': Access.Other
+      '[Analyzer][Data]':
+      - Log
+      - Authentication
+      '[Type][0]': Cyber
+      '[Source][0][Protocol]':
+      - tcp
+      - ssh
+      '[Priority]': Medium
+      '[Description]': 'General purpose authentication request was blocked. Reason:
+        %{[Attachment][RawLog][Content][event][reason]}'
+  - id: 1912
+    translate:
+    - source: '[Attachment][RawLog][Content][destination][user][name]'
+      target: '[Priority]'
+      dictionary:
+        root: Medium
+      fallback: Low
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[@metadata][IDMEFv2][target]': host
+      '[Category][0]': Access.Other
+      '[Analyzer][Data]':
+      - Log
+      - Authentication
+      '[Type][0]': Cyber
+      '[Source][0][Protocol]':
+      - tcp
+      - ssh
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][destination][user][name]}'
+      '[Description]': Someone tried to log in as '%{[Attachment][RawLog][Content][destination][user][name]}'
+        from %{[Attachment][RawLog][Content][source][address]} port %{[Attachment][RawLog][Content][source][port]}
+        using the %{[Attachment][RawLog][Content][SSH][auth_method]} method
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'
+  - id: 1914
+    translate:
+    - source: '[Attachment][RawLog][Content][destination][user][name]'
+      target: '[Priority]'
+      dictionary:
+        root: Medium
+      fallback: Low
+    fields:
+      '[@metadata][IDMEFv2][target]': host
+      '[Category][0]': Access.Other
+      '[Analyzer][Data]':
+      - Log
+      - Authentication
+      '[Type][0]': Cyber
+      '[Source][0][Protocol]':
+      - tcp
+      - ssh
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][destination][user][name]}'
+      '[Description]': Someone tried to log in as '%{[Attachment][RawLog][Content][destination][user][name]}'
+        from %{[Attachment][RawLog][Content][source][address]}
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'
+      '[@metadata][IDMEFv2][source]': source

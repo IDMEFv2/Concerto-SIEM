@@ -1,0 +1,15 @@
+ruleset:
+  name: wireless_parsing
+  rules:
+  - id: 2201
+    fields:
+      '[Type][0]': Cyber
+      '[Category][0]': Access.Unauthorized
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': 'Evenement detecte: Jan 21 17:27:46 192.168.0.17 Unauthorized
+        wireless PC try to connected 00-30-65-05-17-AD. Risque d acces non autorise
+        ou de compromission.'

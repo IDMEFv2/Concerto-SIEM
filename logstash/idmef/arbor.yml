@@ -1,0 +1,19 @@
+ruleset:
+  name: anomaly_parsing
+  rules:
+  - id: 4304
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[@metadata][IDMEFv2][target]': host
+      '[Type][0]': Cyber
+      '[Category][0]': Operational.Process Failure
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Low
+      '[Description]': 'Evenement detecte: Apr 17 07:31:22 arbordos.mynetwork.net
+        pfDoS: rtr 1.2.3.4 rtrSampleRate 1000 proto 17 src 192.168.0.69 dst 1.2.3.4
+        dstPo. Risque de compromission a qualifier par l operateur.'
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'
+      '[Target][0][IP]': '%{[Attachment][RawLog][Content][destination][address]}'

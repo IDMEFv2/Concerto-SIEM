@@ -1,0 +1,15 @@
+ruleset:
+  name: trendmicro_parsing
+  rules:
+  - id: 24302
+    fields:
+      '[Type][0]': Cyber
+      '[Category][0]': Malware.Other
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': High
+      '[Description]': 'Evenement detecte: 2008/07/22 18:40:22 GMT+00:00 [13749:1]
+        License: General: License is activated. Virus and non-spam filters are enabled.
+        Risque de propagation malveillante et d impact systeme.'

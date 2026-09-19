@@ -1,0 +1,19 @@
+ruleset:
+  name: radware_alteon_parsing
+  rules:
+  - id: 168000101
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[@metadata][IDMEFv2][target]': host
+      '[Type][0]': Cyber
+      '[Category][0]': Access.Unauthorized
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': 'Evenement detecte: Mar 16 7:26:32 223.88.134.6 NOTICE WebOS
+        <telnet/ssh-1>: Failed login attempt via TELNET from host 223.88.134.6. Risque
+        d acces non autorise ou de compromission.'
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][user][name]}'

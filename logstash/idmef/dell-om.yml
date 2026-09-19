@@ -1,0 +1,15 @@
+ruleset:
+  name: server_administrator_parsing
+  rules:
+  - id: 3801
+    fields:
+      '[Type][0]': Cyber
+      '[Category][0]': Access.Unauthorized
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': 'Evenement detecte: Jun 24 08:56:25 neo server administrator[info]
+        1352 Power supply returned to normal Sensor location: Power supply 2 Chas.
+        Risque d acces non autorise ou de compromission.'

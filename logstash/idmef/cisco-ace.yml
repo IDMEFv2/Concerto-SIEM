@@ -1,0 +1,14 @@
+ruleset:
+  name: ace_event_parsing
+  rules:
+  - id: 5105
+    fields:
+      '[Type][0]': Cyber
+      '[Category][0]': Access.Unauthorized
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': Tentative d acces refusee detectee. Risque d acces non autorise
+        ou de compromission.

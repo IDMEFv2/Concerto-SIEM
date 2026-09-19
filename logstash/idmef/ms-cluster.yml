@@ -1,0 +1,15 @@
+ruleset:
+  name: ms_cluster_parsing
+  rules:
+  - id: 4901
+    fields:
+      '[Type][0]': Cyber
+      '[Category][0]': Access.Unauthorized
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': 'Evenement detecte: Oct 22 04:16:04 smf-syslog-02 smf-exchange-05/smf-exchange-05
+        clussvc[warning] 1135 Cluster node SMF-EXCHANGE-06 was rem. Risque d acces
+        non autorise ou de compromission.'

@@ -1,0 +1,17 @@
+ruleset:
+  name: shadow-utils
+  rules:
+  - id: 3302
+    fields:
+      '[@metadata][IDMEFv2][target]': host
+      '[Type][0]': Cyber
+      '[Category][0]': Operational.Policy Violation
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': High
+      '[Description]': 'Evenement detecte: Oct 30 10:18:37 localhost useradd[3495]:
+        new user: name=test, UID=1005, GID=1003, home=/home/test, shell=/bin/bash
+        May 1. Risque de derive administrative exploitable.'
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][user][name]}'

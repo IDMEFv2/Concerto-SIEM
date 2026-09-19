@@ -1,0 +1,15 @@
+ruleset:
+  name: nagios
+  rules:
+  - id: 1100
+    fields:
+      '[Type][0]': Cyber
+      '[Category][0]': Access.Unauthorized
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': 'Evenement detecte: Oct 27 23:22:53 host nagios: SERVICE ALERT:
+        app2.test.domain.com;TCPPORT_8009_ajp13;CRITICAL;HARD;5;Connection refused.
+        Risque d acces non autorise ou de compromission.'

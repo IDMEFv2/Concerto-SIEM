@@ -1,0 +1,14 @@
+ruleset:
+  name: virus_found_parsing
+  rules:
+  - id: 3201
+    fields:
+      '[Type][0]': Cyber
+      '[Category][0]': Malware.Other
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': High
+      '[Description]': Indicateur de malware detecte. Risque de propagation malveillante
+        et d impact systeme.

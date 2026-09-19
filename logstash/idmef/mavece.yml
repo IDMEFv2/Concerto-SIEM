@@ -1,0 +1,14 @@
+ruleset:
+  name: norton_parsing
+  rules:
+  - id: 1200
+    fields:
+      '[Type][0]': Cyber
+      '[Category][0]': Access.Unauthorized
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': High
+      '[Description]': Indicateur de malware detecte. Risque d acces non autorise
+        ou de compromission.

@@ -1,36 +1,39 @@
 ruleset:
   name: sudo
   rules:
-    - id: 2700
-      translate:
-        - source: "[Attachment][RawLog][Content][target][user][name]"
-          target: "[Priority]"
-          dictionary:
-            "root": "High"
-          fallback: "Medium"
-      fields:
-        "[Target][0][Hostname]": "%{[Attachment][RawLog][Content][host][hostname]}"
-        "[Priority]": "Info"
-        "[Description]": "User %{[Attachment][RawLog][Content][target][user][name]} successfully executed the command '%{[Attachment][RawLog][Content][process][command_line]}' as %{[Attachment][RawLog][Content][target][user][name]}"
-    - id: 2701
-      translate:
-        - source: "[Attachment][RawLog][Content][target][user][name]"
-          target: "[Category][0]"
-          dictionary:
-           "root": "Access.Unauthorized"
-          fallback: "Access.Unauthorized"
-        - source: "[Attachment][RawLog][Content][target][user][name]"
-          target: "[Priority]"
-          dictionary:
-            "root": "High"
-          fallback: "Medium"
-      fields:
-        "[@metadata][IDMEFv2][target]": "host"
-        "[Analyzer][Data]":
-          - "Log"
-          - "Authentication"
-        "[Type][0]": "Cyber"
-        "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
-        "[Target][0][User]": "%{[Attachment][RawLog][Content][target][user][name]}"
-        "[Target][0][Hostname]": "%{[Attachment][RawLog][Content][host][hostname]}"
-        "[Description]": "Unauthorized user %{[Attachment][RawLog][Content][target][user][name]} tried to execute the command '%{[Attachment][RawLog][Content][process][command_line]}' as %{[Attachment][RawLog][Content][target][user][name]}"
+  - id: 2700
+    translate:
+    - source: '[Attachment][RawLog][Content][target][user][name]'
+      target: '[Priority]'
+      dictionary:
+        root: High
+      fallback: Medium
+    fields:
+      '[Priority]': Info
+      '[Description]': User %{[Attachment][RawLog][Content][target][user][name]} successfully
+        executed the command '%{[Attachment][RawLog][Content][process][command_line]}'
+        as %{[Attachment][RawLog][Content][target][user][name]}
+      '[@metadata][IDMEFv2][target]': host
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][target][user][name]}'
+  - id: 2701
+    translate:
+    - source: '[Attachment][RawLog][Content][target][user][name]'
+      target: '[Category][0]'
+      dictionary:
+        root: Access.Unauthorized
+      fallback: Access.Unauthorized
+    - source: '[Attachment][RawLog][Content][target][user][name]'
+      target: '[Priority]'
+      dictionary:
+        root: High
+      fallback: Medium
+    fields:
+      '[@metadata][IDMEFv2][target]': host
+      '[Analyzer][Data]':
+      - Log
+      - Authentication
+      '[Type][0]': Cyber
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][target][user][name]}'
+      '[Description]': Unauthorized user %{[Attachment][RawLog][Content][target][user][name]}
+        tried to execute the command '%{[Attachment][RawLog][Content][process][command_line]}'
+        as %{[Attachment][RawLog][Content][target][user][name]}

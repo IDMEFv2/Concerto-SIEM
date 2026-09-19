@@ -1,0 +1,19 @@
+ruleset:
+  name: chan_sip_parsing
+  rules:
+  - id: 6001
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[@metadata][IDMEFv2][target]': host
+      '[Type][0]': Cyber
+      '[Category][0]': Access.Unauthorized
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': 'Evenement detecte: Dec 3 10:32:10 NOTICE[23701] chan_sip.c:
+        Invalid to address: '''' from 192.168.33.180 (missing sip:) trying to use
+        anyway. Risque d acces non autorise ou de compromission.'
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][user][target][name]}'

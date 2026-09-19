@@ -1,0 +1,19 @@
+ruleset:
+  name: pam
+  rules:
+  - id: 2
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[@metadata][IDMEFv2][target]': host
+      '[Type][0]': Cyber
+      '[Category][0]': Access.Unauthorized
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': High
+      '[Description]': Tentative d acces refusee detectee. Risque d acces non autorise
+        ou de compromission.
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'
+      '[Source][0][User]': '%{[Attachment][RawLog][Content][source][user][name]}'
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][user][effective][name]}'

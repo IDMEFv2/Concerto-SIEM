@@ -1,17 +1,17 @@
 ruleset:
   name: nginx
   rules:
-    - id: 5643
-      translate:
-        - source: "[Attachment][RawLog][Content][service][err_num]"
-          target: "[Description]"
-          dictionary:
-            "404": "Invalide Web page access"
-            "403": "Unauthorized Web access"
-            "500": "Internal Web server Error"
-          fallback: "Unknown error"
-      fields:
-        "[Source][0][IP]": "%{[Attachment][RawLog][Content][source][address]}"
-        "[Target][0][Hostname]": "%{[Attachment][RawLog][Content][host][hostname]}"
-        "[Priority]": "Medium"
-        "[Category][0]": "Access.Unauthorized"
+  - id: 5643
+    translate:
+    - source: '[Attachment][RawLog][Content][service][err_num]'
+      target: '[Description]'
+      dictionary:
+        '404': Invalide Web page access
+        '403': Unauthorized Web access
+        '500': Internal Web server Error
+      fallback: Unknown error
+    fields:
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'
+      '[Priority]': Medium
+      '[Category][0]': Access.Unauthorized
+      '[@metadata][IDMEFv2][source]': source

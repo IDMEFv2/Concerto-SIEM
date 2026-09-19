@@ -1,0 +1,14 @@
+ruleset:
+  name: kernel_ulogd_bonding_parsing
+  rules:
+  - id: 4807
+    fields:
+      '[Type][0]': Cyber
+      '[Category][0]': Access.Unauthorized
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': Tentative d acces refusee detectee. Risque d acces non autorise
+        ou de compromission.

@@ -1,0 +1,15 @@
+ruleset:
+  name: honeyd_parsing
+  rules:
+  - id: 2609
+    fields:
+      '[@metadata][IDMEFv2][target]': host
+      '[Type][0]': Cyber
+      '[Category][0]': Recon.Network
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': Evenement detecte. Risque de preparation d attaque ciblee.
+      '[Target][0][IP]': '%{[Attachment][RawLog][Content][destination][address]}'

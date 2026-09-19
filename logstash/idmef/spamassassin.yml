@@ -1,0 +1,16 @@
+ruleset:
+  name: spamassassin_parsing
+  rules:
+  - id: 5202
+    fields:
+      '[@metadata][IDMEFv2][target]': host
+      '[Type][0]': Cyber
+      '[Category][0]': Abuse.Other
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Low
+      '[Description]': Activite de reconnaissance detectee. Risque de compromission
+        a qualifier par l operateur.
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][user][target][name]}'

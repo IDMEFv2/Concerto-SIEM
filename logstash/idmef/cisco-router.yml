@@ -1,0 +1,17 @@
+ruleset:
+  name: event_code_parsing
+  rules:
+  - id: 5601
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[Type][0]': Cyber
+      '[Category][0]': Malware.Other
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': High
+      '[Description]': 'Evenement detecte: Apr 11 20:13:49 wormhole.flash.net 2279:
+        %RCMD-4-RSHPORTATTEMPT: Attempted to connect to RSHELL from 1.2.3.4. Risque
+        de propagation malveillante et d impact systeme.'
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'

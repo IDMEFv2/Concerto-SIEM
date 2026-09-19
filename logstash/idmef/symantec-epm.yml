@@ -1,0 +1,16 @@
+ruleset:
+  name: SymantecServer_parsing
+  rules:
+  - id: 172000104
+    fields:
+      '[@metadata][IDMEFv2][target]': host
+      '[Type][0]': Cyber
+      '[Category][0]': Malware.Other
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': High
+      '[Description]': Indicateur de malware detecte. Risque de propagation malveillante
+        et d impact systeme.
+      '[Target][0][Hostname]': '%{[Attachment][RawLog][Content][host][hostname]}'

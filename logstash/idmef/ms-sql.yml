@@ -1,0 +1,16 @@
+ruleset:
+  name: mssql_parsing
+  rules:
+  - id: 1000
+    fields:
+      '[@metadata][IDMEFv2][target]': host
+      '[Type][0]': Cyber
+      '[Category][0]': Recon.Network
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': Tentative d acces refusee detectee. Risque de preparation d
+        attaque ciblee.
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][user][target][name]}'

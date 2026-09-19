@@ -1,0 +1,19 @@
+ruleset:
+  name: product_parsing
+  rules:
+  - id: 112
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[@metadata][IDMEFv2][target]': host
+      '[Type][0]': Cyber
+      '[Category][0]': Recon.Network
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': 'Evenement detecte: 14Aug2006 16:39:44 12.34.56.78 > alert
+        product: SmartDefense; cpmad: CPMAD; attack: Port Scanning; dst: 90.12.34.56;
+        src. Risque de preparation d attaque ciblee.'
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'
+      '[Target][0][IP]': '%{[Attachment][RawLog][Content][destination][address]}'

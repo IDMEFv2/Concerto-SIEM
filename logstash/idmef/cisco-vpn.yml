@@ -1,0 +1,15 @@
+ruleset:
+  name: sev_parsing
+  rules:
+  - id: 303
+    fields:
+      '[@metadata][IDMEFv2][target]': host
+      '[Type][0]': Cyber
+      '[Category][0]': Access.Unauthorized
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': Evenement detecte. Risque d acces non autorise ou de compromission.
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][user][target][name]}'

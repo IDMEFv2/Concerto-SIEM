@@ -1,0 +1,16 @@
+ruleset:
+  name: cisco_nx_os_parsing
+  rules:
+  - id: 25200
+    fields:
+      '[@metadata][IDMEFv2][target]': host
+      '[Type][0]': Cyber
+      '[Category][0]': Access.Unauthorized
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': Tentative d acces refusee detectee. Risque d acces non autorise
+        ou de compromission.
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][user][target][name]}'

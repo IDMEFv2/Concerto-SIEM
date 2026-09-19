@@ -1,0 +1,14 @@
+ruleset:
+  name: apc-emu
+  rules:
+  - id: 2801
+    fields:
+      '[Type][0]': Cyber
+      '[Category][0]': Recon.Network
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': Activite de reconnaissance detectee. Risque de preparation
+        d attaque ciblee.

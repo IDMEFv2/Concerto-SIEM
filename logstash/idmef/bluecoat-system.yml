@@ -1,0 +1,15 @@
+ruleset:
+  name: bluecoat_parsing
+  rules:
+  - id: 11024
+    fields:
+      '[Type][0]': Cyber
+      '[Category][0]': Access.Unauthorized
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': 'Evenement detecte: Feb 04 12:51:40 192.168.11.181 ProxySG:
+        48010 DNS service restored after 0 timeouts, 0 refused connections and 1 rejecte.
+        Risque d acces non autorise ou de compromission.'

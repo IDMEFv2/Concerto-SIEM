@@ -1,0 +1,18 @@
+ruleset:
+  name: paloalto_parsing
+  rules:
+  - id: 24602
+    fields:
+      '[@metadata][IDMEFv2][source]': source
+      '[@metadata][IDMEFv2][target]': host
+      '[Type][0]': Cyber
+      '[Category][0]': Access.Unauthorized
+      '[Analyzer][Data]':
+      - Log
+      '[Analyzer][Method]':
+      - Rule-based
+      '[Priority]': Medium
+      '[Description]': Tentative d acces refusee detectee. Risque d acces non autorise
+        ou de compromission.
+      '[Source][0][IP]': '%{[Attachment][RawLog][Content][source][address]}'
+      '[Target][0][User]': '%{[Attachment][RawLog][Content][user][target][name]}'
