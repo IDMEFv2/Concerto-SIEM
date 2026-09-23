@@ -135,7 +135,7 @@ services:
         MONITORING_ENABLED: "false"
         MAX_MSG_SIZE: 1048576
         BOOTSTRAP_SERVER: "http://kafka1:9092"
-        BIG_DATA_SERVER: "http://es01:9200/"
+        BIG_DATA_SERVER: "http://es01:9200"
         BIG_DATA_USERNAME: "elastic"
         BIG_DATA_PASSWORD: "elastic"
         ANALYZER_NAME: "Logstash"
