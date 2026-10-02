@@ -76,7 +76,7 @@ ruleset:
 
 At this stage, all extracted fields are available within the log and can be found in the "ARCHIVE" section of the web interface.
 
-## Writing IDMEFv2 Rules
+## Writing IDMEFv2 Rules (mapping rules)
 
 To generate an alert from this parsed data, create a corresponding file (e.g., `<my_file>.yml`) in the `logstash/idmef/` directory.
 
@@ -106,7 +106,7 @@ translate:
     fallback: "Low"
 ```
 
-For our SSH example, the corresponding `logstash/to_idmef/ssh.yml` rule would be:
+For our SSH example, the corresponding `logstash/idmef/ssh.yml` rule would be:
 ```yaml
 ruleset:
   name: ssh
@@ -124,7 +124,6 @@ ruleset:
         "[Category][0]": "Attempt.Login"
         "[Analyzer][Data]":
           - "Log"
-          - "Auth"
         "[Analyzer][Type]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
@@ -133,3 +132,36 @@ ruleset:
         "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}" # Dynamic field
         "[Description]": "Someone tried to log in as '%{[Attachment][RawLog][Content][destination][user][name]}' from %{[Attachment][RawLog][Content][source][address]} port %{[Attachment][RawLog][Content][source][port]} using the %{[Attachment][RawLog][Content][SSH][auth_method]} method"
 ```
+## Few tips for creating rules with AI
+
+- - Rules langage is english
+
+- All values must be protected by double quote, no simple quote or no quote
+
+- IDMEFv2 Alert Description attributes should be as clear as possible for operator, if original message description is not clear, try make it clearer
+
+- IDMEFv2 Alert Category should not be other.unclassified unless no other choice
+
+- Do not use YML anchor
+
+- Analyzer.data is ALLWAYS Log and only Log (Detection rules are parsing Logs)
+
+- do not use outcome fields 
+
+- Number of parsing rules (in rulesets)  must be exactly the same as number of mapping rules (in idmef)
+
+- Rules names shoud be : ssh_parsing.yml in rulesets and ssh_mapping.yml in idmef
+
+- Name of the rule set must be the prefix of the file name (ex: ssh_parsing.yml => ssh_parsing)  
+
+- All parsing and mapping rules files should have a banner
+
+# ============================================================
+# File : ssh_parsing.yml
+# Description : Concerto parsing rules for ssh syslog messages
+# ssh parsing IDs: 1902, 1903, 1904
+# Auteur      :  Concerto Security
+# Licence     : MIT
+# Version     :  0.2
+# ============================================================ 
+
