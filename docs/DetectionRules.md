@@ -132,11 +132,88 @@ ruleset:
         "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}" # Dynamic field
         "[Description]": "Someone tried to log in as '%{[Attachment][RawLog][Content][destination][user][name]}' from %{[Attachment][RawLog][Content][source][address]} port %{[Attachment][RawLog][Content][source][port]} using the %{[Attachment][RawLog][Content][SSH][auth_method]} method"
 ```
-## Few tips for creating rules with AI
+## YAML quoting rules for Grok patterns
 
-- - Rules langage is english
+Grok patterns contain regular-expression escapes such as `\s`, `\w`, `\d`, `\.`, `\+`, `\(`, `\)`, `\[`, `\]`, `\{`, `\}`.
+In YAML, these escapes **must not** appear inside a double-quoted scalar, because YAML interprets `\` as its own escape character and only accepts a small fixed set (`\n`, `\t`, `\r`, `\"`, `\\`, `\uXXXX`, `\xXX`, `\UXXXXXXXX`).
+Any other `\X` sequence inside `"..."` raises a `yaml.scanner.ScannerError` at load time.
 
-- All values must be protected by double quote, no simple quote or no quote
+**Rule**: as soon as a Grok pattern contains a backslash, put it between **single quotes** in the YAML file.
+
+### Wrong — double quotes, contains `\s`
+
+```yaml
+    - id: 4800
+      pattern: "bonding:\s%{WORD:[Attachment][RawLog][Content][bonding][belong]}:..."
+```
+
+Loading this file raises:
+
+```
+yaml.scanner.ScannerError: while scanning a double-quoted scalar
+  found unknown escape character 's'
+```
+
+### Right — single quotes, backslashes preserved literally
+
+```yaml
+    - id: 4800
+      pattern: 'bonding:\s%{WORD:[Attachment][RawLog][Content][bonding][belong]}:...'
+```
+
+Inside single-quoted YAML scalars, **no escape sequence is interpreted**. The only special rule is that a literal single quote must be doubled (`''`).
+
+### Comparison table
+
+| Value content | YAML quoting | Reason |
+|---|---|---|
+| `Access.Other` | `"..."` or `'...'` | No backslash, either is fine |
+| `sudo_mapping` | `"..."` or `'...'` | No backslash |
+| `Failed %{NOTSPACE:...} for user` | `"..."` | No backslash, double quotes are fine |
+| `bonding:\s%{WORD:...}` | **`'...'`** | Contains `\s` — forbidden in `"..."` |
+| `denied  \{ (?<desc>[\w ]+) \}` | **`'...'`** | Contains `\w` and `\{` — forbidden in `"..."` |
+| `%{IP:...}\.%{INT:...}` | **`'...'`** | Contains `\.` — forbidden in `"..."` |
+| A value that must contain a real newline | `"..."` with `\n` | Single quotes cannot express a real newline |
+
+**Practical rule**: if the value contains a backslash followed by anything other than `n`, `t`, `r`, `"`, `\`, `u`, `x`, `U` → **use single quotes**.
+
+### What about `samples:`?
+
+Samples are raw log lines. They rarely contain backslashes, but if they do (e.g. Windows paths like `C:\Program Files\...`), the same rule applies: use single quotes.
+
+```yaml
+      samples:
+        - '2009-02-23 15:55:01 slxp0060 Tripwire: Added C:\test\AutoRetrieve\bin\AutoRetrieve.ini on srvtest'
+```
+
+### What about `description:`?
+
+Descriptions are human-readable text and almost never contain backslashes. Double quotes are fine and preferred for consistency with the rest of the document.
+
+```yaml
+  description: "APC Environmental Monitoring Unit (EMU) syslog messages"
+```
+
+### Quick self-check
+
+Before committing a ruleset, run:
+
+```bash
+python3 -c "
+import yaml
+with open('my_ruleset.yml') as f:
+    docs = [d for d in yaml.safe_load_all(f) if d]
+print(len(docs), 'documents loaded')
+"
+```
+
+If it raises a `ScannerError` mentioning an unknown escape character, the offending line is given with its line and column numbers. Replace the surrounding double quotes with single quotes on that line, and re-run until all documents load.
+
+### Few tips for creating rules with AI
+
+- Rules language is English
+
+- All values must be quoted. Use **double quotes** for plain values (names, descriptions, categories, field names). Use **single quotes** for any value that contains a backslash (typically Grok patterns with `\s`, `\w`, `\d`, `\.`, etc.). See the "YAML quoting rules for Grok patterns" section above.
 
 - IDMEFv2 Alert Description attributes should be as clear as possible for operator, if original message description is not clear, try make it clearer
 
@@ -144,18 +221,19 @@ ruleset:
 
 - Do not use YML anchor
 
-- Analyzer.data is ALLWAYS Log and only Log (Detection rules are parsing Logs)
+- Analyzer.data is ALWAYS Log and only Log (Detection rules are parsing Logs)
 
-- do not use outcome fields 
+- do not use outcome fields
 
 - Number of parsing rules (in rulesets)  must be exactly the same as number of mapping rules (in idmef)
 
-- Rules names shoud be : ssh_parsing.yml in rulesets and ssh_mapping.yml in idmef
+- Rules names should be : ssh_parsing.yml in rulesets and ssh_mapping.yml in idmef
 
 - Name of the rule set must be the prefix of the file name (ex: ssh_parsing.yml => ssh_parsing)  
 
 - All parsing and mapping rules files should have a banner
 
+```
 # ============================================================
 # File : ssh_parsing.yml
 # Description : Concerto parsing rules for ssh syslog messages
