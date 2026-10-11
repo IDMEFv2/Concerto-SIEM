@@ -15,7 +15,6 @@ ruleset:
         "[Analyzer][Data]": 
           - "Log"
           - "Auth"
-        "[Analyzer][Type]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"
@@ -47,7 +46,6 @@ ruleset:
         "[Analyzer][Data]":
           - "Log"
           - "Auth"
-        "[Analyzer][Type]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"
@@ -60,7 +58,6 @@ ruleset:
         "[@metadata][IDMEFv2][source]": "source"
         "[@metadata][IDMEFv2][target]": "host"
         "[Category][0]": "Recon.Scanning"
-        "[Analyzer][Type]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"
@@ -79,7 +76,6 @@ ruleset:
         "[@metadata][IDMEFv2][target]": "host"
         "[Category][0]": "Access.Other"
         "[Analyzer][Data]": ["Log", "Auth"]
-        "[Analyzer][Type]": "Cyber"
         "[Source][0][Protocol]": ["tcp", "ssh"]
         "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
         "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
@@ -92,7 +88,6 @@ ruleset:
         "[Analyzer][Data]":
           - "Log"
           - "Auth"
-        "[Analyzer][Type]": "Cyber"
         "[Source][0][IP]": "%{[Attachment][RawLog][Content][source][address]}"
         "[Source][0][Protocol]":
           - "tcp"
@@ -110,7 +105,6 @@ ruleset:
         "[Analyzer][Data]":
           - "Log"
           - "Auth"
-        "[Analyzer][Type]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"
@@ -126,7 +120,6 @@ ruleset:
         "[Analyzer][Data]":
           - "Log"
           - "Auth"
-        "[Analyzer][Type]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"
@@ -147,7 +140,6 @@ ruleset:
         "[Analyzer][Data]":
           - "Log"
           - "Auth"
-        "[Analyzer][Type]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"
@@ -167,7 +159,6 @@ ruleset:
         "[Analyzer][Data]":
           - "Log"
           - "Auth"
-        "[Analyzer][Type]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"

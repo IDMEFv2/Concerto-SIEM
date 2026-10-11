@@ -347,7 +347,6 @@ ruleset:
         "[Analyzer][Data]":
           - "Log"
           - "Auth"
-        "[Analyzer][Type]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"

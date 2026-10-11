@@ -124,7 +124,6 @@ ruleset:
         "[Category][0]": "Attempt.Login"
         "[Analyzer][Data]":
           - "Log"
-        "[Analyzer][Type]": "Cyber"
         "[Source][0][Protocol]":
           - "tcp"
           - "ssh"

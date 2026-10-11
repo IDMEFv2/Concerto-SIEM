@@ -29,7 +29,6 @@ ruleset:
         "[Analyzer][Data]":
           - "Log"
           - "Auth"
-        "[Analyzer][Type]": "Cyber"
         "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
         "[Target][0][User]": "%{[Attachment][RawLog][Content][target][user][name]}"
         "[Target][0][Hostname]": "%{[Attachment][RawLog][Content][host][hostname]}"
