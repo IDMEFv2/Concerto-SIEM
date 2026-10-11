@@ -1,4 +1,4 @@
-ruleset:
+﻿ruleset:
   name: process_name_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
@@ -9,13 +9,13 @@ ruleset:
       - operator: constant
         operands: "bigconf.cgi"
   rules:
-    - id: 3600
+    - id: "3600"
       pattern: "AUDIT -- %{WORD:action} (?!VIPPORT)(%{WORD:data}) %{IP:[Attachment][RawLog][Content][destination][address]}.+User: %{USER:[Attachment][RawLog][Content][user][name]}"
       samples:
         - "Jun 10 14:03:08 12.4.18.135 bigconf.cgi: AUDIT -- Create MEMBER 10.5.253.52:0 (Parent: POOL SMDEMO) User: admin"
-    - id: 3601
+    - id: "3601"
       pattern: "AUDIT -- %{WORD:action} %{WORD:type} %{WORD:descr}.+User: %{USER:[Attachment][RawLog][Content][user][name]}"
       samples:
         - "Jun 10 18:05:43 12.4.18.135 bigconf.cgi: AUDIT -- Delete POOL SMDEMO User: admin"
-    - id: 3602
+    - id: "3602"
       pattern: "security: %{NOTSPACE:proto} .*port denial %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} -> %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}"

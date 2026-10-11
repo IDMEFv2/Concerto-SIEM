@@ -1,4 +1,4 @@
-ruleset:
+﻿ruleset:
   name: ftpd_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
@@ -9,7 +9,7 @@ ruleset:
       - operator: constant
         operands: "ftpd"
   rules:
-    - id: 2300
+    - id: "2300"
       pattern: "ANONYMOUS FTP LOGIN FROM ([\\w\\-\\.]+) \\[%{IP:[Attachment][RawLog][Content][source][address]}\\], %{NOTSPACE:[Attachment][RawLog][Content][user][name]}"
-    - id: 2301
+    - id: "2301"
       pattern: "FTP LOGIN FAILED \\((.+)\\) for ([\\w\\-\\.]+) \\[%{IP:[Attachment][RawLog][Content][source][address]}\\], %{NOTSPACE:[Attachment][RawLog][Content][user][name]}"

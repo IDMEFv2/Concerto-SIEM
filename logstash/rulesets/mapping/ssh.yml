@@ -1,7 +1,7 @@
-ruleset:
+﻿ruleset:
   name: ssh
   rules:
-    - id: 1902
+    - id: "1902"
       translate:
         - source: "[Attachment][RawLog][Content][destination][user][name]"
           target: "[Priority]"
@@ -21,7 +21,7 @@ ruleset:
         "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
         "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
         "[Description]": "Someone tried to log in as '%{[Attachment][RawLog][Content][destination][user][name]}' from %{[Attachment][RawLog][Content][source][address]} port %{[Attachment][RawLog][Content][source][port]} and failed"
-    - id: 1904
+    - id: "1904"
       fields:
         "[@metadata][IDMEFv2][source]": "source"
         "[@metadata][IDMEFv2][target]": "host"
@@ -36,7 +36,7 @@ ruleset:
         "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
         "[Priority]": "Medium"
         "[Description]": "Someone tried to log in with an invalid username '%{[Attachment][RawLog][Content][destination][user][name]}' from %{[Attachment][RawLog][Content][source][address]}"
-    - id: 1905
+    - id: "1905"
       fields:
         "[@metadata][IDMEFv2][source]": "source"
         "[@metadata][IDMEFv2][target]": "host"
@@ -53,7 +53,7 @@ ruleset:
         "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
         "[Priority]": "Medium"
         "[Description]": "%{[Attachment][RawLog][Content][message]}"
-    - id: 1906
+    - id: "1906"
       fields:
         "[@metadata][IDMEFv2][source]": "source"
         "[@metadata][IDMEFv2][target]": "host"
@@ -64,7 +64,7 @@ ruleset:
         "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
         "[Priority]": "Medium"
         "[Description]": "%{[Attachment][RawLog][Content][source][address]} is probably making a server recognition"
-    - id: 1908
+    - id: "1908"
       translate:
         - source: "[Attachment][RawLog][Content][destination][user][name]"
           target: "[Priority]"
@@ -80,7 +80,7 @@ ruleset:
         "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
         "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
         "[Description]": "User %{[Attachment][RawLog][Content][destination][user][name]} logged in from %{[Attachment][RawLog][Content][source][address]} port %{[Attachment][RawLog][Content][source][port]} using the %{[Attachment][RawLog][Content][SSH][auth_method]} method"
-    - id: 1909
+    - id: "1909"
       fields:
         "[@metadata][IDMEFv2][source]": "source"
         "[@metadata][IDMEFv2][target]": "host"
@@ -97,7 +97,7 @@ ruleset:
         "[Target][0][User]": "root"
         "[Priority]": "Medium"
         "[Description]": "Someone tried to log in as root while it is forbidden"
-    - id: 1910
+    - id: "1910"
       fields:
         "[@metadata][IDMEFv2][source]": "source"
         "[@metadata][IDMEFv2][target]": "host"
@@ -112,7 +112,7 @@ ruleset:
         "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
         "[Priority]": "Medium"
         "[Description]": "General purpose authentication request was blocked. Reason: invalid user %{[Attachment][RawLog][Content][destination][user][name]}"
-    - id: 1911
+    - id: "1911"
       fields:
         "[@metadata][IDMEFv2][source]": "source"
         "[@metadata][IDMEFv2][target]": "host"
@@ -126,7 +126,7 @@ ruleset:
         "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
         "[Priority]": "Medium"
         "[Description]": "General purpose authentication request was blocked. Reason: %{[Attachment][RawLog][Content][event][reason]}"
-    - id: 1912
+    - id: "1912"
       translate:
         - source: "[Attachment][RawLog][Content][destination][user][name]"
           target: "[Priority]"
@@ -146,7 +146,7 @@ ruleset:
         "[Target][0][Service]": "%{[Attachment][RawLog][Content][process][name]}"
         "[Target][0][User]": "%{[Attachment][RawLog][Content][destination][user][name]}"
         "[Description]": "Someone tried to log in as '%{[Attachment][RawLog][Content][destination][user][name]}' from %{[Attachment][RawLog][Content][source][address]} port %{[Attachment][RawLog][Content][source][port]} using the %{[Attachment][RawLog][Content][SSH][auth_method]} method"
-    - id: 1914
+    - id: "1914"
       translate:
         - source: "[Attachment][RawLog][Content][destination][user][name]"
           target: "[Priority]"

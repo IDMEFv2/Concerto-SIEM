@@ -139,8 +139,15 @@ def filter(event)
       if ruleid
         event.set('[Attachment][RawLog][Content][rule][id]', ruleid)
 
-        ruleid = Integer(ruleid) rescue ruleid
         rule = ruleset['rules'][ruleid]
+        if rule.nil?
+          begin
+            rule = ruleset['rules'][Integer(ruleid)]
+          rescue
+            rule = nil
+          end
+        end
+        next if rule.nil?
         @fields.each do |field|
           v = rule[field]
           event.set("[Attachment][RawLog][Content][rule][#{field}]", v) if v

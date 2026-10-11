@@ -1,7 +1,7 @@
-ruleset:
+﻿ruleset:
   name: sudo
   rules:
-    - id: 2700
+    - id: "2700"
       translate:
         - source: "[Attachment][RawLog][Content][target][user][name]"
           target: "[Priority]"
@@ -12,7 +12,7 @@ ruleset:
         "[Target][0][Hostname]": "%{[Attachment][RawLog][Content][host][hostname]}"
         "[Severity]": "Info"
         "[Description]": "User %{[Attachment][RawLog][Content][target][user][name]} successfully executed the command '%{[Attachment][RawLog][Content][process][command_line]}' as %{[Attachment][RawLog][Content][target][user][name]}"
-    - id: 2701
+    - id: "2701"
       translate:
         - source: "[Attachment][RawLog][Content][target][user][name]"
           target: "[Category][0]"

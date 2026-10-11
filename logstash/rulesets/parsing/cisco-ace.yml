@@ -1,4 +1,4 @@
-ruleset:
+﻿ruleset:
   name: ace_event_parsing
   field: "[Attachment][RawLog][Content][event][original]"
   predicate:
@@ -9,59 +9,59 @@ ruleset:
       - operator: constant
         operands: "ACE-"
   rules:
-    - id: 5101
+    - id: "5101"
       pattern: "-442002: Health probe %{DATA:classification} detected %{DATA:target} \\(interface %{DATA:interface}\\) in serverfarm %{DATA:server} changed state to DOWN"
       samples:
         - "Sep 25 11:53:19 x.x.x.x ACE_NAME %ACE-4-442002: Health probe CHECK_NAME detected SERVER_NAME (interface vlanXX) in serverfarm SF_NAME changed state to DOWN"
-    - id: 5102
+    - id: "5102"
       pattern: "-442001: Health probe %{DATA:classification} detected %{DATA:target} \\(interface %{DATA:interface}\\) in serverfarm %{DATA:server} changed state to UP"
       samples:
         - "Sep 25 11:53:19 x.x.x.x ACE_NAME %ACE-4-442001: Health probe CHECK_NAME detected SERVER_NAME (interface vlanXX) in serverfarm SF_NAME changed state to UP"
-    - id: 5103
+    - id: "5103"
       pattern: "-442007: VIP in class: '%{DATA:vipname}' changed state from %{NOTSPACE:src} to %{NOTSPACE:dst}"
-    - id: 5104
+    - id: "5104"
       pattern: "-441002: Serverfarm \\(%{NOTSPACE:name}\\) is now back in service %{GREEDYDATA:data}"
-    - id: 5105
+    - id: "5105"
       pattern: "-441001: Serverfarm \\(%{NOTSPACE:server}\\) failed over to backup"
-    - id: 5106
+    - id: "5106"
       pattern: "-727017: HA: FT Track Interface (?<interface_id>\\d+) is UP"
-    - id: 5107
+    - id: "5107"
       pattern: "-727018: HA: FT Track Interface (?<interface_id>\\d+) is DOWN"
-    - id: 5108
+    - id: "5108"
       pattern: "-727012: HA: FT Group (?<groupid>\\d+) changed state to %{NOTSPACE:status} %{GREEDYDATA:data}"
-    - id: 5109
+    - id: "5109"
       pattern: "-211001"
-    - id: 5110
+    - id: "5110"
       pattern: "-254001"
-    - id: 5111
+    - id: "5111"
       pattern: "-411001"
-    - id: 5112
+    - id: "5112"
       pattern: "-411002"
-    - id: 5113
+    - id: "5113"
       pattern: "-411003"
-    - id: 5114
+    - id: "5114"
       pattern: "-411004"
-    - id: 5115
+    - id: "5115"
       pattern: "-727011"
-    - id: 5116
+    - id: "5116"
       pattern: "-727014"
-    - id: 5117
+    - id: "5117"
       pattern: "-727018"
-    - id: 5118
+    - id: "5118"
       pattern: "-727015"
-    - id: 5119
+    - id: "5119"
       pattern: "-322001"
-    - id: 5120
+    - id: "5120"
       pattern: "-322002"
-    - id: 5121
+    - id: "5121"
       pattern: "-322003"
-    - id: 5122
+    - id: "5122"
       pattern: "-4000(\\d+): IDS:(\\d+)"
-    - id: 5123
+    - id: "5123"
       pattern: "-405001: Received ARP (\\S+) collision from %{IP:[Attachment][RawLog][Content][source][address]}"
-    - id: 5124
+    - id: "5124"
       pattern: "-410001"
-    - id: 5125
+    - id: "5125"
       pattern: "-412001"
-    - id: 5126
+    - id: "5126"
       pattern: "-111008"

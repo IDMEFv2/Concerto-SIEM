@@ -1,6 +1,6 @@
 # Detection rules
 
-Alerts can be created by Probes (IDS, AV, FW, CCTVs, etc) and sent to IDMEFv2. Concerto SIEM can also analyse syslog messages and identify potential incidents based on preconfigured "Detection rules". Those rules are composed of two part (in two separate files) a parsing rule detecting "incident" logs and parsing the content and an idmefv2 rule creation an IDMEFv2 message with the data previously parsed. Those two rules are identfied by the same ID.
+Alerts can be created by Probes (IDS, AV, FW, CCTVs, etc) and sent to IDMEFv2. Concerto SIEM can also analyse syslog messages and identify potential incidents based on preconfigured "Detection rules". Those rules are composed of two part (in two separate files) a parsing rule detecting "incident" logs and parsing the content and an idmefv2 rule creation an IDMEFv2 message with the data previously parsed. Those two rules are identfied by the same ID string.
 
 ## Write your own parsing rule
 
@@ -35,7 +35,7 @@ ruleset:
   field: "[Attachment][RawLog][Content][message]"
   <predicate_if_needed>
   rules:
-    - id: <rule_id, must be unique in your whole SIEM installation>
+    - id: "<rule_id, must be unique in your whole SIEM installation>"
       pattern: <grok_pattern>
       samples:
         - <Example of log>
@@ -66,7 +66,7 @@ ruleset:
       - operator: constant
         operands: "sshd"
   rules:
-    - id: 1912 # This ID must be unique across all rulesets
+    - id: "1912" # This ID string must be unique across all rulesets
       pattern: "Failed %{NOTSPACE:[Attachment][RawLog][Content][SSH][auth_method]} for (invalid|illegal) user (?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][destination][user][name]} from %{IPORHOST:[Attachment][RawLog][Content][source][address]} port %{POSINT:[Attachment][RawLog][Content][source][port]:int} ssh2"
       outcome: "failure"
       samples:
@@ -87,7 +87,7 @@ The file format is similar:
 ruleset:
   name: <ruleset_name>
   rules:
-    - id: <rule_id>
+    - id: "<rule_id>"
       <translate if needed>
       fields:
         <list_of fields to fill based on IDMEFv2 format>
@@ -111,7 +111,7 @@ For our SSH example, the corresponding `logstash/idmef/ssh.yml` rule would be:
 ruleset:
   name: ssh
   rules:
-    - id: 1912 # Must match the ID in the parsing ruleset
+    - id: "1912" # Must match the ID string in the parsing ruleset
       translate:
         - source: "[Attachment][RawLog][Content][destination][user][name]"
           target: "[Priority]"
@@ -142,7 +142,7 @@ Any other `\X` sequence inside `"..."` raises a `yaml.scanner.ScannerError` at l
 ### Wrong — double quotes, contains `\s`
 
 ```yaml
-    - id: 4800
+    - id: "4800"
       pattern: "bonding:\s%{WORD:[Attachment][RawLog][Content][bonding][belong]}:..."
 ```
 
@@ -156,7 +156,7 @@ yaml.scanner.ScannerError: while scanning a double-quoted scalar
 ### Right — single quotes, backslashes preserved literally
 
 ```yaml
-    - id: 4800
+    - id: "4800"
       pattern: 'bonding:\s%{WORD:[Attachment][RawLog][Content][bonding][belong]}:...'
 ```
 

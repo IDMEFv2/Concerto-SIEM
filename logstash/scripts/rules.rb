@@ -31,8 +31,8 @@ def register(params)
         })
         f.register
         r.push(f)
-        ruleid = Integer(rule['id']) rescue 0
-        if ruleid == 0
+        ruleid = rule['id'].to_s.strip
+        if ruleid.empty?
           logger.error("IDMEFv2 matching plugin: Can't read configuration for rule ID #{rule['id']}")
         else
           @rulesets[ruleid] = r
@@ -43,11 +43,22 @@ def register(params)
 end
 
 def filter(event)
-  ruleid = Integer(event.get('[Attachment][RawLog][Content][rule][id]')) rescue 0
-  if ruleid == 0
+  ruleid = event.get('[Attachment][RawLog][Content][rule][id]').to_s.strip
+  if ruleid.empty?
     return [event]
   end
-  @rulesets.fetch(ruleid, []).each do |filter|
+
+  # Keep compatibility with legacy numeric ids that were not quoted in YAML.
+  filters = @rulesets[ruleid]
+  if filters.nil?
+    begin
+      filters = @rulesets[Integer(ruleid)]
+    rescue
+      filters = nil
+    end
+  end
+
+  Array(filters).each do |filter|
     filter.filter(event)
   end
   return [event]

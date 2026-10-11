@@ -1,4 +1,4 @@
-ruleset:
+﻿ruleset:
   name: mysqld_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
@@ -9,17 +9,17 @@ ruleset:
       - operator: constant
         operands: "mysqld"
   rules:
-    - id: 23601
+    - id: "23601"
       pattern: "\\[\\w+\\] /usr/libexec/mysqld: Shutdown complete"
       samples:
         - "070823 20:58:09 [Note] /usr/libexec/mysqld: Shutdown complete"
-    - id: 23602
+    - id: "23602"
       pattern: "mysqld_safe Starting mysqld daemon with databases from %{NOTSPACE:filePath}"
       samples:
         - "140902 13:31:04 mysqld_safe Starting mysqld daemon with databases from /var/lib/mysql"
-    - id: 23603
+    - id: "23603"
       pattern: "\\[\\w+\\] Fatal error: Can't open privilege tables: Table '%{NOTSPACE:tableName}' doesn't exist"
-    - id: 23604
+    - id: "23604"
       pattern: "Connect\\s*Access denied for user '%{WORD:[Attachment][RawLog][Content][user][target][name]}'@'%{NOTSPACE:hostname}'"
-    - id: 23605
+    - id: "23605"
       pattern: "Connect\\s*%{WORD:[Attachment][RawLog][Content][user][target][name]}@%{NOTSPACE:domain} on %{NOTSPACE:inerface}"

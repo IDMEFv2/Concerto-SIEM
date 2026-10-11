@@ -1,7 +1,7 @@
-ruleset:
+﻿ruleset:
   name: nginx
   rules:
-    - id: 5643
+    - id: "5643"
       translate:
         - source: "[Attachment][RawLog][Content][service][err_num]"
           target: "[Description]"
