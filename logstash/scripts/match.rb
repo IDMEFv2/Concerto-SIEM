@@ -105,7 +105,7 @@ def eval_predicate(predicate, event)
   when 'match', 'not_match'
     begin
       opd2 = opd1
-      opd1 = Regex.new(eval_predicate(predicate['operands'][1], event)).match(opd1)
+      opd1 = Regexp.new(eval_predicate(predicate['operands'][1], event)).match(opd1)
     rescue
       # @FIXME Log a warning/error
       return false
