@@ -19,7 +19,7 @@
       samples:
         - "Mar 28 04:06:27 enviro1 12.34.56.78 EMU: Probe 2 'Loc Env Probe 2' high  humidity violation cleared, '39%RH'. 0x101D"
     - id: "2802"
-      pattern: "Input Contact %{INT:[Attachment][RawLog][Content][APC-EMU][contact][number]:int} '%{DATA}:[Attachment][RawLog][Content][APC-EMU][contact][name]' opened, abnormal condition"
+      pattern: "Input Contact %{INT:[Attachment][RawLog][Content][APC-EMU][contact][number]:int} '%{DATA:[Attachment][RawLog][Content][APC-EMU][contact][name]}' opened, abnormal condition"
       samples:
         - "Mar 22 16:27:50 enviro1 12.34.56.78 EMU: Input Contact 4 'Rack 4 Front Door' opened, abnormal condition. 0x1013"
     - id: "2803"

@@ -2,15 +2,23 @@
   name: ironport_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: in
+    operator: or
     operands:
-      - operator: variable
-        operands: "[Attachment][RawLog][Content][message]"
-      - operator: constant
-        operands: "Info:"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][process][name]"
+          - operator: constant
+            operands: "Info"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][message]"
+          - operator: constant
+            operands: "Info:"
   rules:
     - id: "24501"
-      pattern: "Info: New SMTP ICID \\d+ interface [^\\)]+\\(%{NOTSPACE:nodeAddr}\\) address %{IP:[Attachment][RawLog][Content][destination][address]} reverse dns host unknown"
+      pattern: "New SMTP ICID \\d+ interface [^\\)]+\\(%{NOTSPACE:nodeAddr}\\) address %{IP:[Attachment][RawLog][Content][destination][address]} reverse dns host unknown"
       samples:
         - "Nov 24 00:06:25 mailcleaner1.pp.com Info: New SMTP ICID 30481570 interface Data 1 (22.4.4.8) address 7.15.16.10 reverse dns host unknown verified no"
     - id: "24502"

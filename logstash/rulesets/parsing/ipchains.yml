@@ -2,12 +2,20 @@
   name: kernel_ulogd_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: in
+    operator: or
     operands:
-      - operator: variable
-        operands: "[Attachment][RawLog][Content][process][name]"
-      - operator: constant
-        operands: "ulogd"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][process][name]"
+          - operator: constant
+            operands: "ulogd"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][process][name]"
+          - operator: constant
+            operands: "kernel"
   rules:
     - id: "700"
       pattern: "%{WORD:status} DENY (.*) PROTO=6 %{IP:[Attachment][RawLog][Content][source][address]}:%{POSINT:[Attachment][RawLog][Content][source][port]:int} %{IP:[Attachment][RawLog][Content][destination][address]}:%{POSINT:[Attachment][RawLog][Content][destination][port]}"

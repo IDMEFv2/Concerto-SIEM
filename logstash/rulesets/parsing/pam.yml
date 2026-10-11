@@ -18,7 +18,7 @@
             operands: "PAM"
   rules:
     - id: "1"
-      pattern: "session opened for user (?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][user][effective][name]} by (?:(?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][user][name]]})?\\(uid=%{NONNEGINT:[Attachment][RawLog][Content][user][id]}\\)"
+      pattern: "session opened for user (?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][user][effective][name]} by (?:(?=%{USERNAME:[Attachment][RawLog][Content][related][user]})%{USERNAME:[Attachment][RawLog][Content][user][name]})?\\(uid=%{NONNEGINT:[Attachment][RawLog][Content][user][id]}\\)"
       samples:
         - "Aug 14 17:32:19 blah su(pam_unix)[17944]: session opened for user root by (uid=123)"
         - "Dec  9 18:47:10 devel5 sshd(pam_unix)[13189]: session opened for user yyyy by xxxx(uid=0)"

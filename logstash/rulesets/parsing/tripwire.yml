@@ -2,12 +2,20 @@
   name: tripwire_parsing
   field: "[Attachment][RawLog][Content][message]"
   predicate:
-    operator: in
+    operator: or
     operands:
-      - operator: variable
-        operands: "[Attachment][RawLog][Content][message]"
-      - operator: constant
-        operands: "Tripwire"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][process][name]"
+          - operator: constant
+            operands: "Tripwire"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][process][name]"
+          - operator: constant
+            operands: "tripwire"
   rules:
     - id: "24001"
       pattern: "Added (?<Path>.*) on (?<dstAddr>.*) by (?<data>.*)"

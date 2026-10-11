@@ -2,15 +2,15 @@
   name: event_code_parsing
   field: "[Attachment][RawLog][Content][event][original]"
   predicate:
-    operator: in
+    operator: match
     operands:
       - operator: variable
-        operands: "[Attachment][RawLog][Content][event][code]"
+        operands: "[Attachment][RawLog][Content][event][original]"
       - operator: constant
-        operands: "^[A-Z0-9_]+-\\.+-[A-Z0-9_]$"
+        operands: "%[A-Z0-9_]+-[0-7]-[A-Z0-9_]+:"
   rules:
     - id: "5600"
-      pattern: "SEC-6-IPACCESSLOGP: list %{DATA:data} denied (udp|tcp) %{IP:[Attachment][RawLog][Content][source][address]}\\.%{INT:number}\\. -> %{IP:[Attachment][RawLog][Content][destination][address]}\\.%{POSINT:[Attachment][RawLog][Content][destination][port]:int}\\., %{INT:count} %{GREEDYDATA:text}"
+      pattern: "SEC-6-IPACCESSLOGP: list %{DATA:data} denied (udp|tcp) %{IP:[Attachment][RawLog][Content][source][address]}\\(%{INT:number}\\) -> %{IP:[Attachment][RawLog][Content][destination][address]}\\(%{POSINT:[Attachment][RawLog][Content][destination][port]:int}\\), %{INT:count} %{GREEDYDATA:text}"
       samples:
         - "Sep 23 07:30:41 gate 301270: 5d17h: %SEC-6-IPACCESSLOGP: list 101 denied tcp 1.2.3.4(1929) -> 5.6.7.8(80), 1 packet"
     - id: "5601"

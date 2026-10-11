@@ -2,27 +2,19 @@
   name: asa_pix_logs
   field: "[Attachment][RawLog][Content][event][original]"
   predicate:
-    operator: or
+    operator: match
     operands:
-      - operator: in
-        operands:
-          - operator: variable
-            operands: "[Attachment][RawLog][Content][message]"
-          - operator: constant
-            operands: "ASA-"
-      - operator: in
-        operands:
-          - operator: variable
-            operands: "[Attachment][RawLog][Content][message]"
-          - operator: constant
-            operands: "PIX-"
+      - operator: variable
+        operands: "[Attachment][RawLog][Content][event][original]"
+      - operator: constant
+        operands: "%(?:ASA|PIX|FWSM)-[0-7]-"
   rules:
     - id: "195"
       pattern: "-410001: Dropped %{NOTSPACE:[Attachment][RawLog][Content][network][transport]} %{NOTSPACE:[Attachment][RawLog][Content][network][protocol]} %{DATA} from %{DATA}:%{IP:[Attachment][RawLog][Content][source][address]}/%{POSINT:[Attachment][RawLog][Content][source][port]:int} to %{DATA}:%{IP:[Attachment][RawLog][Content][destination][address]}/%{POSINT:[Attachment][RawLog][Content][destination][port]:int}; %{GREEDYDATA:[Attachment][RawLog][Content][event][reason]}"
       samples:
         - "Sep 20 18:25:50 ASA_NAME %ASA-4-410001: Dropped UDP DNS packet_type from source_interface:source_address/source_port to dest_interface:dest_address/dest_port; error_length_type length length bytes exceeds max_length_type limit of maximum_length bytes"
     - id: "196"
-      pattern: "-4000\\.\\.: I[PD]S:%{INT} %{DATA:[Attachment][RawLog][Content][event][reason]} from %{IP:[Attachment][RawLog][Content][source][address]} to %{IP:[Attachment][RawLog][Content][destination][address]} on interface %{DATA}"
+      pattern: "-4000\\d\\d: I[PD]S:%{INT} %{DATA:[Attachment][RawLog][Content][event][reason]} from %{IP:[Attachment][RawLog][Content][source][address]} to %{IP:[Attachment][RawLog][Content][destination][address]} on interface %{DATA}"
       samples:
         - "May 10 09:25:28 asa %ASA-4-400000: IPS:1000 IP options-Bad Option List from 193.211.21.12 to 78.12.34.1 on interface dmz"
     - id: "197"
