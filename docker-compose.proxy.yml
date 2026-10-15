@@ -1,0 +1,81 @@
+# ============================================================
+# Concerto SIEM - NGINX reverse proxy
+# ============================================================
+# This file is used in combination with the main docker-compose.yml:
+#
+#   sudo podman-compose -p proto \
+#     -f docker-compose.yml \
+#     -f docker-compose.proxy.yml up -d
+#
+# It adds an NGINX container that terminates TLS and forwards
+# public traffic to the Concerto SIEM web UI (the `gui` service).
+#
+# The network declared below is marked as external because it is
+# created by the main docker-compose.yml. Its actual name is
+# "proto_proto" in the rootful Podman context used by this project.
+#
+# The NGINX container is the ONLY service in the Concerto stack
+# that publishes ports to the public network. Every other service
+# binds to 127.0.0.1 and is reachable only from the host itself.
+# ============================================================
+
+services:
+
+  # ----------------------------------------------------------
+  # NGINX reverse proxy
+  # ----------------------------------------------------------
+  nginx:
+    # Official NGINX image based on Alpine Linux (small footprint).
+    # Pulled from Docker Hub on first start, then cached locally.
+    image: nginx:alpine
+
+    # Public HTTP and HTTPS. These are the only ports exposed
+    # to the outside world by the entire Concerto stack.
+    # The "host:container" syntax means host port 80 -> container 80.
+    ports:
+      - "80:80"
+      - "443:443"
+
+    # Configuration and certificates are mounted read-only so the
+    # container cannot modify them. The :ro suffix enforces this.
+    volumes:
+      # NGINX server configuration: server blocks, proxy_pass, TLS.
+      # Populated by nginx/conf.d/concerto.conf.
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      # TLS certificate and private key.
+      # Populated by the certs-init / certs-force targets.
+      - ./nginx/certs:/etc/nginx/certs:ro
+
+    # Join the internal network created by the main compose file.
+    # This is what makes "proxy_pass http://gui:80" work: inside
+    # this network, the service name "gui" resolves to the GUI
+    # container's IP address.
+    networks:
+      - proto
+
+    # Restart automatically on crash or host reboot, unless the
+    # container was explicitly stopped by the operator.
+    restart: unless-stopped
+
+    # Start the GUI container first. This is a soft ordering hint,
+    # not a health check: NGINX may return 502 until the GUI
+    # application is fully ready to serve requests.
+    depends_on:
+      - gui
+
+# ----------------------------------------------------------
+# Networks
+# ----------------------------------------------------------
+networks:
+  proto:
+    # The network is defined in the main docker-compose.yml.
+    # Marking it external prevents this file from creating a
+    # second, separate network, which would break name resolution
+    # between NGINX and the gui service.
+    external: true
+    # Actual network name as seen by rootful Podman.
+    # Compose naming convention is <project>_<network>, so for
+    # a project named "proto" and a network named "proto", the
+    # result is "proto_proto".
+    # Verify with: sudo podman network ls
+    name: proto_proto

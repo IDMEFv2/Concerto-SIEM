@@ -1,0 +1,188 @@
+# ============================================================
+# Concerto SIEM - Self-signed certificate targets
+# ============================================================
+# Included from the main Makefile with:
+#     -include Makefile.certs
+#
+# These targets generate a self-signed TLS certificate for the
+# NGINX reverse proxy. The certificate includes the VPS public
+# IP (and localhost) in its Subject Alternative Name (SAN) list,
+# which modern browsers require. Without SANs, the browser
+# rejects the certificate outright, before the user even sees
+# the "proceed anyway" option.
+#
+# The certificate is self-signed, so browsers will still show a
+# security warning. This is expected and acceptable for testing
+# and development. For production, replace the files in
+# nginx/certs/ with a certificate from a trusted authority
+# (e.g. Let's Encrypt).
+#
+# Run `make certs-help` for a list of targets.
+# ============================================================
+
+# Directory where the certificate and key are stored.
+# This directory is mounted read-only into the NGINX container.
+CERT_DIR  = proxy/certs
+CERT_KEY  = $(CERT_DIR)/privkey.pem
+CERT_CRT  = $(CERT_DIR)/fullchain.pem
+
+# Public IP of the VPS, used as a SAN in the certificate.
+# `curl ifconfig.me` returns the IP as seen from the internet.
+# If the lookup fails (no internet, service down), fall back to
+# 127.0.0.1 so the target still produces a usable certificate.
+# Can be overridden on the command line:
+#     make certs-force PUBLIC_IP=1.2.3.4
+PUBLIC_IP ?= $(shell curl -4 -s --max-time 5 ifconfig.me || echo "127.0.0.1")
+
+# ------------------------------------------------------------
+# Help
+# ------------------------------------------------------------
+.PHONY: certs-help
+certs-help:
+	@echo ""
+	@echo "Concerto SIEM - Certificate targets"
+	@echo "===================================="
+	@echo ""
+	@echo "  make certs-list     List existing certificates"
+	@echo "  make certs-init     Generate a self-signed cert if none exists"
+	@echo "  make certs-force    Force regenerate the certificate"
+	@echo "  make certs-clean    Remove certificate files"
+	@echo ""
+	@echo "Detected public IP: $(PUBLIC_IP)"
+	@echo "Certificate path:   $(CERT_CRT)"
+	@echo "Private key path:   $(CERT_KEY)"
+	@echo ""
+
+# ------------------------------------------------------------
+# List existing certificates
+# ------------------------------------------------------------
+# Enumerates all .pem and .crt files in CERT_DIR and prints
+# their subject, issuer, validity dates, days remaining, and
+# whether they are self-signed. A certificate is reported as
+# self-signed when its subject and issuer are identical, which
+# is the defining property of a self-signed certificate.
+.PHONY: certs-list
+certs-list:
+	@echo ""
+	@echo "Concerto SIEM - Certificates in $(CERT_DIR)"
+	@echo "=================================================="
+	@if [ ! -d $(CERT_DIR) ]; then \
+		echo "Directory $(CERT_DIR) does not exist."; \
+		echo "Run 'make certs-init' to generate a certificate."; \
+		exit 0; \
+	fi
+	@found=0; \
+	for crt in $(CERT_DIR)/*.pem $(CERT_DIR)/*.crt; do \
+		[ -f "$$crt" ] || continue; \
+		case "$$crt" in \
+			*privkey*|*key.pem) continue;; \
+		esac; \
+		if ! openssl x509 -in "$$crt" -noout 2>/dev/null; then \
+			continue; \
+		fi; \
+		found=1; \
+		subject=$$(openssl x509 -in "$$crt" -noout -subject 2>/dev/null | sed 's/^subject=//'); \
+		issuer=$$(openssl x509 -in "$$crt" -noout -issuer 2>/dev/null | sed 's/^issuer=//'); \
+		not_before=$$(openssl x509 -in "$$crt" -noout -startdate 2>/dev/null | sed 's/^notBefore=//'); \
+		not_after=$$(openssl x509 -in "$$crt" -noout -enddate 2>/dev/null | sed 's/^notAfter=//'); \
+		sans=$$(openssl x509 -in "$$crt" -noout -ext subjectAltName 2>/dev/null | tail -n +2 | tr -d ' '); \
+		fingerprint=$$(openssl x509 -in "$$crt" -noout -fingerprint -sha256 2>/dev/null | sed 's/^.*=//'); \
+		expiry_epoch=$$(date -d "$$not_after" +%s 2>/dev/null); \
+		now_epoch=$$(date +%s); \
+		days_left=$$(( (expiry_epoch - now_epoch) / 86400 )); \
+		echo ""; \
+		echo "File:        $$crt"; \
+		echo "Subject:     $$subject"; \
+		echo "Issuer:      $$issuer"; \
+		if [ "$$subject" = "$$issuer" ]; then \
+			echo "Type:        SELF-SIGNED"; \
+		else \
+			echo "Type:        CA-issued"; \
+		fi; \
+		echo "Valid from:  $$not_before"; \
+		echo "Valid to:    $$not_after ($$days_left days remaining)"; \
+		if [ -n "$$sans" ]; then \
+			echo "SANs:        $$sans"; \
+		fi; \
+		echo "Fingerprint: $$fingerprint"; \
+		base=$${crt%.*}; \
+		key_found=""; \
+		for k in "$$base.key" "$${base}.privkey.pem" "$$(dirname $$crt)/privkey.pem"; do \
+			if [ -f "$$k" ]; then key_found="$$k"; break; fi; \
+		done; \
+		if [ -n "$$key_found" ]; then \
+			echo "Key:         $$key_found (present)"; \
+		else \
+			echo "Key:         NOT FOUND (certificate may be unusable)"; \
+		fi; \
+	done; \
+	if [ "$$found" -eq 0 ]; then \
+		echo ""; \
+		echo "No valid X.509 certificates found in $(CERT_DIR)."; \
+		echo "Run 'make certs-init' to generate a self-signed certificate."; \
+	fi
+	@echo ""
+	@echo "Actions:"
+	@echo "  make certs-init    Generate a self-signed certificate if none exists"
+	@echo "  make certs-force   Regenerate the certificate"
+	@echo "  make certs-clean   Remove certificate files"
+	@echo ""
+
+
+# ------------------------------------------------------------
+# Generate if missing (idempotent)
+# ------------------------------------------------------------
+# This target is a dependency of `up-proxy`, so the certificate
+# is created automatically the first time the proxy is started.
+# On subsequent runs, the existing certificate is kept.
+.PHONY: certs-init
+certs-init:
+	@if [ -f $(CERT_CRT) ] && [ -f $(CERT_KEY) ]; then \
+		echo "Certificate already exists in $(CERT_DIR). Skipping."; \
+		echo "Use 'make certs-force' to regenerate."; \
+	else \
+		$(MAKE) --no-print-directory certs-force; \
+	fi
+
+# ------------------------------------------------------------
+# Force regenerate
+# ------------------------------------------------------------
+# Always regenerates the certificate, overwriting any existing
+# files. Use this after the VPS IP changes, or when the
+# certificate has expired.
+#
+# OpenSSL flags explained:
+#   -x509         : produce a self-signed certificate
+#   -newkey rsa:4096 : generate a new 4096-bit RSA key
+#   -sha256       : sign with SHA-256
+#   -days 3650    : valid for 10 years
+#   -nodes        : do not encrypt the private key (no passphrase)
+#   -keyout       : path to write the private key
+#   -out          : path to write the certificate
+#   -subj         : non-interactive subject (CN only)
+#   -addext       : add Subject Alternative Names
+.PHONY: certs-force
+certs-force:
+	@echo "Generating self-signed certificate for IP: $(PUBLIC_IP)"
+	@mkdir -p $(CERT_DIR)
+	openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
+		-keyout $(CERT_KEY) \
+		-out $(CERT_CRT) \
+		-subj "/CN=concerto" \
+		-addext "subjectAltName=IP:$(PUBLIC_IP),DNS:localhost,IP:127.0.0.1"
+	@chmod 600 $(CERT_KEY)
+	@chmod 644 $(CERT_CRT)
+	@echo "Certificate generated:"
+	@echo "  $(CERT_CRT)"
+	@echo "  $(CERT_KEY)"
+
+# ------------------------------------------------------------
+# Remove certificate files
+# ------------------------------------------------------------
+# Useful when switching from a self-signed certificate to a
+# real one, or when starting over.
+.PHONY: certs-clean
+certs-clean:
+	@echo "Removing certificate files from $(CERT_DIR)..."
+	@rm -f $(CERT_KEY) $(CERT_CRT)
+	@echo "Done."
