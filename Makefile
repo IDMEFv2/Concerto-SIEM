@@ -159,7 +159,14 @@ ps: check_bin
 # so the terminal stays usable. The stack runs in the background.
 .PHONY: up
 up: check_bin $(ELASTIC_MMC) $(PROTO_DIRS)
-	(sudo podman-compose -p proto -f docker-compose.yml up 2>&1 1>>logs &)
+	sudo podman-compose -p proto -f docker-compose.yml up -d 2>&1 | tee -a logs
+	@echo "Attente de la fin du setup..."
+	@while [ "$$(sudo podman inspect -f '{{.State.Status}}' proto_setup_1 2>/dev/null)" != "exited" ] && \
+	       [ "$$(sudo podman inspect -f '{{.State.Health.Status}}' proto_setup_1 2>/dev/null)" != "healthy" ]; do \
+		sleep 2; \
+	done
+	@echo "Démarrage de gui et correlator si nécessaire..."
+	-sudo podman start proto_gui_1 proto_correlator_1 2>/dev/null || true
 
 # Rebuild all images from scratch (no cache), then recreate the
 # containers. Use this after changing a Dockerfile or when an
