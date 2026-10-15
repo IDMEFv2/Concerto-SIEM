@@ -1,23 +1,56 @@
+# ============================================================
+# Concerto SIEM - Main stack
+# ============================================================
+# Defines the core services of the SIEM: setup, GUI, database,
+# correlation engine, Elasticsearch, Logstash, Kafka, Zookeeper,
+# and the Kafka web UI.
+#
+# All services run on the internal "proto" network and are
+# reachable by name (e.g. "es01", "kafka1"). Host port bindings
+# are all prefixed with 127.0.0.1, so nothing is exposed to the
+# public network. Public access is handled by the optional
+# reverse proxy in docker-compose.proxy.yml.
+#
+# Start with: make up
+# ============================================================
+
 services:
 
+    # --------------------------------------------------------
+    # Setup: one-shot initializer for the Elasticsearch indices
+    # --------------------------------------------------------
+    # Runs once after Logstash and Postgres are healthy, creates
+    # the "alerts" and "logs" indices if they do not exist, then
+    # writes /state/.done and reports healthy.
     setup:
       build:
         context: setup/
         args:
+          # Elasticsearch version, taken from .env
           ELASTIC_VERSION: ${ELASTIC_VERSION}
+      # init: true runs a minimal init process as PID 1, so the
+      # container reaps orphaned child processes correctly.
       init: true
       volumes:
+        # Entrypoint script that performs the index creation.
         - ./setup/entrypoint.sh:/entrypoint.sh:ro,Z
+        # State directory shared between runs, holding .done.
         - ./setup_data:/state:Z
+        # Static setup configuration files.
         - ./setup/config:/config:ro,Z
       networks:
         - proto
       depends_on:
+        # Wait for Logstash and Postgres to be healthy before
+        # attempting to create indices.
         logstash:
           condition: service_healthy
         postgres:
           condition: service_healthy
       healthcheck:
+        # Healthy once .done exists AND Elasticsearch reports an
+        # "alerts" index. The second check confirms the indices
+        # were actually created, not just that the script ran.
         test:
           [
             "CMD-SHELL",
@@ -27,10 +60,18 @@ services:
         timeout: 10s
         retries: 30
 
+    # --------------------------------------------------------
+    # GUI: Prewikka web interface
+    # --------------------------------------------------------
+    # The user-facing web application. Bound to 127.0.0.1 only,
+    # so it is reachable from the host but not from the network.
+    # Public access goes through the reverse proxy.
     gui:
       build:
         context: gui/
       volumes:
+        # Entrypoint and Prewikka configuration files.
+        # All mounted read-only so the container cannot modify them.
         - ./gui/entrypoint.sh:/entrypoint.sh:ro,Z
         - ./gui/config/prewikka.conf:/etc/prewikka/prewikka.conf:ro,Z
         - ./gui/config/auth.conf:/etc/prewikka/conf.d/auth.conf:ro,Z
@@ -38,35 +79,50 @@ services:
         - ./gui/config/logs.conf:/etc/prewikka/conf.d/logs.conf:ro,Z
         - ./gui/config/menu.yml:/etc/prewikka/menu.yml:ro,Z
       ports:
+        # 127.0.0.1 prefix keeps both ports host-only.
         - 127.0.0.1:8000:80
         - 127.0.0.1:8001:81
       networks:
         - proto
       restart: on-failure
       depends_on:
+        # The GUI can only function once the setup service has
+        # created the Elasticsearch indices.
         setup:
           condition: service_healthy
 
+    # --------------------------------------------------------
+    # PostgreSQL: Prewikka database
+    # --------------------------------------------------------
     postgres:
       build:
         context: postgres/
       environment:
+        # Credentials. Values come from .env, with defaults if unset.
         POSTGRES_USER: ${POSTGRES_USER:-postgres}
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
         PGDATA: /data/postgres
       volumes:
+        # Persistent data directory. Survives container removal.
         - ./postgres_data:/data/postgres
       ports:
+        # Host-only binding. Useful for debugging with psql.
         - "127.0.0.1:5432:5432"
       networks:
         - proto
       restart: on-failure
       healthcheck:
+        # pg_isready returns 0 when the server accepts connections.
         test: ["CMD-SHELL", "pg_isready -U postgres"]
         interval: 15s
         timeout: 10s
         retries: 5
-  
+
+    # --------------------------------------------------------
+    # Correlator: ElastAlert-based correlation engine
+    # --------------------------------------------------------
+    # Reads processed events from Kafka and applies Sigma rules
+    # to generate alerts. Configuration is mounted read-only.
     correlator:
       build:
         context: correlator/
@@ -78,42 +134,61 @@ services:
         - proto
       restart: on-failure
       depends_on:
+        # Needs the alerts index to exist before it can write to it.
         setup:
           condition: service_healthy
 
+    # --------------------------------------------------------
+    # Elasticsearch: alert and log storage
+    # --------------------------------------------------------
     es01:
       build:
         context: elasticsearch/
         args:
           ELASTIC_VERSION: ${ELASTIC_VERSION}
       volumes:
+        # Configuration, data directory, and log directory.
         - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
         - ./elasticsearch_data:/usr/share/elasticsearch/data:Z
         - ./elasticsearch_logs:/usr/share/elasticsearch/logs:Z
       ports:
+        # Host-only. Never expose Elasticsearch to the network.
         - 127.0.0.1:9200:9200
         - 127.0.0.1:9300:9300
       environment:
+        # JVM heap settings from .env, and the built-in elastic
+        # superuser password.
         ES_JAVA_OPTS: ${ELASTIC_JVM}
         ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
       ulimits:
+        # Elasticsearch requires the ability to lock memory.
+        # -1 means unlimited.
         memlock:
           soft: -1
           hard: -1
       networks:
         - proto
       healthcheck:
+        # Cluster health endpoint, authenticated as elastic.
         test: ["CMD-SHELL", "curl --user elastic:elastic -fs http://localhost:9200/_cluster/health || exit 1"]
         interval: 15s
         timeout: 10s
         retries: 30
-  
+
+    # --------------------------------------------------------
+    # Logstash: log and alert pipeline
+    # --------------------------------------------------------
+    # Receives syslog on 6514 and IDMEFv2 alerts on 4690, parses
+    # and enriches them, and writes the results to Elasticsearch
+    # via Kafka.
     logstash:
       build:
         context: logstash/
         args:
           LOGSTASH_VERSION: ${LOGSTASH_VERSION}
       volumes:
+        # Configuration, pipeline definitions, rulesets, schemas,
+        # and IDMEFv2 mappings. All read-only.
         - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
         - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options:ro,Z
         - ./logstash/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro,Z
@@ -126,25 +201,36 @@ services:
         - ./logstash/scripts:/usr/share/logstash/config/scripts:ro,Z
         - ./logstash/rulesets:/usr/share/logstash/config/rulesets:ro,Z
       ports:
+        # Syslog input (6514) and IDMEFv2 HTTP input (4690).
+        # Both host-only by default.
         - 127.0.0.1:6514:6514
         - 127.0.0.1:4690:4690
       environment:
+        # JVM heap from .env.
         LS_JAVA_OPTS: ${LOGSTASH_JVM}
+        # Internal password left empty: authentication is not
+        # used on the internal Kafka connection.
         LOGSTASH_INTERNAL_PASSWORD: ""
+        # Logstash's own monitoring API is disabled.
         MONITORING_ENABLED: "false"
+        # Maximum size of a single message, in bytes.
         MAX_MSG_SIZE: 1048576
+        # Kafka and Elasticsearch endpoints, by service name.
         BOOTSTRAP_SERVER: "http://kafka1:9092"
         BIG_DATA_SERVER: "http://es01:9200"
         BIG_DATA_USERNAME: "elastic"
         BIG_DATA_PASSWORD: "elastic"
+        # Analyzer metadata attached to generated IDMEFv2 alerts.
         ANALYZER_NAME: "Logstash"
         ANALYZER_LOCATION: "Safe4SOC - Prototype"
         ANALYZER_UNLOCATION: "FR PAR"
         ANALYZER_GEOLOCATION: "48.7730817, 2.2442167"
         ANALYZER_IP: "${DOCKER_IP}"
         ANALYZER_HOSTNAME: "${DOCKER_HOSTNAME}"
+        # Listening ports for the two inputs.
         LISTEN_SYSLOG: 6514
         LISTEN_HTTP: 4690
+        # Kafka topic names and Elasticsearch index names.
         TOPIC_COLLECTED: my_collected
         TOPIC_PROCESSED: my_processed
         INDEX_ALERTS: alerts
@@ -152,6 +238,8 @@ services:
       networks:
         - proto
       healthcheck:
+        # Logstash exposes a monitoring API on 9600. A 2xx response
+        # means the pipeline is up.
         test:
           [
             "CMD-SHELL",
@@ -161,11 +249,17 @@ services:
         timeout: 10s
         retries: 30
       depends_on:
+        # Needs Elasticsearch to store data and Kafka to publish.
         es01:
           condition: service_healthy
         kafka1:
           condition: service_healthy
 
+    # --------------------------------------------------------
+    # Kafdrop: Kafka web UI
+    # --------------------------------------------------------
+    # Browser-based viewer for Kafka topics and messages. Useful
+    # for debugging the pipeline. Host-only port binding.
     kafdrop:
       build:
         context: kafdrop/
@@ -175,6 +269,7 @@ services:
         - 127.0.0.1:9201:9201
       environment:
         KAFKA_BROKERCONNECT: "kafka1:9092"
+        # Small JVM heap: Kafdrop is a lightweight UI.
         JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
         CMD_ARGS: "--server.port=9201"
       networks:
@@ -184,6 +279,9 @@ services:
         kafka1:
           condition: service_healthy
 
+    # --------------------------------------------------------
+    # Zookeeper: Kafka coordination
+    # --------------------------------------------------------
     zoo1:
       build:
         context: zoo/
@@ -196,9 +294,12 @@ services:
         ZOOKEEPER_CLIENT_PORT: 2181
         ZOOKEEPER_SERVER_ID: 1
         ZOOKEEPER_SERVERS: zoo1:2888:3888
+        # Enables the "ruok" four-letter command used by the
+        # health check below.
         KAFKA_OPTS: "-Dzookeeper.4lw.commands.whitelist=ruok"
       restart: on-failure
       healthcheck:
+        # "ruok" returns "imok" when Zookeeper is responsive.
         test:
           [
             "CMD-SHELL",
@@ -207,7 +308,10 @@ services:
         interval: 15s
         timeout: 10s
         retries: 30
-  
+
+    # --------------------------------------------------------
+    # Kafka: message bus
+    # --------------------------------------------------------
     kafka1:
       build:
         context: kafka/
@@ -215,28 +319,36 @@ services:
           KAFKA_VERSION: ${KAFKA_VERSION}
       hostname: kafka1
       ports:
+        # 9092: external listener, 29092: docker listener,
+        # 9999: JMX. All host-only.
         - "127.0.0.1:9092:9092"
         - "127.0.0.1:29092:29092"
         - "127.0.0.1:9999:9999"
       volumes:
         - ./kafka_logs:/var/lib/kafka/logs:Z
       environment:
+        # Three listeners: internal for broker-to-broker traffic,
+        # external for host access, docker for container access.
         KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka1:19092,EXTERNAL://kafka1:9092,DOCKER://kafka1:29092
         KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
         KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
         KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
         KAFKA_BROKER_ID: 1
         KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+        # Single-broker settings: replication factors of 1.
         KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
         KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
         KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
         KAFKA_JMX_PORT: 9999
         KAFKA_JMX_HOSTNAME: kafka1
+        # Authorization disabled: everyone is allowed.
         KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
         KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
         KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
       restart: on-failure
       healthcheck:
+        # Opens a TCP connection to the broker port. Succeeds if
+        # the socket accepts the connection.
         test:
           [
             "CMD-SHELL",
@@ -246,13 +358,23 @@ services:
         timeout: 10s
         retries: 30
       depends_on:
+        # Kafka needs a working Zookeeper to start.
         zoo1:
           condition: service_healthy
 
+# ------------------------------------------------------------
+# Networks
+# ------------------------------------------------------------
 networks:
   proto:
     driver: bridge
 
+# ------------------------------------------------------------
+# Named volumes
+# ------------------------------------------------------------
+# Declared here so Compose manages their lifecycle. The actual
+# data directories are bind-mounted from the host, as listed in
+# each service's volumes section above.
 volumes:
   setup:
   postgres:

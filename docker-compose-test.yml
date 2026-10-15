@@ -1,18 +1,45 @@
+# ============================================================
+# Concerto SIEM - NGINX test webserver
+# ============================================================
+# A small standalone NGINX container that serves a static page
+# and generates HTTP logs (200, 403, 404, 500 responses) for
+# testing the SIEM ingestion pipeline.
+#
+# This stack is independent of the main one and is used to
+# exercise the syslog path without touching real systems.
+#
+# Start with: make up-test
+# Stop with:  make down-test
+# ============================================================
+
 services:
 
+    # --------------------------------------------------------
+    # Test webserver
+    # --------------------------------------------------------
     nginx:
       build:
         context: nginx/
       volumes:
+        # Static page served at the root URL.
         - ./nginx/index.html:/var/www/html/index.html:ro,Z
+        # NGINX server configuration, defining the test URLs and
+        # the log format that sends access logs to the SIEM.
         - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:Z,ro
       ports:
+        # Host-only binding on 8080. The default port 80 is left
+        # free for the reverse proxy.
         - 127.0.0.1:8080:80
       networks:
         - proto
       restart: on-failure
 
+# ------------------------------------------------------------
+# Networks
+# ------------------------------------------------------------
+# Uses a network also named "proto". When started with the same
+# project name (`-p proto`), this joins the same network as the
+# main stack, so the test webserver can reach Logstash by name.
 networks:
   proto:
     driver: bridge
-
