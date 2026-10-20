@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: es01
+  labels:
+    app: es-service
+spec:
+  type: NodePort
+  ports:
+    - port: 9200
+      name: es-9200
+      nodePort: 30200
+    - port: 9300
+      name: es-9300
+  selector:
+    app: elasticsearch-tmpl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch
+  labels:
+    app: elasticsearch-depl
+spec:
+  replicas: {{ coalesce .Values.elasticsearch.replicaCount .Values.global.replicaCount 1 }}
+  selector:
+    matchLabels:
+      app: elasticsearch-tmpl
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: elasticsearch-tmpl
+    spec:
+      containers:
+      - image: "{{ coalesce .Values.elasticsearch.image.repository .Values.global.image.repository }}/{{ .Values.elasticsearch.image.name }}:{{ coalesce .Values.elasticsearch.image.tag .Values.global.image.tag }}"
+        name: elasticsearch
+        env:
+        - name: ES_JAVA_OPTS
+          value: "{{ .Values.elasticsearch.java.javaOpts }}"
+        - name: ELASTIC_PASSWORD
+          value: "{{ .Values.elasticsearch.secrets.password }}"
+        ports:
+        - containerPort: 9200
+          name: es-9200
+        - containerPort: 9300
+          name: es-9300
+        volumeMounts:
+          - name: config
+            mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+            subPath: elasticsearch.yml
+          - name: data
+            mountPath: /var/lib/elasticsearch
+      volumes:
+      {{- range .Values.elasticsearch.volumes }}
+        - name: {{ .name }}
+          hostPath:
+            path: {{ .hostPath }}
+            type: DirectoryOrCreate
+      {{- end }}

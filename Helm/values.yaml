@@ -1,0 +1,106 @@
+global:
+  replicaCount: 1
+  image:
+    repository: docker.io/idmefv2prototype
+    pullPolicy: IfNotPresent
+    tag: main
+
+postgresql:
+  image:
+    name: postgres
+  secrets:
+    user: prelude
+    password: prelude
+  volumes:
+    - name: data
+      hostPath: /mnt/data/postgresql
+
+logstash:
+  image:
+    name: logstash
+  java:
+    JavaOpts: "-Xms4g -Xmx4g -Xss256k"
+  analyzer:
+    name: "Logstash"
+    location: "Safe4SOC - Prototype"
+    unlocation: "FR PAR"
+    geolocation: "48.7730817, 2.2442167"
+    ip: "192.168.1.1"
+    hostname: "fedora"
+  ports:
+    listenSyslog: "30514"
+    listenIDMEFv2: "30690"
+  volumes:
+    - name: config
+      hostPath: /mnt/data/logstash
+
+zoo:
+  image:
+    name: zoo
+
+correlator:
+  image:
+    name: correlator
+    tag: latest
+  volumes:
+    - name: config
+      hostPath: /mnt/data/correlator
+
+elasticsearch:
+  image:
+    name: elasticsearch
+  java:
+    javaOpts: "-Xms4g -Xmx4g"
+  secrets:
+    password: elastic
+  volumes:
+    - name: data
+      hostPath: /mnt/data/elasticsearch/data
+    - name: config
+      hostPath: /mnt/data/elasticsearch/config
+
+gui:
+  image:
+    name: gui
+  ports:
+    listenPort: 30081
+  secrets:
+    password: S4Sadmin
+  volumes:
+    - name: config
+      hostPath: /mnt/data/gui
+
+kafdrop:
+  image:
+    name: kafdrop
+  ports:
+    listenPort: 30201
+  java:
+    jvmOpts: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
+
+kafka:
+  image:
+    name: kafka
+
+kowl:
+  image:
+    repository: quay.io/cloudhut
+    name: kowl
+    tag: master
+  java:
+    javaOpts: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
+  ports:
+    listenPort: 30301
+
+setup:
+  image:
+    name: setup
+
+nginx:
+  serverName: concerto.idmefv2.org
+  ports:
+    listenHTTP: 30080
+    listenHTTPS: 30443
+  volumes:
+    - name: certificates
+      hostPath: /mnt/data/nginx/certificates

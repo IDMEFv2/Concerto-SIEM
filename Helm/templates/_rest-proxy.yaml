@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rest-proxy
+  labels:
+    app: rest-proxy-service
+spec:
+  ports:
+    - port: 8082
+      name: rest-proxy-8082
+  selector:
+    app: rest-proxy-tmpl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rest-proxy
+  labels:
+    app: rest-proxy-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rest-proxy-tmpl
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: rest-proxy-tmpl
+    spec:
+      containers:
+      - image: confluentinc/cp-kafka-rest:7.9.0
+        name: rest-proxy
+        env:
+        - name: KAFKA_REST_HOST_NAME
+          value: rest-proxy
+        - name: KAFKA_REST_BOOTSTRAP_SERVERS
+          value: kafka:9092
+        - name: KAFKA_REST_LISTENERS
+          value: http://0.0.0.0:8082
+        ports:
+        - containerPort: 8082
+          name: rest-proxy-8082

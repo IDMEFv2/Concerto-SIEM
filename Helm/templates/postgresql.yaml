@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgres-service
+spec:
+  ports:
+    - port: 5432
+      name: pg-5432
+  selector:
+    app: postgres-tmpl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres-depl
+spec:
+  replicas: {{ coalesce .Values.postgresql.replicaCount .Values.global.replicaCount 1 }}
+  selector:
+    matchLabels:
+      app: postgres-tmpl
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgres-tmpl
+    spec:
+      containers:
+      - image: "{{ coalesce .Values.postgresql.image.repository .Values.global.image.repository }}/{{ .Values.postgresql.image.name }}:{{ coalesce .Values.postgresql.image.tag .Values.global.image.tag }}"
+        name: postgres
+        env:
+        - name: POSTGRES_PASSWORD
+          value: postgres
+        - name: PGDATA
+          value: /data/postgres
+        ports:
+        - containerPort: 5432
+          name: pg-5432
+        volumeMounts:
+          - name: data
+            mountPath: /data/postgres
+      volumes:
+      {{- range .Values.postgresql.volumes }}
+        - name: {{ .name }}
+          hostPath:
+            path: {{ .hostPath }}
+            type: DirectoryOrCreate
+      {{- end }}

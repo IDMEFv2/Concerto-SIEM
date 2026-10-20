@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app: nginx-service
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      name: nginx-80
+      nodePort: {{ .Values.nginx.ports.listenHTTP }}
+    - port: 443
+      name: nginx-443
+      nodePort: {{ .Values.nginx.ports.listenHTTPS }}
+  selector:
+    app: nginx-tmpl
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "nginx-certbot-generator"
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-weight": "-10" # S'exécute en tout premier
+    "helm.sh/hook-delete-policy": "hook-succeeded"
+spec:
+  template:
+    metadata:
+      labels:
+        app: nginx-tmpl
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: certbot
+          image: docker.io/certbot/certbot:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Vérification / Génération du certificat Let's Encrypt..."
+              
+              # Lancement de certbot (en mode standalone ou webroot selon votre config)
+              certbot certonly --standalone \
+                --agree-tos \
+                --no-eff-email \
+                -d {{ .Values.nginx.serverName }} \
+                --non-interactive || true
+
+              # Si le certificat existe, on peut le copier ou s'assurer qu'il est accessible
+              if [ -d "/etc/letsencrypt/live/{{ .Values.nginx.serverName }}" ]; then
+                echo "Certificat généré avec succès !"
+              else
+                echo "Attention : Le certificat n'a pas pu être généré (mode test/offline ?)."
+              fi
+          volumeMounts:
+            - name: certificates
+              mountPath: /etc/letsencrypt
+          ports:
+          - containerPort: 80
+            name: nginx-80
+      volumes:
+      {{- range .Values.nginx.volumes }}
+        - name: {{ .name }}
+          hostPath:
+            path: {{ .hostPath }}
+            type: DirectoryOrCreate
+      {{- end }}

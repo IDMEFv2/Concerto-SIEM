@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafdrop
+  labels:
+    app: kafdrop-service
+spec:
+  type: NodePort
+  ports:
+    - port: 9000
+      name: kafdrop-9000
+      nodePort: {{ .Values.kafdrop.ports.listenPort }}
+  selector:
+    app: kafdrop-tmpl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafdrop
+  labels:
+    app: kafdrop-depl
+spec:
+  replicas: {{ coalesce .Values.kafdrop.replicaCount .Values.global.replicaCount 1 }}
+  selector:
+    matchLabels:
+      app: kafdrop-tmpl
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: kafdrop-tmpl
+    spec:
+      containers:
+      - image: {{ coalesce .Values.kafdrop.image.repository .Values.global.image.repository }}/{{ .Values.kafdrop.image.name }}:{{ coalesce .Values.kafdrop.image.tag .Values.global.image.tag }}
+        name: kafdrop
+        env:
+        - name: KAFKA_BROKERCONNECT
+          value: "kafka:9092"
+        - name: JVM_OPTS
+          value: "{{ .Values.kafdrop.java.jvmOpts }}"
+        - name: CMD_ARGS
+          value: "--server.port=9000"
+        ports:
+        - containerPort: 9200
+          name: kafdrop-9200

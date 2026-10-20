@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gui
+  labels:
+    app: gui-service
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      name: gui-80
+      nodePort: {{ .Values.gui.ports.listenPort }}
+  selector:
+    app: gui-tmpl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gui
+  labels:
+    app: gui-depl
+spec:
+  replicas: {{ coalesce .Values.gui.replicaCount .Values.global.replicaCount 1 }}
+  selector:
+    matchLabels:
+      app: gui-tmpl
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: gui-tmpl
+    spec:
+      containers:
+      - image: "{{ coalesce .Values.gui.image.repository .Values.global.image.repository }}/{{ .Values.gui.image.name }}:{{ coalesce .Values.gui.image.tag .Values.global.image.tag }}"
+        name: gui
+        ports:
+        - containerPort: 80
+          name: gui-80
+        volumeMounts:
+          - name: config-configmap
+            mountPath: /entrypoint.sh
+            subPath: entrypoint.sh
+          - name: config
+            mountPath: /etc/prewikka/prewikka.conf
+            subPath: prewikka.conf
+          - name: config
+            mountPath: /etc/prewikka/conf.d/auth.conf
+            subPath: auth.conf
+          - name: config
+            mountPath: /etc/prewikka/conf.d/idmefv2.conf
+            subPath: idmefv2.conf
+          - name: config
+            mountPath: /etc/prewikka/conf.d/logs.conf
+            subPath: logs.conf
+          - name: config
+            mountPath: /etc/prewikka/menu.yml
+            subPath: menu.yml
+      volumes:
+        - name: config-configmap
+          configMap:
+            name: gui-entrypoint
+            defaultMode: 0755
+      {{- range .Values.gui.volumes }}
+        - name: {{ .name }}
+          hostPath:
+            path: {{ .hostPath }}
+            type: DirectoryOrCreate
+      {{- end }}

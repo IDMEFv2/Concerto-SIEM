@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: correlator
+  labels:
+    app: correlator-depl
+spec:
+  replicas: {{ coalesce .Values.correlator.replicaCount .Values.global.replicaCount 1 }}
+  selector:
+    matchLabels:
+      app: correlator-tmpl
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: correlator-tmpl
+    spec:
+      containers:
+      - image: "{{ coalesce .Values.correlator.image.repository .Values.global.image.repository }}/{{ .Values.correlator.image.name }}:{{ coalesce .Values.correlator.image.tag .Values.global.image.tag }}"
+        name: correlator
+        volumeMounts:
+          - name: correlator-configmap
+            mountPath: /opt/kafka.yaml
+            subPath: kafka.yaml
+          - name: correlator-configmap
+            mountPath: /opt/elastalert/config.yaml
+            subPath: config.yaml
+          - name: config
+            mountPath: /opt/sigma_rules
+            subPath: rules
+      volumes:
+        - name: correlator-configmap
+          configMap:
+            name: correlator-configmap
+      {{- range .Values.correlator.volumes }}
+        - name: {{ .name }}
+          hostPath:
+            path: {{ .hostPath }}
+            type: DirectoryOrCreate
+      {{- end }}
