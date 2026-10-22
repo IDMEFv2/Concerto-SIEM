@@ -4,9 +4,25 @@ RUN microdnf -y update && microdnf -y install postgresql diffutils patch vim pre
 
 WORKDIR /prewikka
 
-RUN git clone https://github.com/IDMEFv2/IDMEFv2-prototype-gui.git
+RUN git clone https://github.com/IDMEFv2/Concerto-MicroMap-Plugin.git
 
-WORKDIR /prewikka/IDMEFv2-prototype-gui
+WORKDIR /prewikka/Concerto-MicroMap-Plugin/prewikka_apps_micro_map
+
+RUN python setup.py install
+
+WORKDIR /prewikka
+
+RUN git clone https://github.com/IDMEFv2/Concerto-MacroMap-Plugin.git
+
+WORKDIR /prewikka/Concerto-MacroMap-Plugin/prewikka_apps_macro_map
+
+RUN python setup.py install
+
+WORKDIR /prewikka
+
+RUN git clone https://github.com/IDMEFv2/Concerto-SIEM-GUI.git
+
+WORKDIR /prewikka/Concerto-SIEM-GUI
 
 RUN python setup.py install
 

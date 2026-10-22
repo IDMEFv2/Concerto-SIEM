@@ -15,16 +15,25 @@ done
 echo "Database is ready"
 
 echo "Waiting for elasticsearch to be ready ..."
-until curl --user elastic:elastic 'http://es01:9200/_cluster/health?wait_for_status=yellow&timeout=30s'; do
+until curl --silent --fail --user elastic:elastic 'http://es01:9200/_cluster/health?wait_for_status=yellow&timeout=30s'; do
     sleep 2
 done
 echo "Elasticsearch is ready"
+
+echo "Waiting for 'alerts' index to be present ..."
+until curl --fail --output /dev/null --silent --head --user elastic:elastic 'http://es01:9200/alerts'; do
+    sleep 2
+done
+echo "'alerts' index is ready"
 
 echo "Running GUI"
 sleep 20
 /usr/local/bin/prewikka-cli -C 'sync plugin'
 
-PGPASSWORD=prelude psql -d prewikka -h postgres -U prelude -c "UPDATE prewikka_user_configuration SET config = '{\"\": {\"password\": \"\$5\$rounds=535000\$F0fsipTsXZvzOM6n\$r4D77J5PrWT/ZfRx7z0D/44d64irmg5ENnEwvLOASW.\"}}' WHERE userid = '21232f297a57a5a743894a0e4a801fc3';" || :
-echo "Webinterface's admin's password sets to S4Sadmin"
+PLAINTEXT_PASSWORD="S4Sadmin"
+HASHED_PASSWORD=$(python3 -c "import passlib.hash; print(passlib.hash.sha256_crypt.hash('$PLAINTEXT_PASSWORD'))")
+
+PGPASSWORD=prelude psql -d prewikka -h postgres -U prelude -c "UPDATE prewikka_user_configuration SET config = '{\"\": {\"password\": \"$HASHED_PASSWORD\"}}' WHERE userid = '21232f297a57a5a743894a0e4a801fc3';" || :
+echo "Webinterface's admin's password sets to {{ .Values.gui.secrets.password }}"
 
 /usr/local/bin/prewikka-httpd -p 80
