@@ -30,8 +30,8 @@ endif
 
 .PHONY: proto_dirs
 proto_dirs:
-	sudo mkdir -pv elasticsearch_data elasticsearch_logs kafka_logs postgres_data setup_data
-	sudo chown -R 1000:0 elasticsearch_data elasticsearch_logs postgres_data setup_data
+	sudo mkdir -pv elasticsearch_data elasticsearch_logs kafka_logs postgres_data
+	sudo chown -R 1000:0 elasticsearch_data elasticsearch_logs postgres_data
 
 .PHONY: proto_dirs-test
 proto_dirs-test:
@@ -44,11 +44,11 @@ ps: check_bin
 
 .PHONY: up
 up: check_bin $(ELASTIC_MMC) $(PROTO_DIRS)
-	(sudo podman-compose -p proto -f docker-compose.yml up 2>&1 1>>logs &)
+	(sudo podman-compose -p proto -f docker-compose.yml up 1>>logs 2>&1 &)
 
 .PHONY: up-build
 up-build: check_bin $(ELASTIC_MMC) $(PROTO_DIRS)
-	(sudo podman-compose -p proto -f docker-compose.yml build --no-cache 2>&1 1>>logs && sudo podman-compose -p proto -f docker-compose.yml up --build --force-recreate 2>&1 1>>logs &)
+	(sudo podman-compose -p proto -f docker-compose.yml build --no-cache 1>>logs 2>&1 && sudo podman-compose -p proto -f docker-compose.yml up --build --force-recreate 1>>logs 2>&1 &)
 
 .PHONY: down
 down: check_bin
@@ -61,11 +61,11 @@ clean_podman: check_bin down
 .PHONY: clean
 clean: clean_podman check_bin down
 	sudo rm -rvf logs
-	sudo rm -rvf elasticsearch_data elasticsearch_logs kafka_logs postgres_data setup_data
+	sudo rm -rvf elasticsearch_data elasticsearch_logs kafka_logs postgres_data
 
 .PHONY: up-test
 up-test: check_bin $(ELASTIC_MMC) $(PROTO_DIRS_TEST)
-	(sudo podman-compose -p proto -f docker-compose-test.yml up 2>&1 1>>logs &)
+	(sudo podman-compose -p proto -f docker-compose-test.yml up 1>>logs 2>&1 &)
 
 .PHONY: down-test
 down-test: check_bin

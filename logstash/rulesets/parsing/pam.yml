@@ -31,4 +31,4 @@
       pattern: "(?:no such user|User unknown)"
       samples:
         - "Dec 21 21:18:46 share2 sshd[15525]: pam_tally(sshd:auth): pam_get_uid; no such user"
-        - "Mar 31 15:09:01 prelude-node-bastion login pam_faillock(login:auth): User unknown"
+        - "Mar 31 15:09:01 node-bastion login pam_faillock(login:auth): User unknown"

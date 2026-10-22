@@ -2,12 +2,12 @@
 
 The Concerto SIEM is a Security Information & Event Manager (SIEM) compatible with the IDMEFv2 format. Thus it is the only SIEM able to monitor cyber and physical alerts.
 
-This SIEM, based partially on Prelude OSS (IDMEFv1), is under active development but fully operational operational.
+This SIEM is under active development but fully operational operational.
 
 Technical key features include:
 * A `kafka`-based communication bus
 * JSON alert storage in `Elasticsearch`
-* A web user interface (based on `Prewikka OSS`)
+* A web user interface (based on `Concerto SIEM`)
 * A correlation engine (based on yara rules)
 * Log management and analysis with `Logstash`
 * A test environment with local Linux logs and a local webserver

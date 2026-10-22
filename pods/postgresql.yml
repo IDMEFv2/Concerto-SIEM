@@ -34,11 +34,11 @@ spec:
         name: postgres
         env:
         - name: POSTGRES_DB
-          value: prewikka
+          value: concerto
         - name: POSTGRES_USER
-          value: prelude
+          value: concerto
         - name: POSTGRES_PASSWORD
-          value: prelude
+          value: concerto
         - name: PGDATA
           value: /data/postgres
         ports:

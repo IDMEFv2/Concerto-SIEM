@@ -43,7 +43,7 @@ spec:
             subPath: entrypoint.sh
           - name: config
             mountPath: /etc/prewikka/prewikka.conf
-            subPath: prewikka.conf
+            subPath: concerto.conf
           - name: config
             mountPath: /etc/prewikka/conf.d/auth.conf
             subPath: auth.conf

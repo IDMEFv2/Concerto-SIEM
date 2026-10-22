@@ -9,7 +9,7 @@ One container for each function :
 * kafdrop: kafdrop: Web interface for Kafka
 * elasticsearch: es01: IDMEFv2 and logs storage
 * logstash: logstash: Data manipulation, detection and correlation
-* gui: gui: SIEM Web Interface based on open-source Prelude-SIEM
+* gui: gui: SIEM Web Interface based on open-source Concerto Security
 * postgres: postgres: SIEM Web Interface database to store users customizations.
 * setup: setup: Initialization of the PostgreSQL and Elasticsearch database and wait for them to be ready
 

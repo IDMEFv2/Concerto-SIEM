@@ -6,9 +6,15 @@ services:
         args:
           ELASTIC_VERSION: ${ELASTIC_VERSION}
       init: true
+      environment:
+        POSTGRES_USER: ${POSTGRES_USER:-postgres}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+        POSTGRES_CONCERTO_USER: ${POSTGRES_CONCERTO_USER:-concerto}
+        POSTGRES_CONCERTO_PASSWORD: ${POSTGRES_CONCERTO_PASSWORD:-concerto}
+        POSTGRES_CONCERTO_DB: ${POSTGRES_CONCERTO_DB:-concerto}
+        ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-elastic}
       volumes:
         - ./setup/entrypoint.sh:/entrypoint.sh:ro,Z
-        - ./setup_data:/state:Z
         - ./setup/config:/config:ro,Z
       networks:
         - proto
@@ -30,9 +36,14 @@ services:
     gui:
       build:
         context: gui/
+      environment:
+        POSTGRES_CONCERTO_USER: ${POSTGRES_CONCERTO_USER:-concerto}
+        POSTGRES_CONCERTO_PASSWORD: ${POSTGRES_CONCERTO_PASSWORD:-concerto}
+        POSTGRES_CONCERTO_DB: ${POSTGRES_CONCERTO_DB:-concerto}
+        ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-elastic}
       volumes:
         - ./gui/entrypoint.sh:/entrypoint.sh:ro,Z
-        - ./gui/config/prewikka.conf:/etc/prewikka/prewikka.conf:ro,Z
+        - ./gui/config/concerto.conf:/etc/prewikka/prewikka.conf:ro,Z
         - ./gui/config/auth.conf:/etc/prewikka/conf.d/auth.conf:ro,Z
         - ./gui/config/idmefv2.conf:/etc/prewikka/conf.d/idmefv2.conf:ro,Z
         - ./gui/config/logs.conf:/etc/prewikka/conf.d/logs.conf:ro,Z

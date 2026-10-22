@@ -13,7 +13,7 @@ data:
     
     echo "Waiting for database to be ready ..."
     while true; do
-        pg_isready -U prelude -h postgres
+        pg_isready -U {{ .Values.postgresql.db.user }} -h postgres
         if [ $? -eq 0 ]; then
             break
         else
@@ -41,7 +41,7 @@ data:
     PLAINTEXT_PASSWORD="{{ .Values.gui.secrets.password }}"
     HASHED_PASSWORD=$(python3 -c "import passlib.hash; print(passlib.hash.sha256_crypt.hash('$PLAINTEXT_PASSWORD'))")
     
-    PGPASSWORD=prelude psql -d prewikka -h postgres -U prelude -c "UPDATE prewikka_user_configuration SET config = '{\"\": {\"password\": \"$HASHED_PASSWORD\"}}' WHERE userid = '21232f297a57a5a743894a0e4a801fc3';" || :
-    echo "Webinterface's admin's password sets to {{ .Values.gui.secrets.password }}"
+    PGPASSWORD={{ .Values.postgresql.db.password }} psql -d {{ .Values.postgresql.db.db }} -h postgres -U {{ .Values.postgresql.db.user }} -c "UPDATE prewikka_user_configuration SET config = '{\"\": {\"password\": \"$HASHED_PASSWORD\"}}' WHERE userid = '21232f297a57a5a743894a0e4a801fc3';" || :
+    echo "Webinterface's admin's password sets to $PLAINTEXT_PASSWORD"
     
     /usr/local/bin/prewikka-httpd -p 80

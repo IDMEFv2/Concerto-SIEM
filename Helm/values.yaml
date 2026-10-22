@@ -8,9 +8,10 @@ global:
 postgresql:
   image:
     name: postgres
-  secrets:
-    user: prelude
-    password: prelude
+  db:
+    user: concerto
+    password: concerto
+    name: concerto
   volumes:
     - name: data
       hostPath: /mnt/data/postgresql
