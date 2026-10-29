@@ -195,30 +195,6 @@ services:
         kafka1:
           condition: service_healthy
 
-    zoo1:
-      build:
-        context: zoo/
-        args:
-          ZOO_VERSION: ${ZOO_VERSION}
-      hostname: zoo1
-      ports:
-        - "127.0.0.1:2181:2181"
-      environment:
-        ZOOKEEPER_CLIENT_PORT: 2181
-        ZOOKEEPER_SERVER_ID: 1
-        ZOOKEEPER_SERVERS: zoo1:2888:3888
-        KAFKA_OPTS: "-Dzookeeper.4lw.commands.whitelist=ruok"
-      restart: on-failure
-      healthcheck:
-        test:
-          [
-            "CMD-SHELL",
-            "echo ruok | nc localhost 2181 | grep imok"
-          ]
-        interval: 15s
-        timeout: 10s
-        retries: 30
-  
     kafka1:
       build:
         context: kafka/
@@ -237,6 +213,7 @@ services:
         KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
         KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
         KAFKA_BROKER_ID: 1
+        KAFKA_PORT: ""
         KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
         KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
         KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
@@ -256,9 +233,6 @@ services:
         interval: 15s
         timeout: 10s
         retries: 30
-      depends_on:
-        zoo1:
-          condition: service_healthy
 
 networks:
   proto:

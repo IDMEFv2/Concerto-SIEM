@@ -35,10 +35,6 @@ logstash:
     - name: config
       hostPath: /mnt/data/logstash
 
-zoo:
-  image:
-    name: zoo
-
 correlator:
   image:
     name: correlator
@@ -81,7 +77,9 @@ kafdrop:
 
 kafka:
   image:
-    name: kafka
+    name: cp-kafka
+    repository: docker.io/confluentinc 
+    tag: 8.4.0
 
 kowl:
   image:
@@ -102,6 +100,7 @@ nginx:
   ports:
     listenHTTP: 30080
     listenHTTPS: 30443
+    listenIDMEFv2: 30790
   volumes:
     - name: certificates
       hostPath: /mnt/data/nginx/certificates

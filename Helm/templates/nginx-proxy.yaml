@@ -22,10 +22,15 @@ spec:
               name: nginx-80
             - containerPort: 443
               name: nginx-443
+            - containerPort: 4690
+              name: nginx-4690
           volumeMounts:
             - name: config
               mountPath: /etc/nginx/conf.d/default.conf
               subPath: default.conf
+            - name: config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
             - name: certificates
               mountPath: /etc/letsencrypt
               readOnly: true

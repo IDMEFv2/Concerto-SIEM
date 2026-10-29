@@ -16,6 +16,9 @@ spec:
     - port: 443
       name: nginx-443
       nodePort: {{ .Values.nginx.ports.listenHTTPS }}
+    - port: 4690
+      name: nginx-4690
+      nodePort: {{ .Values.nginx.ports.listenIDMEFv2 }}
   selector:
     app: nginx-tmpl
 ---

@@ -52,7 +52,7 @@ spec:
         - name: MAX_MSG_SIZE
           value: "1048576"
         - name: BOOTSTRAP_SERVER
-          value: "http://kafka:9092"
+          value: "http://kafka:29092"
         - name: BIG_DATA_SERVER
           value: "http://es01:9200/"
         - name: BIG_DATA_USERNAME

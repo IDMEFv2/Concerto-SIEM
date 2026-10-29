@@ -45,6 +45,9 @@ spec:
             mountPath: /etc/prewikka/prewikka.conf
             subPath: concerto.conf
           - name: config
+            mountPath: /etc/prewikka/concerto.conf
+            subPath: concerto.conf
+          - name: config
             mountPath: /etc/prewikka/conf.d/auth.conf
             subPath: auth.conf
           - name: config
