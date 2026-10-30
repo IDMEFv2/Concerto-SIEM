@@ -227,44 +227,6 @@ jobs:
           build-args: |
             KAFDROP_VERSION=${{ vars.KAFDROP_VERSION }}
 
-  push_zoo:
-    name: Push Zoo container image to Docker Hub
-    runs-on: ubuntu-latest
-    environment: PROTO
-    permissions:
-      packages: write
-      contents: read
-      attestations: write
-      id-token: write
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v4
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: idmefv2prototype/zoo
-
-      - name: Build and push Docker image
-        id: push
-        uses: docker/build-push-action@v6
-        with:
-          context: zoo/
-          file: zoo/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          annotations: ${{ steps.meta.outputs.annotations }}
-          build-args: |
-            ZOO_VERSION=${{ vars.ZOO_VERSION }}
-
   push_kafka:
     name: Push kafka container image to Docker Hub
     runs-on: ubuntu-latest
