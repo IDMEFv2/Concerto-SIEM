@@ -1,0 +1,140 @@
+# ============================================================
+# Syslog forwarding targets for Concerto SIEM
+# ============================================================
+# Included from the main Makefile.
+#
+# Usage:
+#   make log-start   Enable forwarding to the SIEM
+#   make log-stop    Disable forwarding, keep queued logs
+#   make log-clear   Disable forwarding, discard queued logs
+# ============================================================
+
+RSYSLOG_UNIT_CHECK = systemctl list-unit-files 2>/dev/null | grep -q '^rsyslog\.service'
+FORWARD_CONF       = syslog/50-concerto-forward.conf
+FORWARD_DEST       = /etc/rsyslog.d/50-concerto-forward.conf
+QUEUE_GLOB         = /var/spool/rsyslog/concerto_fwd*
+
+log-help:
+	@echo "=========================================="
+	@echo "Concerto SIEM - Syslog forwarding targets"
+	@echo "=========================================="
+	@echo ""
+	@echo "Forwarding to the SIEM:"
+	@echo "  make log-start   Enable rsyslog forwarding to 127.0.0.1:6514"
+	@echo "  make log-stop    Disable forwarding, keep queued logs"
+	@echo "  make log-clear   Disable forwarding, discard queued logs"
+	@echo ""
+	@echo "When to use each:"
+	@echo "  log-start   After 'make up' has completed and the SIEM is healthy."
+	@echo "  log-stop    Before a short 'make down' / 'make up' cycle, or when"
+	@echo "              you want to stop forwarding but keep buffered logs."
+	@echo "  log-clear   After an extended outage, if the queue has grown large"
+	@echo "              or the host has become unstable. This discards all"
+	@echo "              buffered logs."
+	@echo "  log-status  Show the current syslog formwarding status"
+	@echo ""
+	@echo "Notes:"
+	@echo "  - Queued logs live in /var/spool/rsyslog/concerto_fwd*"
+	@echo "  - Requires rsyslog managed by systemd on the host."
+	@echo "  - The queue is capped at 100 MB to prevent unbounded growth."
+	@echo ""
+	@echo "This help:"
+	@echo "  make log-help    Show this message"
+	@echo ""
+
+
+
+
+log-start:
+	@if ! $(RSYSLOG_UNIT_CHECK); then \
+		echo "ERROR: rsyslog is not installed or not managed by systemd."; \
+		echo "Install rsyslog first (e.g. 'sudo apt install rsyslog') and retry."; \
+		exit 1; \
+	fi
+	@echo "Enabling syslog forwarding to Concerto SIEM..."
+	@sudo cp $(FORWARD_CONF) $(FORWARD_DEST)
+	@sudo systemctl restart rsyslog
+	@echo "Forwarding enabled. Logs will now be sent to 127.0.0.1:6514."
+
+log-stop:
+	@if ! $(RSYSLOG_UNIT_CHECK); then \
+		echo "ERROR: rsyslog is not installed or not managed by systemd."; \
+		exit 1; \
+	fi
+	@echo "Disabling syslog forwarding to Concerto SIEM..."
+	@sudo rm -f $(FORWARD_DEST)
+	@sudo systemctl restart rsyslog
+	@echo "Forwarding disabled."
+	@echo "Queued logs are preserved in /var/spool/rsyslog/concerto_fwd*"
+	@echo "Run 'make log-clear' to discard them, or 'make log-start' to resume."
+
+log-clear:
+	@if ! $(RSYSLOG_UNIT_CHECK); then \
+		echo "ERROR: rsyslog is not installed or not managed by systemd."; \
+		exit 1; \
+	fi
+	@echo "Stopping syslog forwarding and clearing the Concerto queue..."
+	@sudo rm -f $(FORWARD_DEST)
+	@sudo systemctl stop rsyslog
+	@sudo rm -f $(QUEUE_GLOB)
+	@sudo systemctl start rsyslog
+	@echo "Forwarding disabled and queue cleared."
+
+# ------------------------------------------------------------
+# Show the current syslog forwarding status
+# ------------------------------------------------------------
+# Read-only. Safe to run at any time.
+#
+# Reports:
+#   - whether rsyslog is installed and running
+#   - whether the forwarding config file is in place
+#   - the size and file count of the Concerto queue
+#   - the last few lines of the rsyslog journal
+.PHONY: log-status
+log-status:
+	@echo ""
+	@echo "Concerto SIEM - Syslog forwarding status"
+	@echo "=========================================="
+	@echo ""
+	@printf "%-28s " "rsyslog service:"; \
+	if systemctl is-active --quiet rsyslog 2>/dev/null; then \
+		echo "active"; \
+	else \
+		echo "inactive or not installed"; \
+	fi
+	@printf "%-28s " "Forwarding config:"; \
+	if [ -f /etc/rsyslog.d/50-concerto-forward.conf ]; then \
+		echo "present"; \
+	else \
+		echo "absent (forwarding disabled)"; \
+	fi
+	@printf "%-28s " "Queue directory:"; \
+	if [ -d /var/spool/rsyslog ]; then \
+		echo "/var/spool/rsyslog"; \
+	else \
+		echo "not found"; \
+	fi
+	@printf "%-28s " "Queue files:"; \
+	if ls /var/spool/rsyslog/concerto_fwd* >/dev/null 2>&1; then \
+		count=$$(ls /var/spool/rsyslog/concerto_fwd* 2>/dev/null | wc -l); \
+		echo "$$count file(s)"; \
+	else \
+		echo "none"; \
+	fi
+	@printf "%-28s " "Queue size:"; \
+	if ls /var/spool/rsyslog/concerto_fwd* >/dev/null 2>&1; then \
+		size=$$(sudo du -sh /var/spool/rsyslog/concerto_fwd* 2>/dev/null | awk '{sum+=$1} END {print sum}'); \
+		sudo du -ch /var/spool/rsyslog/concerto_fwd* 2>/dev/null | tail -1 | awk '{print $$1}'; \
+	else \
+		echo "0"; \
+	fi
+	@echo ""
+	@echo "=== Recent rsyslog messages (last 5) ==="
+	@sudo journalctl -u rsyslog -n 5 --no-pager 2>/dev/null || \
+		echo "Cannot read rsyslog journal."
+	@echo ""
+	@echo "Actions:"
+	@echo "  make log-start   Enable forwarding"
+	@echo "  make log-stop    Disable forwarding, keep queued logs"
+	@echo "  make log-clear   Disable forwarding, discard queued logs"
+	@echo ""

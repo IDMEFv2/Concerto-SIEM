@@ -1,0 +1,176 @@
+# ============================================================
+# Concerto SIEM - NGINX reverse proxy targets
+# ============================================================
+# Included from the main Makefile with:
+#     -include Makefile.proxy
+#
+# This file manages the optional NGINX reverse proxy that sits
+# in front of the Concerto SIEM web UI. It uses a direct
+# `podman run` command instead of podman-compose, to avoid a
+# known podman-compose 1.5.0 bug where it incorrectly reports
+# that an external network does not exist.
+#
+# Prerequisite:
+#   The main Concerto stack must be running (`make up`), so that
+#   the proto_proto network exists and the `gui` service is
+#   reachable by name.
+#
+# Run `make proxy-help` for a list of targets.
+# ============================================================
+
+# Container and network names.
+PROXY_CONTAINER  = proto_proxy
+PROXY_NETWORK    = proto_proto
+PROXY_IMAGE      = docker.io/library/nginx:alpine
+
+# Ports published to the host. These are the only ports exposed
+# to the outside world by the Concerto stack.
+PROXY_HTTP_PORT  = 80
+PROXY_HTTPS_PORT = 443
+
+# Absolute path to the proxy configuration and certificates.
+PROXY_DIR        = $(shell pwd)/proxy
+
+# ------------------------------------------------------------
+# Help
+# ------------------------------------------------------------
+.PHONY: proxy-help
+proxy-help:
+	@echo ""
+	@echo "Concerto SIEM - Reverse proxy targets"
+	@echo "======================================"
+	@echo ""
+	@echo "  make up-proxy        Start the reverse proxy"
+	@echo "  make down-proxy      Stop and remove the reverse proxy"
+	@echo "  make proxy-reload    Apply NGINX config changes without downtime"
+	@echo "  make proxy-logs      Follow proxy logs in real time"
+	@echo "  make proxy-shell     Open a shell inside the proxy container"
+	@echo "  make proxy-test      Test the proxy from the host"
+	@echo "  make proxy-status    Show the proxy container status"
+	@echo ""
+	@echo "Related:"
+	@echo "  make certs-help      Certificate management targets"
+	@echo ""
+	@echo "Proxy configuration: proxy/conf.d/concerto.conf"
+	@echo "Certificates:        proxy/certs/"
+	@echo ""
+
+# ------------------------------------------------------------
+# Preflight checks
+# ------------------------------------------------------------
+# Verify that the main stack is running and that the network
+# exists before attempting to start the proxy.
+.PHONY: proxy-check
+proxy-check:
+	@if ! sudo podman network exists $(PROXY_NETWORK); then \
+		echo "ERROR: Network $(PROXY_NETWORK) does not exist."; \
+		echo "Run 'make up' first and wait for the stack to be healthy."; \
+		exit 1; \
+	fi
+	@if ! sudo podman container exists proto_gui_1; then \
+		echo "ERROR: The main Concerto stack is not running."; \
+		echo "Run 'make up' first and wait for the stack to be healthy."; \
+		exit 1; \
+	fi
+	@if [ ! -f $(PROXY_DIR)/conf.d/concerto.conf ]; then \
+		echo "ERROR: $(PROXY_DIR)/conf.d/concerto.conf not found."; \
+		exit 1; \
+	fi
+	@if [ ! -f $(PROXY_DIR)/certs/fullchain.pem ] || [ ! -f $(PROXY_DIR)/certs/privkey.pem ]; then \
+		echo "ERROR: TLS certificate not found in $(PROXY_DIR)/certs/."; \
+		echo "Run 'make certs-init' first."; \
+		exit 1; \
+	fi
+
+# ------------------------------------------------------------
+# Start the reverse proxy
+# ------------------------------------------------------------
+# Uses a direct `podman run` command instead of podman-compose
+# to avoid the network-existence bug.
+#
+# Flags explained:
+#   -d                            run detached (in the background)
+#   --name                        name the container explicitly
+#   --restart unless-stopped      auto-restart on crash or reboot
+#   --network $(PROXY_NETWORK)    attach to the Concerto network
+#   --network-alias proxy         give the container a network alias
+#   -p 80:80 -p 443:443           publish public ports
+#   -v .../conf.d:/etc/nginx/conf.d:ro    mount NGINX config
+#   -v .../certs:/etc/nginx/certs:ro      mount TLS certificate
+.PHONY: up-proxy
+up-proxy: proxy-check certs-init
+	@echo "Removing any existing proxy container..."
+	@sudo podman rm -f $(PROXY_CONTAINER) 2>/dev/null || true
+	@echo "Starting NGINX reverse proxy..."
+	sudo podman run -d \
+		--name $(PROXY_CONTAINER) \
+		--restart unless-stopped \
+		--network $(PROXY_NETWORK) \
+		--network-alias proxy \
+		-p $(PROXY_HTTP_PORT):80 \
+		-p $(PROXY_HTTPS_PORT):443 \
+		-v $(PROXY_DIR)/conf.d:/etc/nginx/conf.d:ro \
+		-v $(PROXY_DIR)/certs:/etc/nginx/certs:ro \
+		$(PROXY_IMAGE)
+	@echo "Proxy started. Test with 'make proxy-test'."
+
+# ------------------------------------------------------------
+# Stop and remove the proxy
+# ------------------------------------------------------------
+# Only the proxy container is affected. The main Concerto stack
+# keeps running.
+.PHONY: down-proxy
+down-proxy:
+	@echo "Stopping and removing the proxy container..."
+	@sudo podman rm -f $(PROXY_CONTAINER) 2>/dev/null || true
+	@echo "Done."
+
+# ------------------------------------------------------------
+# Reload NGINX configuration
+# ------------------------------------------------------------
+# Sends SIGHUP to the NGINX master process. The configuration is
+# validated first with `nginx -t`, so a syntax error does not
+# take the proxy offline.
+.PHONY: proxy-reload
+proxy-reload:
+	@echo "Validating NGINX configuration..."
+	@sudo podman exec $(PROXY_CONTAINER) nginx -t
+	@echo "Reloading NGINX..."
+	@sudo podman exec $(PROXY_CONTAINER) nginx -s reload
+	@echo "Done."
+
+# ------------------------------------------------------------
+# Follow proxy logs
+# ------------------------------------------------------------
+.PHONY: proxy-logs
+proxy-logs:
+	sudo podman logs -f $(PROXY_CONTAINER)
+
+# ------------------------------------------------------------
+# Open a shell inside the proxy container
+# ------------------------------------------------------------
+.PHONY: proxy-shell
+proxy-shell:
+	sudo podman exec -it $(PROXY_CONTAINER) /bin/sh
+
+# ------------------------------------------------------------
+# Show proxy status
+# ------------------------------------------------------------
+.PHONY: proxy-status
+proxy-status:
+	@sudo podman ps -a --filter name=$(PROXY_CONTAINER)
+
+# ------------------------------------------------------------
+# Test the proxy from the host
+# ------------------------------------------------------------
+# -k tells curl to ignore the self-signed certificate warning.
+.PHONY: proxy-test
+proxy-test:
+	@echo "Testing HTTPS endpoint (self-signed certificate, -k used)..."
+	@printf "%-30s %s\n" "HTTPS root:" \
+		"$$(curl -sk -o /dev/null -w '%{http_code}' https://localhost/ || echo 'unreachable')"
+	@printf "%-30s %s\n" "HTTP redirect:" \
+		"$$(curl -s -o /dev/null -w '%{http_code}' http://localhost/ || echo 'unreachable')"
+	@echo ""
+	@echo "Expected: HTTPS returns 200 or 302, HTTP returns 301."
+	@echo "If HTTPS returns 000, the proxy is not running or not listening."

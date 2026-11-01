@@ -1,0 +1,230 @@
+# ============================================================
+# Diagnostic targets for Concerto SIEM
+# ============================================================
+# Included from the main Makefile with:
+#     -include Makefile.diag
+#
+# All diag-* targets are READ-ONLY.
+# The `evidence` target writes a single file: evidence.txt
+#
+# Run `make diag-help` for a list of available targets.
+# ============================================================
+
+COMPOSE    = sudo podman-compose -p proto -f docker-compose.yml
+EVIDENCE   = evidence.txt
+
+# ------------------------------------------------------------
+# Help
+# ------------------------------------------------------------
+diag-help:
+	@echo ""
+	@echo "Concerto SIEM - Diagnostic targets"
+	@echo "=================================="
+	@echo ""
+	@echo "Passive checks (read-only, safe to run anytime):"
+	@echo "  make diag              Run all passive checks in sequence"
+	@echo "  make diag-versions     Host OS, kernel, Podman, rsyslog, .env (redacted)"
+	@echo "  make diag-quick	Quick health diagnostic for Elastic, Indexes, Logstash, Kafka, kafdrop and GUI"
+	@echo "  make diag-containers   Container status (podman-compose ps)"
+	@echo "  make diag-services     HTTP reachability of Elasticsearch, Kafdrop, GUI, Logstash"
+	@echo "  make diag-elastic      Cluster health, indices, document counts"
+	@echo "  make diag-kafka        List Kafka topics"
+	@echo "  make diag-resources    Container CPU/RAM usage and data volume sizes"
+	@echo "  make diag-logs         Last 30 lines of key container logs"
+	@echo ""
+	@echo "Active test (writes one test log line):"
+	@echo "  make diag-flow         Send a test syslog message and check ingestion"
+	@echo ""
+	@echo "Reporting:"
+	@echo "  make evidence          Collect all passive checks into evidence.txt"
+	@echo "                         Attach the file to a GitHub issue"
+	@echo ""
+	@echo "This help:"
+	@echo "  make diag-help         Show this message"
+	@echo ""
+
+# ------------------------------------------------------------
+# Run all passive checks
+# ------------------------------------------------------------
+diag: diag-versions diag-containers diag-services diag-elastic diag-kafka diag-resources
+	@echo ""
+	@echo "=== Diagnostic complete ==="
+	@echo "For end-to-end log/alert flow: make diag-flow"
+	@echo "To collect all evidence into a file: make evidence"
+	@echo "For a list of all diagnostic targets: make diag-help"
+
+
+# ------------------------------------------------------------
+# One-shot health check: prints OK / FAIL for each component
+# ------------------------------------------------------------
+diag-quick:
+	@echo "=================================="
+	@echo "Concerto SIEM - Quick health check"
+	@echo "=================================="
+	@printf "%-24s " "Elasticsearch:"; \
+		if curl -sf -u elastic:elastic http://localhost:9200/_cluster/health >/dev/null 2>&1; then echo "OK"; else echo "FAIL"; fi
+	@printf "%-24s " "Logs index:"; \
+		if curl -sf -u elastic:elastic http://localhost:9200/logs/_count >/dev/null 2>&1; then \
+			echo "OK ($$(curl -s -u elastic:elastic http://localhost:9200/logs/_count | grep -o '\"count\":[0-9]*' | cut -d: -f2) docs)"; \
+		else echo "FAIL"; fi
+	@printf "%-24s " "Alerts index:"; \
+		if curl -sf -u elastic:elastic http://localhost:9200/alerts/_count >/dev/null 2>&1; then \
+			echo "OK ($$(curl -s -u elastic:elastic http://localhost:9200/alerts/_count | grep -o '\"count\":[0-9]*' | cut -d: -f2) docs)"; \
+		else echo "FAIL"; fi
+	@printf "%-24s " "Logstash:"; \
+		if sudo podman exec proto_logstash_1 curl -sf http://localhost:9600/_node >/dev/null 2>&1; then echo "OK"; else echo "FAIL"; fi
+	@printf "%-24s " "SIEM Web UI:"; \
+		if curl -sf -o /dev/null http://localhost:8000; then echo "OK"; else echo "FAIL"; fi
+	@printf "%-24s " "Kafdrop:"; \
+		if curl -sf -o /dev/null http://localhost:9201; then echo "OK"; else echo "FAIL"; fi
+	@printf "%-24s " "Kafka broker:"; \
+		if sudo podman exec proto_kafka1_1 kafka-topics --bootstrap-server kafka1:9092 --list >/dev/null 2>&1; then echo "OK"; else echo "FAIL"; fi
+	@echo ""
+	@echo "If any line shows FAIL, run 'make evidence' and attach the file to your issue."
+
+# ------------------------------------------------------------
+# Versions and environment
+# ------------------------------------------------------------
+diag-versions:
+	@echo ""
+	@echo "=== Versions ==="
+	@echo "Host OS:          $$(lsb_release -ds 2>/dev/null || grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '\"')"
+	@echo "Kernel:           $$(uname -r)"
+	@echo "Podman:           $$(podman --version 2>/dev/null || echo 'not found')"
+	@echo "podman-compose:   $$(podman-compose --version 2>/dev/null || echo 'not found')"
+	@echo "rsyslog:          $$(rsyslogd -v 2>/dev/null | head -1 || echo 'not installed')"
+	@echo "vm.max_map_count: $$(sysctl -n vm.max_map_count 2>/dev/null || echo 'unknown')"
+	@echo ""
+	@echo "=== .env (secrets redacted) ==="
+	@sed -E 's/(PASSWORD|SECRET|TOKEN|KEY)=.*/\1=<redacted>/' .env 2>/dev/null || echo ".env not found"
+
+# ------------------------------------------------------------
+# Containers
+# ------------------------------------------------------------
+diag-containers:
+	@echo ""
+	@echo "=== Containers ==="
+	@$(COMPOSE) ps
+
+# ------------------------------------------------------------
+# HTTP endpoints
+# ------------------------------------------------------------
+diag-services:
+	@echo ""
+	@echo "=== Service endpoints ==="
+	@printf "%-20s %s\n" "Elasticsearch:" \
+		"$$(curl -s -o /dev/null -w '%{http_code}' -u elastic:elastic http://localhost:9200 || echo 'unreachable')"
+	@printf "%-20s %s\n" "Kafdrop UI:" \
+		"$$(curl -s -o /dev/null -w '%{http_code}' http://localhost:9201 || echo 'unreachable')"
+	@printf "%-20s %s\n" "SIEM Web UI:" \
+		"$$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8000 || echo 'unreachable')"
+	@printf "%-20s %s\n" "Logstash HTTP:" \
+		"$$(curl -s -o /dev/null -w '%{http_code}' http://localhost:9600/_node || echo 'unreachable')"
+
+# ------------------------------------------------------------
+# Elasticsearch
+# ------------------------------------------------------------
+diag-elastic:
+	@echo ""
+	@echo "=== Elasticsearch cluster health ==="
+	@curl -s -u elastic:elastic http://localhost:9200/_cluster/health?pretty || \
+		echo "Cannot reach Elasticsearch."
+	@echo ""
+	@echo "=== Indices ==="
+	@curl -s -u elastic:elastic "http://localhost:9200/_cat/indices?v" || \
+		echo "Cannot list indices."
+	@echo ""
+	@echo "=== Document counts ==="
+	@printf "%-20s %s\n" "alerts:" \
+		"$$(curl -s -u elastic:elastic http://localhost:9200/alerts/_count 2>/dev/null | grep -o '\"count\":[0-9]*' || echo 'index missing')"
+	@printf "%-20s %s\n" "logs:" \
+		"$$(curl -s -u elastic:elastic http://localhost:9200/logs/_count 2>/dev/null | grep -o '\"count\":[0-9]*' || echo 'index missing')"
+
+# ------------------------------------------------------------
+# Kafka
+# ------------------------------------------------------------
+diag-kafka:
+	@echo ""
+	@echo "=== Kafka topics ==="
+	@sudo podman exec proto_kafka1_1 kafka-topics \
+		--bootstrap-server kafka1:9092 --list 2>/dev/null || \
+		echo "Cannot list Kafka topics."
+	@echo ""
+	@echo "=== Message counts (latest offset per topic) ==="
+	@for t in my_collected my_collected_cleaned my_collected_analyzed my_collected_ruled my_collected_ERR my_processed; do \
+		printf "%-28s " "$$t:"; \
+		sudo podman exec proto_kafka1_1 kafka-run-class kafka.tools.GetOffsetShell \
+			--bootstrap-server kafka1:9092 --topic $$t 2>/dev/null \
+			| awk -F: '{sum += $$3} END {print sum+0}'; \
+	done
+
+# ------------------------------------------------------------
+# Resource usage
+# ------------------------------------------------------------
+diag-resources:
+	@echo ""
+	@echo "=== Container resource usage ==="
+	@sudo podman stats --no-stream 2>/dev/null || echo "Cannot read podman stats."
+	@echo ""
+	@echo "=== Disk usage of data volumes ==="
+	@du -sh elasticsearch_data elasticsearch_logs kafka_logs postgres_data setup_data 2>/dev/null || true
+
+# ------------------------------------------------------------
+# Recent container logs
+# ------------------------------------------------------------
+diag-logs:
+	@echo ""
+	@echo "=== Recent logs (last 30 lines each) ==="
+	@for c in proto_logstash_1 proto_es01_1 proto_correlator_1 proto_gui_1; do \
+		echo ""; \
+		echo "--- $$c ---"; \
+		sudo podman logs --tail 30 $$c 2>&1 || echo "cannot read logs for $$c"; \
+	done
+
+# ------------------------------------------------------------
+# End-to-end flow test
+# ------------------------------------------------------------
+diag-flow:
+	@echo "=== End-to-end flow test ==="
+	@logs_before=$$(curl -s -u elastic:elastic http://localhost:9200/logs/_count | grep -o '\"count\":[0-9]*' | cut -d: -f2); \
+	alerts_before=$$(curl -s -u elastic:elastic http://localhost:9200/alerts/_count | grep -o '\"count\":[0-9]*' | cut -d: -f2); \
+	echo "Sending harmless log (expected: log count +1, no alert)..."; \
+	echo 'Mar 11 11:00:35 diag sshd[1]: Accepted password for diag from 12.34.56.78 port 1806 ssh2' | nc -N localhost 6514; \
+	sleep 2; \
+	echo "Sending detection log (expected: log count +1, alert count +1)..."; \
+	echo 'Mar 11 11:00:36 diag sshd[2]: Failed password for invalid user diag from 12.34.56.78 port 1807 ssh2' | nc -N localhost 6514; \
+	sleep 8; \
+	logs_after=$$(curl -s -u elastic:elastic http://localhost:9200/logs/_count | grep -o '\"count\":[0-9]*' | cut -d: -f2); \
+	alerts_after=$$(curl -s -u elastic:elastic http://localhost:9200/alerts/_count | grep -o '\"count\":[0-9]*' | cut -d: -f2); \
+	logs_delta=$$((logs_after - logs_before)); \
+	alerts_delta=$$((alerts_after - alerts_before)); \
+	echo ""; \
+	echo "Results:"; \
+	printf "  Logs:    %s -> %s (delta: +%s, expected +2)  " "$$logs_before" "$$logs_after" "$$logs_delta"; \
+	if [ "$$logs_delta" -ge 2 ]; then echo "OK"; else echo "WARNING"; fi; \
+	printf "  Alerts:  %s -> %s (delta: +%s, expected +1)  " "$$alerts_before" "$$alerts_after" "$$alerts_delta"; \
+	if [ "$$alerts_delta" -ge 1 ]; then echo "OK"; else echo "WARNING"; fi
+
+# ------------------------------------------------------------
+# Collect all evidence into evidence.txt
+# ------------------------------------------------------------
+evidence:
+	@echo "Collecting diagnostic evidence into $(EVIDENCE) ..."
+	@echo "============================================================" > $(EVIDENCE)
+	@echo "Concerto SIEM - Diagnostic Evidence" >> $(EVIDENCE)
+	@echo "Collected: $$(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $(EVIDENCE)
+	@echo "Hostname:  $$(hostname)" >> $(EVIDENCE)
+	@echo "============================================================" >> $(EVIDENCE)
+	@echo "" >> $(EVIDENCE)
+	@$(MAKE) --no-print-directory diag-versions   >> $(EVIDENCE) 2>&1
+	@$(MAKE) --no-print-directory diag-containers >> $(EVIDENCE) 2>&1
+	@$(MAKE) --no-print-directory diag-services   >> $(EVIDENCE) 2>&1
+	@$(MAKE) --no-print-directory diag-elastic    >> $(EVIDENCE) 2>&1
+	@$(MAKE) --no-print-directory diag-kafka      >> $(EVIDENCE) 2>&1
+	@$(MAKE) --no-print-directory diag-resources  >> $(EVIDENCE) 2>&1
+	@$(MAKE) --no-print-directory diag-logs       >> $(EVIDENCE) 2>&1
+	@echo ""
+	@echo "Evidence collected: $(EVIDENCE)"
+	@echo "Review it for sensitive information before attaching to an issue."
+	@echo "Attach it to your GitHub issue at:"
+	@echo "  https://github.com/IDMEFv2/Concerto-SIEM/issues"

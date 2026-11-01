@@ -3,3 +3,5 @@ elasticsearch_logs
 kafka_logs
 logs
 postgres_data
+evidence.txt
+proxy/certs/
