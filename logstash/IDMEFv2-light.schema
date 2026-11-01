@@ -1,10 +1,10 @@
 {
-    "description": "JSON schema for the Intrusion Detection Message Exchange Format (IDMEF) version 2 (revision 2.D.V08)",
+    "description": "JSON schema for the Intrusion Detection Message Exchange Format (IDMEF) version 2 (revision 2.D.V09)",
     "properties": {
         "Version": {
             "description": "The version of the IDMEF format in use by this alert. During the drafts tuning period the version is equal to the draft version. Therefore it is \"2.D.V0X\" for Draft V0X.",
             "enum": [
-                "2.D.V08"
+                "2.D.V09"
             ]
         },
         "ID": {
@@ -20,11 +20,11 @@
             "type": "string"
         },
         "EntityName": {
-            "description": "Entity Name, monitored by the organisation, where the incident occurred. Could be a town, region or country name or an internal name. Could also be the name of a client for a MSSP centralizing it's client incidents in a single system. Do not repeat the organisation name in the EntityName Example: - ACME HeadQuaters is located in Paris France and has a local office in India - If the incident occurred in the local office: \"OrganisationName\": \"ACME\" , \"EntityName\": \"India\" - If the incident occurred in the headquaters: \"OrganisationName\": \"ACME\", \"EntityName\": \"Headquaters\" (or \"Paris\")",
+            "description": "Entity Name, monitored by the organisation, where the incident occurred. Could be a town, region or country name or an internal name. Could also be the name of a customer for a MSSP centralizing it's customer incidents in a single system. Do not repeat the organisation name in the EntityName Example: - ACME HeadQuaters is located in Paris France and has a local office in India - If the incident occurred in the local office: \"OrganisationName\": \"ACME\" , \"EntityName\": \"India\" - If the incident occurred in the headquaters: \"OrganisationName\": \"ACME\", \"EntityName\": \"Headquaters\" (or \"Paris\")",
             "type": "string"
         },
         "EntityId": {
-            "description": "Entity ID, monitored by the organisation, where the incident occurred. Useful if organisation and entity are not directly linked, like a client and a MSSP.",
+            "description": "Entity ID, monitored by the organisation, where the incident occurred. Useful if organisation and entity are not directly linked, like a customer and a MSSP.",
             "type": "string"
         },
         "EntitySector": {
@@ -150,6 +150,17 @@
                 "$ref": "#/definitions/uuidType"
             }
         },
+        "SignedAttributes": {
+            "description": "List of IDMEFv2 paths of the attributes included in the signature.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "Signature": {
+            "description": "JWS Compact Serialization string containing the signature.",
+            "type": "string"
+        },
         "Analyzer": {
             "type": "object",
             "items": {
@@ -228,12 +239,17 @@
                     "Location": {
                         "description": "Internal name for the location of the analyzer.",
                         "type": "string"
+                    },
+                    "Locator": {
+                        "description": "Resolvable URL for the entity. May be dynamic or expire; complements Location, which is a persistent path.",
+                        "type": "string"
+                    },
+                    "CaptureZone": {
+                        "description": "A string that describes the \"capture zone\" of the analyzer (if the analyzer is also a sensor), as a JSON-serialized string. Depending on the type of sensor, the capture zone may for instance refer to: A JSON object describing a camera's settings (elevation, horizontal and vertical field of view, azimuth, etc.) A description of the IP network where packet capture is taking place.",
+                        "type": "string"
                     }
                 },
-                "additionalProperties": false,
-                "required": [
-                    "Name"
-                ]
+                "additionalProperties": false
             }
         },
         "Sensor": {
@@ -261,6 +277,20 @@
                         "description": "The sensor model's description (usually its generic name, brand and version).",
                         "type": "string"
                     },
+                    "Data": {
+                        "description": "Type of data captured by the sensor.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/sensorDataEnum"
+                        }
+                    },
+                    "ext-Data": {
+                        "description": "A means by which to extend the Data attribute. (see )",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
                     "GeoLocation": {
                         "description": "GPS coordinates for the analyzer.",
                         "$ref": "#/definitions/geolocType"
@@ -273,16 +303,17 @@
                         "description": "Internal name for the location of the sensor.",
                         "type": "string"
                     },
+                    "Locator": {
+                        "description": "Resolvable URL for the entity. May be dynamic or expire; complements Location, which is a persistent path.",
+                        "type": "string"
+                    },
                     "CaptureZone": {
                         "description": "A string that describes the \"capture zone\" of the sensor, as a JSON-serialized string. Depending on the type of sensor, the capture zone may for instance refer to: \n- A JSON object describing a camera's settings (elevation, horizontal and vertical field of view, azimuth, etc.)\n- A description of the IP network where packet capture is taking place.",
                         "type": "string"
                     }
                 },
                 "additionalProperties": false,
-                "type": "object",
-                "required": [
-                    "Name"
-                ]
+                "type": "object"
             }
         },
         "Source": {
@@ -300,6 +331,10 @@
                     },
                     "Hostname": {
                         "description": "Hostname of this source. This SHOULD be a fully qualified domain name, but may not conform exactly because values extracted from logs, messages, DNS, etc. may themselves be malformed. An empty string MAY be used to explicitly state that this value was inquired but not found (missing DNS entry).",
+                        "type": "string"
+                    },
+                    "Name": {
+                        "description": "Name of this source. Naming the source might be necessary for non digital source like a human, a vehicle, a drone, etc.",
                         "type": "string"
                     },
                     "Category": {
@@ -355,6 +390,10 @@
                         "description": "Internal name for the location of the source.",
                         "type": "string"
                     },
+                    "Locator": {
+                        "description": "Resolvable URL for the entity. May be dynamic or expire; complements Location, which is a persistent path.",
+                        "type": "string"
+                    },
                     "Attachment": {
                         "description": "Identifiers for attachments related to this source. Each identifier listed here MUST match the \"Name\" attribute for one of the attachments described using the Attachment class .",
                         "type": "array",
@@ -384,6 +423,10 @@
                         "description": "Hostname of this target. This SHOULD be a fully qualified domain name, but may not conform exactly because values extracted from logs, messages, DNS, etc. may themselves be malformed. An empty string MAY be used to explicitly state that this value was inquired but not found (missing DNS entry).",
                         "type": "string"
                     },
+                    "Name": {
+                        "description": "Name of this target. Naming the target might be necessary for non digital targets like a human, a vehicle, a building, etc.",
+                        "type": "string"
+                    },
                     "Category": {
                         "description": "Target category",
                         "type": "array",
@@ -396,7 +439,7 @@
                         "type": "string"
                     },
                     "Service": {
-                        "description": "Service or process impacted by the incident.",
+                        "description": "Should be High Level Service (messaging, internet, ...), if not defined can be process impacted by the incident.",
                         "type": "string"
                     },
                     "User": {
@@ -415,6 +458,14 @@
                             "type": "integer"
                         }
                     },
+                    "Polygon": {
+                        "description": "Pollygonal incident affected area. Whitespace-delimited list of WGS 84 'latitude,longitude' pairs. Minimum 4 pairs, first equals last",
+                        "type": "string"
+                    },
+                    "Circle": {
+                        "description": "Circular incident infected area. WGS 84 center point 'latitude,longitude' followed by a space and radius in kilometers",
+                        "type": "string"
+                    },
                     "GeoLocation": {
                         "description": "GPS coordinates for the target.",
                         "$ref": "#/definitions/geolocType"
@@ -425,6 +476,10 @@
                     },
                     "Location": {
                         "description": "Internal name for the location of the target.",
+                        "type": "string"
+                    },
+                    "Locator": {
+                        "description": "Resolvable URL for the entity. May be dynamic or expire; complements Location, which is a persistent path.",
                         "type": "string"
                     },
                     "Attachment": {
@@ -440,7 +495,7 @@
             }
         },
         "Attachment": {
-            "type": "object",
+            "type": "array",
             "items": {
                 "description": "The Attachment class contains additional data which was captured in relation with the event.",
                 "properties": {
@@ -500,6 +555,7 @@
                     }
                 },
                 "additionalProperties": false,
+                "type": "object",
                 "required": [
                     "Name"
                 ]
@@ -518,6 +574,12 @@
         "entitysectorEnum": {
             "enum": [
                 "Undefined",
+                "Administration.CentralGovernment",
+                "Administration.Diplomatic",
+                "Administration.EmergencyServices",
+                "Administration.Judiciary",
+                "Administration.Local",
+                "Administration.Other",
                 "Banking.Banking",
                 "Banking.Other",
                 "Cemeteries.Crematoria",
@@ -615,12 +677,6 @@
                 "Nuclear.Other",
                 "Postal.CourierServices",
                 "Postal.Other",
-                "Administration.CentralGovernment",
-                "Administration.Diplomatic",
-                "Administration.EmergencyServices",
-                "Administration.Judiciary",
-                "Administration.Local",
-                "Administration.Other",
                 "Religious.PilgrimageSites",
                 "Religious.PlacesOfWorship",
                 "Religious.Other",
@@ -657,6 +713,7 @@
                 "Cyber",
                 "Physical",
                 "Availability",
+                "Hazards",
                 "Combined"
             ],
             "description": "Possible alert type"
@@ -664,47 +721,66 @@
         "categoryEnum": {
             "enum": [
                 "Abuse.Coercion",
-                "Abuse.Extermism",
+                "Abuse.Extremism",
                 "Abuse.Grooming",
                 "Abuse.Harassment",
                 "Abuse.Trafficking",
                 "Abuse.Other",
                 "Access.Authorized",
                 "Access.Backdoor",
-                "Access.Clonned",
+                "Access.Cloned",
                 "Access.Compromise",
                 "Access.Escalation",
+                "Access.Expired",
                 "Access.Forced",
                 "Access.Lost",
                 "Access.Tailgating",
                 "Access.Unauthorized",
                 "Access.Other",
+                "Anomaly.Burst",
+                "Anomaly.Chaos",
+                "Anomaly.Context",
+                "Anomaly.Correlation",
+                "Anomaly.Deviation",
+                "Anomaly.Drift",
+                "Anomaly.Oscillation",
+                "Anomaly.Relation",
+                "Anomaly.Sequence",
+                "Anomaly.Threshold",
+                "Anomaly.Timing",
+                "Anomaly.Unknown",
+                "Anomaly.Other",
                 "Availability.DDoS",
                 "Availability.DoS",
                 "Availability.Failure",
-                "Availability.HeartBeat",
+                "Availability.Flapping",
+                "Availability.Heartbeat",
                 "Availability.Misconfiguration",
                 "Availability.Outage",
                 "Availability.Overload",
+                "Availability.Recovery",
+                "Availability.Restart",
+                "Availability.Start",
+                "Availability.Status",
+                "Availability.Stop",
                 "Availability.Other",
                 "Biological.Animal",
                 "Biological.Epidemic",
                 "Biological.Insect",
                 "Biological.Zombies",
                 "Biological.Other",
-                "Climat.Drought",
-                "Climat.LakeOutburst",
-                "Climat.Wildfire",
-                "Climat.Other",
+                "Climate.Drought",
+                "Climate.LakeOutburst",
+                "Climate.Wildfire",
+                "Climate.Other",
                 "Extraterrestrial.Aliens",
                 "Extraterrestrial.Impact",
                 "Extraterrestrial.SpaceWeather",
                 "Extraterrestrial.Other",
                 "Fraud.Copyright",
                 "Fraud.Corruption",
-                "Fraud.Espionnage",
+                "Fraud.Espionage",
                 "Fraud.Masquerade",
-                "Fraud.Phishing",
                 "Fraud.Usage",
                 "Fraud.Other",
                 "Geophysical.Earthquake",
@@ -720,7 +796,7 @@
                 "Insider.Other",
                 "Malware.Adware",
                 "Malware.Backdoor",
-                "Malware.Cryptominer",
+                "Malware.ResourceHijacking",
                 "Malware.Downloader",
                 "Malware.Ransomware",
                 "Malware.Rootkit",
@@ -739,14 +815,16 @@
                 "National.Conflict",
                 "National.Crime",
                 "National.Cyber",
-                "National.Economical",
-                "National.Environemental",
+                "National.Economic",
+                "National.Environmental",
                 "National.Societal",
                 "National.Terrorism",
                 "National.Other",
+                "Operational.Configuration",
                 "Operational.Misuse",
-                "Operational.Policy Violation",
-                "Operational.Process Failure",
+                "Operational.PolicyViolation",
+                "Operational.ProcessFailure",
+                "Operational.Update",
                 "Operational.Other",
                 "Recon.Aerial",
                 "Recon.Landscape",
@@ -762,35 +840,8 @@
                 "Sabotage.Vandalism",
                 "Sabotage.Other",
                 "Safety.Accident",
-                "Safety.Agression",
-                "Safety.Explosion",
-                "Safety.Fire",
-                "Safety.Hostage",
-                "Safety.Sexual",
-                "Safety.Other",
-                "SocialEng.Baiting",
-                "SocialEng.Phishing",
-                "SocialEng.Pretexting",
-                "SocialEng.QuidProQuo",
-                "SocialEng.Smishing",
-                "SocialEng.Spear Phishing",
-                "SocialEng.Vishing",
-                "SupplyChain.Compromise",
-                "SupplyChain.Disruption",
-                "SupplyChain.Other",
-                "SocialEng.Other",
-                "Theft.Breaches",
-                "Theft.Data",
-                "Theft.Equiment",
-                "Theft.FinInfo",
-                "Theft.IP",
-                "Theft.Machinery",
-                "Theft.PII",
-                "Theft.Other",
-                "Other.Uncategorised",
-                "Other.Undetermined",
-                "Other.Test",
-                "Other.ext-value"
+                "Safety.Aggression",
+                "Safety.Explosion"
             ],
             "description": "Possible alert category"
         },
@@ -812,7 +863,7 @@
                 "Open",
                 "Closed",
                 "FalsePositive",
-                "Reported"
+                "Obsolete"
             ],
             "description": "Possible alert status"
         },
@@ -822,7 +873,8 @@
                 "Info",
                 "Low",
                 "Medium",
-                "High"
+                "High",
+                "Critical"
             ],
             "description": "Possible alert priority"
         },
@@ -833,7 +885,9 @@
                 "APP.DAST",
                 "APP.IAST",
                 "APP.RASP",
+                "APP.SANDBOX",
                 "APP.SAST",
+                "APP.SCA",
                 "CLD.CASB",
                 "CLD.CIEM",
                 "CLD.CSPM",
@@ -853,14 +907,23 @@
                 "END.HIDS",
                 "END.HIPS",
                 "END.HPT",
-                "END.RASP",
+                "HUM.REPORT",
                 "ID.DCAP",
                 "ID.DLP",
                 "ID.IAM",
                 "ID.IRM",
+                "ID.MFA",
                 "ID.PAM",
                 "ID.PIM",
+                "ID.SECRETS",
                 "ID.UEBA",
+                "NAT.AIR",
+                "NAT.FIRE",
+                "NAT.HYDRO",
+                "NAT.METEO",
+                "NAT.RADIO",
+                "NAT.SAT",
+                "NAT.SEISMO",
                 "NET.DNS-FW",
                 "NET.DPI",
                 "NET.FW",
@@ -874,32 +937,40 @@
                 "NET.WAF",
                 "NET.WIDS",
                 "NET.WIPS",
-                "OT.IoT-IDS",
+                "OT.IOT-IDS",
                 "OT.OT-IDS",
                 "OT.PLC-SCAN",
+                "OT.SCADA",
+                "OT.SENSOR",
                 "PHY.1D-LAS",
-                "PHY.1D-LiDAR",
                 "PHY.2D-LAS",
-                "PHY.2D-LiDAR",
                 "PHY.3D-LAS",
-                "PHY.3D-LiDAR",
                 "PHY.ACCESS-CTRL",
                 "PHY.ADS",
+                "PHY.CBRN",
+                "PHY.FIRE",
                 "PHY.FR-CAM",
+                "PHY.GAS",
                 "PHY.GLASS-BRK",
                 "PHY.HAR",
                 "PHY.LWIR",
                 "PHY.MOT-SEN",
                 "PHY.MWIR",
                 "PHY.OBJ-DET",
+                "PHY.PERIMETER",
+                "PHY.RADAR",
+                "PHY.SMOKE",
                 "PHY.SWIR",
                 "PHY.VAD",
                 "PHY.VNIR",
+                "PHY.WATER",
+                "SIEM.APM",
                 "SIEM.ETL",
                 "SIEM.LOG",
                 "SIEM.NMS",
                 "SIEM.SIEM",
                 "SIEM.SOAR",
+                "SIEM.UPTIME",
                 "TI.CTI",
                 "TI.TI-FEED",
                 "TI.TIP",
@@ -913,38 +984,31 @@
         "analyzerDataEnum": {
             "enum": [
                 "Undetermined",
-                "Light",
                 "Acoustics",
+                "Alert",
                 "Contact",
-                "Vibration",
-                "Temperature",
-                "Humidity",
-                "Rain",
-                "Water",
-                "Fog",
-                "Particles",
-                "Seismic",
-                "Magnetic",
-                "Images",
-                "Thermal",
-                "Lidar",
-                "Network",
-                "Flow",
-                "Protocol",
-                "Datagram",
-                "Host",
-                "Connection",
-                "Port",
-                "SNMP",
-                "Authentication",
-                "Log",
-                "File",
                 "Content",
                 "Data",
-                "Reporting",
-                "Alert",
-                "Relay",
+                "Datagram",
                 "External",
+                "File",
+                "Flow",
+                "Fog",
+                "Humidity",
+                "Images",
+                "Lidar",
+                "Light",
+                "Log",
+                "Magnetic",
+                "Particles",
+                "PCAP",
+                "Rain",
+                "Seismic",
+                "SNMP",
+                "Temperature",
+                "Thermal",
+                "Vibration",
+                "Water",
                 "ext-value"
             ],
             "description": "Possible analyzer data"
@@ -1251,5 +1315,5 @@
         }
     },
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "IDMEF 2.D.V08"
+    "title": "IDMEF 2.D.V09"
 }

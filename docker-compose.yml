@@ -31,6 +31,13 @@ services:
       # init: true runs a minimal init process as PID 1, so the
       # container reaps orphaned child processes correctly.
       init: true
+      environment:
+        POSTGRES_USER: ${POSTGRES_USER:-postgres}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+        POSTGRES_CONCERTO_USER: ${POSTGRES_CONCERTO_USER:-concerto}
+        POSTGRES_CONCERTO_PASSWORD: ${POSTGRES_CONCERTO_PASSWORD:-concerto}
+        POSTGRES_CONCERTO_DB: ${POSTGRES_CONCERTO_DB:-concerto}
+        ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-elastic}
       volumes:
         # Entrypoint script that performs the index creation.
         - ./setup/entrypoint.sh:/entrypoint.sh:ro,Z
@@ -69,11 +76,16 @@ services:
     gui:
       build:
         context: gui/
+      environment:
+        POSTGRES_CONCERTO_USER: ${POSTGRES_CONCERTO_USER:-concerto}
+        POSTGRES_CONCERTO_PASSWORD: ${POSTGRES_CONCERTO_PASSWORD:-concerto}
+        POSTGRES_CONCERTO_DB: ${POSTGRES_CONCERTO_DB:-concerto}
+        ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-elastic}
       volumes:
         # Entrypoint and Prewikka configuration files.
         # All mounted read-only so the container cannot modify them.
         - ./gui/entrypoint.sh:/entrypoint.sh:ro,Z
-        - ./gui/config/prewikka.conf:/etc/prewikka/prewikka.conf:ro,Z
+        - ./gui/config/concerto.conf:/etc/prewikka/prewikka.conf:ro,Z
         - ./gui/config/auth.conf:/etc/prewikka/conf.d/auth.conf:ro,Z
         - ./gui/config/idmefv2.conf:/etc/prewikka/conf.d/idmefv2.conf:ro,Z
         - ./gui/config/logs.conf:/etc/prewikka/conf.d/logs.conf:ro,Z
@@ -200,7 +212,6 @@ services:
         - ./logstash/pipeline:/usr/share/logstash/config/pipeline:ro,Z
         - ./logstash/scripts:/usr/share/logstash/config/scripts:ro,Z
         - ./logstash/rulesets:/usr/share/logstash/config/rulesets:ro,Z
-        - ./logstash/idmef:/usr/share/logstash/config/idmef:ro,Z
       ports:
         # Syslog input (6514) and IDMEFv2 HTTP input (4690).
         # Both host-only by default.
@@ -218,7 +229,7 @@ services:
         MAX_MSG_SIZE: 1048576
         # Kafka and Elasticsearch endpoints, by service name.
         BOOTSTRAP_SERVER: "http://kafka1:9092"
-        BIG_DATA_SERVER: "http://es01:9200/"
+        BIG_DATA_SERVER: "http://es01:9200"
         BIG_DATA_USERNAME: "elastic"
         BIG_DATA_PASSWORD: "elastic"
         # Analyzer metadata attached to generated IDMEFv2 alerts.
@@ -280,39 +291,6 @@ services:
         kafka1:
           condition: service_healthy
 
-    # --------------------------------------------------------
-    # Zookeeper: Kafka coordination
-    # --------------------------------------------------------
-    zoo1:
-      build:
-        context: zoo/
-        args:
-          ZOO_VERSION: ${ZOO_VERSION}
-      hostname: zoo1
-      ports:
-        - "127.0.0.1:2181:2181"
-      environment:
-        ZOOKEEPER_CLIENT_PORT: 2181
-        ZOOKEEPER_SERVER_ID: 1
-        ZOOKEEPER_SERVERS: zoo1:2888:3888
-        # Enables the "ruok" four-letter command used by the
-        # health check below.
-        KAFKA_OPTS: "-Dzookeeper.4lw.commands.whitelist=ruok"
-      restart: on-failure
-      healthcheck:
-        # "ruok" returns "imok" when Zookeeper is responsive.
-        test:
-          [
-            "CMD-SHELL",
-            "echo ruok | nc localhost 2181 | grep imok"
-          ]
-        interval: 15s
-        timeout: 10s
-        retries: 30
-
-    # --------------------------------------------------------
-    # Kafka: message bus
-    # --------------------------------------------------------
     kafka1:
       build:
         context: kafka/
@@ -335,6 +313,7 @@ services:
         KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
         KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
         KAFKA_BROKER_ID: 1
+        KAFKA_PORT: ""
         KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
         # Single-broker settings: replication factors of 1.
         KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -358,10 +337,6 @@ services:
         interval: 15s
         timeout: 10s
         retries: 30
-      depends_on:
-        # Kafka needs a working Zookeeper to start.
-        zoo1:
-          condition: service_healthy
 
 # ------------------------------------------------------------
 # Networks

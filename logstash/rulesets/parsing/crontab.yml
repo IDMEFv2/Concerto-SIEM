@@ -1,0 +1,15 @@
+﻿ruleset:
+  name: crontab_parsing
+  field: "[Attachment][RawLog][Content][message]"
+  predicate:
+    operator: in
+    operands:
+      - operator: variable
+        operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "crontab"
+  rules:
+    - id: "23801"
+      pattern: "\\(%{USERNAME:[Attachment][RawLog][Content][user][name]}\\) BEGIN EDIT \\(%{USERNAME:[Attachment][RawLog][Content][user][target][name]}\\)"
+      samples:
+        - "Sep 11 09:46:33 sys1 crontab[20601]: (root) BEGIN EDIT (root)"

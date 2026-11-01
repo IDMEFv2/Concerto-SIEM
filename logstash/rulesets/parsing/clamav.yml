@@ -1,0 +1,27 @@
+﻿ruleset:
+  name: virus_found_parsing
+  field: "[Attachment][RawLog][Content][message]"
+  predicate:
+    operator: or
+    operands:
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][message]"
+          - operator: constant
+            operands: "FOUND"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][message]"
+          - operator: constant
+            operands: "virus"
+  rules:
+    - id: "3200"
+      pattern: "%{NOTSPACE:filePath}: %{NOTSPACE:type} FOUND"
+      samples:
+        - "May 10 15:19:28 mail clamd[14292]: /usr/share/doc/clamav-0.70/test/test2.badext: ClamAV-Test-Signature FOUND"
+    - id: "3201"
+      pattern: "Database correctly reloaded \\(\\d+ viruses\\)"
+      samples:
+        - "May 10 15:18:56 mail clamd[14292]: Database correctly reloaded (21517 viruses)"

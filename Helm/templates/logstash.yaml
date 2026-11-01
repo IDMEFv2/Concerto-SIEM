@@ -1,0 +1,131 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+  labels:
+    app: logstash-service
+spec:
+  type: NodePort
+  ports:
+    - port: 4690
+      name: ls-tcp-4690
+      nodePort: {{ .Values.logstash.ports.listenIDMEFv2 }}
+    - port: 6514
+      name: ls-tcp-6514
+      nodePort: {{ .Values.logstash.ports.listenSyslog }}
+      protocol: TCP
+    - port: 6514
+      name: ls-udp-6514
+      nodePort: {{ .Values.logstash.ports.listenSyslog }}
+      protocol: UDP
+  selector:
+    app: logstash-tmpl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+  labels:
+    app: logstash-depl
+spec:
+  replicas: {{ coalesce .Values.logstash.replicaCount .Values.global.replicaCount 1 }}
+  selector:
+    matchLabels:
+      app: logstash-tmpl
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: logstash-tmpl
+    spec:
+      containers:
+      - image: "{{ coalesce .Values.logstash.image.repository .Values.global.image.repository }}/{{ .Values.logstash.image.name }}:{{ coalesce .Values.logstash.image.tag .Values.global.image.tag }}"
+        name: logstash
+        env:
+        - name: LS_JAVA_OPTS
+          value: {{ .Values.logstash.java.javaOpts }}
+        - name: LOGSTASH_INTERNAL_PASSWORD
+          value: ""
+        - name: MONITORING_ENABLED
+          value: "false"
+        - name: MAX_MSG_SIZE
+          value: "1048576"
+        - name: BOOTSTRAP_SERVER
+          value: "http://kafka:29092"
+        - name: BIG_DATA_SERVER
+          value: "http://es01:9200/"
+        - name: BIG_DATA_USERNAME
+          value: elastic
+        - name: BIG_DATA_PASSWORD
+          value: {{ .Values.elasticsearch.secrets.password }}
+        - name: ANALYZER_NAME
+          value: {{ .Values.logstash.analyzer.name }}
+        - name: ANALYZER_LOCATION
+          value: {{ .Values.logstash.analyzer.location }}
+        - name: ANALYZER_UNLOCATION
+          value: {{ .Values.logstash.analyzer.unlocation }}
+        - name: ANALYZER_GEOLOCATION
+          value: {{ .Values.logstash.analyzer.geolocation }}
+        - name: ANALYZER_IP
+          value: {{ .Values.logstash.analyzer.ip }}
+        - name: ANALYZER_HOSTNAME
+          value: {{ .Values.logstash.analyzer.hostname }}
+        - name: LISTEN_SYSLOG
+          value: "6514"
+        - name: LISTEN_HTTP
+          value: "4690"
+        - name: TOPIC_COLLECTED
+          value: "my_collected"
+        - name: TOPIC_PROCESSED
+          value: "my_processed"
+        - name: INDEX_ALERTS
+          value: "alerts"
+        - name: INDEX_LOGS
+          value: "logs"
+        ports:
+        - containerPort: 4690
+          name: ls-tcp-4690
+        - containerPort: 6514
+          name: ls-tcp-6514
+        volumeMounts:
+          - name: config
+            mountPath: /usr/share/logstash/config/logstash.yml
+            subPath: config/logstash.yml
+          - name: config
+            mountPath: /usr/share/logstash/config/jvm.options
+            subPath: config/jvm.options
+          - name: config
+            mountPath: /usr/share/logstash/config/pipelines.yml
+            subPath: pipelines.yml
+          - name: config
+            mountPath: /usr/share/logstash/config/IDMEFv2-light.schema
+            subPath: IDMEFv2-light.schema
+          - name: config
+            mountPath: /usr/share/logstash/config/IDMEFv2.schema
+            subPath: IDMEFv2.schema
+          - name: config
+            mountPath: /usr/share/logstash/config/IDMEFv2.mapping
+            subPath: IDMEFv2.mapping
+          - name: config
+            mountPath: /usr/share/logstash/config/NXLog.schema
+            subPath: NXLog.schema
+          - name: config
+            mountPath: /usr/share/logstash/config/pipeline
+            subPath: pipeline
+          - name: config
+            mountPath: /usr/share/logstash/config/scripts
+            subPath: scripts
+          - name: config
+            mountPath: /usr/share/logstash/config/rulesets
+            subPath: rulesets
+          - name: config
+            mountPath: /usr/share/logstash/config/idmef
+            subPath: idmef
+      volumes:
+      {{- range .Values.logstash.volumes }}
+        - name: {{ .name }}
+          hostPath:
+            path: {{ .hostPath }}
+            type: DirectoryOrCreate
+      {{- end }}

@@ -105,7 +105,7 @@ def eval_predicate(predicate, event)
   when 'match', 'not_match'
     begin
       opd2 = opd1
-      opd1 = Regex.new(eval_predicate(predicate['operands'][1], event)).match(opd1)
+      opd1 = Regexp.new(eval_predicate(predicate['operands'][1], event)).match(opd1)
     rescue
       # @FIXME Log a warning/error
       return false
@@ -139,8 +139,15 @@ def filter(event)
       if ruleid
         event.set('[Attachment][RawLog][Content][rule][id]', ruleid)
 
-        ruleid = Integer(ruleid) rescue ruleid
         rule = ruleset['rules'][ruleid]
+        if rule.nil?
+          begin
+            rule = ruleset['rules'][Integer(ruleid)]
+          rescue
+            rule = nil
+          end
+        end
+        next if rule.nil?
         @fields.each do |field|
           v = rule[field]
           event.set("[Attachment][RawLog][Content][rule][#{field}]", v) if v

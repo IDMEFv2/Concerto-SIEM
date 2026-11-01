@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+  labels:
+    app: kafka-service
+spec:
+  type: NodePort
+  ports:
+    - port: 9092
+      name: kafka-9092
+      nodePort: 30092
+    - port: 29093
+      name: kafka-29093
+    - port: 29092
+      name: kafka-29092
+  selector:
+    app: kafka-tmpl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka
+  labels:
+    app: kafka-depl
+spec:
+  replicas: {{ coalesce .Values.kafka.replicaCount .Values.global.replicaCount 1 }}
+  selector:
+    matchLabels:
+      app: kafka-tmpl
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: kafka-tmpl
+    spec:
+      containers:
+      - image: {{ coalesce .Values.kafka.image.repository .Values.global.image.repository }}/{{ .Values.kafka.image.name }}:{{ coalesce .Values.kafka.image.tag .Values.global.image.tag }}
+        name: kafka
+        env:
+        - name: KAFKA_NODE_ID
+          value: "1"
+        - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+          value: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:SASL_PLAINTEXT"
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: "PLAINTEXT://kafka:29092,PLAINTEXT_HOST://{{ .Values.nginx.serverName }}:9092"
+        - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+          value: "1"
+        - name: KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS
+          value: "0"
+        - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+          value: "1"
+        - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+          value: "1"
+        - name: KAFKA_PORT
+          value: ""
+        - name: KAFKA_PROCESS_ROLES
+          value: "broker,controller"
+        - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+          value: "1@kafka:29093"
+        - name: KAFKA_LISTENERS
+          value: "PLAINTEXT://0.0.0.0:29092,CONTROLLER://0.0.0.0:29093,PLAINTEXT_HOST://0.0.0.0:9092"
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: "PLAINTEXT"
+        - name: KAFKA_CONTROLLER_LISTENER_NAMES
+          value: "CONTROLLER"
+        - name: KAFKA_LOG_DIRS
+          value: "/tmp/kraft-combined-logs"
+        - name: CLUSTER_ID
+          value: "MkU3OEVBNTcwNTJENDM2Qk"
+        - name: KAFKA_SASL_ENABLED_MECHANISMS
+          value: "PLAIN"
+        - name: KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL
+          value: "PLAINTEXT"
+        - name: KAFKA_OPTS
+          value: "-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"
+        ports:
+        - containerPort: 9092
+          name: kafka-9092
+        - containerPort: 29093
+          name: kafka-29093
+        - containerPort: 29092
+          name: kafka-29092
+        volumeMounts:
+          - name: config
+            mountPath: /etc/kafka/kafka_server_jaas.conf
+            subPath: kafka_server_jaas.conf
+      volumes:
+        - name: config
+          configMap:
+            name: kafka-config

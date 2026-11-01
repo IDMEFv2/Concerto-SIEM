@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx-tmpl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-tmpl
+  template:
+    metadata:
+      labels:
+        app: nginx-tmpl
+    spec:
+      containers:
+        - name: nginx-proxy
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+              name: nginx-80
+            - containerPort: 443
+              name: nginx-443
+            - containerPort: 4690
+              name: nginx-4690
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+            - name: config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: certificates
+              mountPath: /etc/letsencrypt
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: nginx-config
+      {{- range .Values.nginx.volumes }}
+        - name: {{ .name }}
+          hostPath:
+            path: {{ .hostPath }}
+            type: DirectoryOrCreate
+      {{- end }}

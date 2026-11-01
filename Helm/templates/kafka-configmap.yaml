@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-config
+  labels:
+    app: kafka
+data:
+  kafka_server_jaas.conf: |
+    KafkaServer {
+        org.apache.kafka.common.security.plain.PlainLoginModule required
+        username="admin"
+        password="S4Sadmin"
+        user_admin="S4Sadmin";
+    };

@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kowl
+  labels:
+    app: kowl-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8085
+      name: kowl-8085
+      nodePort: {{ .Values.kowl.ports.listenPort }}
+  selector:
+    app: kowl-tmpl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kowl
+  labels:
+    app: kowl-depl
+spec:
+  replicas: {{ coalesce .Values.kowl.replicaCount .Values.global.replicaCount 1 }}
+  selector:
+    matchLabels:
+      app: kowl-tmpl
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: kowl-tmpl
+    spec:
+      containers:
+      - image: {{ coalesce .Values.kowl.image.repository .Values.global.image.repository }}/{{ .Values.kowl.image.name }}:{{ coalesce .Values.kowl.image.tag .Values.global.image.tag }}
+        name: kowl
+        env:
+        - name: KAFKA_BROKERS
+          value: kafka:29092
+        ports:
+        - containerPort: 8085
+          name: kowl-8085

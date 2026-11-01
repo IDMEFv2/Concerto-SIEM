@@ -143,6 +143,26 @@
           }
         }
       },
+      "SignedAttributes": {
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
+      },
+      "Signature": {
+        "type": "text",
+        "norms": false,
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "norms": false
+          }
+        }
+      },
       "Cause": {
         "type": "text",
         "norms": false,
@@ -439,6 +459,26 @@
                 "norms": false
               }
             }
+          },
+          "Locator": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
+          "CaptureZone": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           }
         }
       },
@@ -529,6 +569,36 @@
                 "norms": false
               }
             }
+          },
+          "Data": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
+          "ext-Data": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
+          "Locator": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           }
         }
       },
@@ -538,6 +608,16 @@
         "dynamic": false,
         "properties": {
           "ID": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
+          "Name": {
             "type": "text",
             "norms": false,
             "fields": {
@@ -662,6 +742,16 @@
                 "norms": false
               }
             }
+          },
+          "Locator": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
           }
         }
       },
@@ -671,6 +761,16 @@
         "dynamic": false,
         "properties": {
           "ID": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
+          "Name": {
             "type": "text",
             "norms": false,
             "fields": {
@@ -752,6 +852,26 @@
           "Port": {
             "type": "integer"
           },
+          "Polygon": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
+          "Circle": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
           "GeoLocation": {
             "type": "geo_point"
           },
@@ -777,6 +897,16 @@
             }
           },
           "Attachment": {
+            "type": "text",
+            "norms": false,
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "norms": false
+              }
+            }
+          },
+          "Locator": {
             "type": "text",
             "norms": false,
             "fields": {

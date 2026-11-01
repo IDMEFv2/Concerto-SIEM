@@ -1,0 +1,19 @@
+﻿ruleset:
+  name: wireless_parsing
+  field: "[Attachment][RawLog][Content][message]"
+  predicate:
+    operator: in
+    operands:
+      - operator: variable
+        operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "Wireless"
+  rules:
+    - id: "2200"
+      pattern: "PC connected[\\s]+%{MAC:[Attachment][RawLog][Content][mac][address]}"
+      samples:
+        - "Jan 21 17:22:34 192.168.0.17 Wireless PC connected   00-30-65-05-17-AD"
+    - id: "2201"
+      pattern: "PC try to connected[\\s]+%{MAC:[Attachment][RawLog][Content][mac][address]}"
+      samples:
+        - "Jan 21 17:27:46 192.168.0.17 Unauthorized wireless PC try to connected   00-30-65-05-17-AD"

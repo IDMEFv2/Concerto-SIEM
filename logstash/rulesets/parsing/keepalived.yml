@@ -1,0 +1,25 @@
+﻿ruleset:
+  name: keepalived_parsing
+  field: "[Attachment][RawLog][Content][message]"
+  predicate:
+    operator: in
+    operands:
+      - operator: variable
+        operands: "[Attachment][RawLog][Content][process][name]"
+      - operator: constant
+        operands: "Keepalived"
+  rules:
+    - id: "23201"
+      pattern: "Stopping Keepalived %{NOTSPACE:desc}"
+      samples:
+        - "Oct  5 17:21:24 test1 Keepalived: Stopping Keepalived v1.1.7 (08/10,2004)"
+    - id: "23202"
+      pattern: "Starting VRRP child process, pid=%{NOTSPACE:pid}"
+      samples:
+        - "Oct  5 17:21:25 test1 Keepalived: Starting VRRP child process, pid=6292"
+    - id: "23203"
+      pattern: "VRRP_Instance\\((?<data>.+)\\) Entering MASTER STATE"
+    - id: "23204"
+      pattern: "VRRP_Instance\\((?<data>.+)\\) Entering FAULT STATE"
+    - id: "23205"
+      pattern: "Kernel is reporting: interface %{NOTSPACE:interface} DOWN"

@@ -1,0 +1,15 @@
+﻿ruleset:
+  name: mssql_parsing
+  field: "[Attachment][RawLog][Content][message]"
+  predicate:
+    operator: in
+    operands:
+      - operator: variable
+        operands: "[Attachment][RawLog][Content][message]"
+      - operator: constant
+        operands: "mssql"
+  rules:
+    - id: "1000"
+      pattern: "mssqlserver(?:\\[%{WORD:procID}\\])? %{POSINT:identifiant}  %{POSINT:id_name} : Login failed for user '%{NOTSPACE:[Attachment][RawLog][Content][user][target][name]}'"
+      samples:
+        - "Nov 24 14:45:58 testdb.itg.sac.tfs mssqlserver[info] 17055  18456 : Login failed for user 'probe'."

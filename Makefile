@@ -159,21 +159,14 @@ ps: check_bin
 # so the terminal stays usable. The stack runs in the background.
 .PHONY: up
 up: check_bin $(ELASTIC_MMC) $(PROTO_DIRS)
-	sudo podman-compose -p proto -f docker-compose.yml up -d 2>&1 | tee -a logs
-	@echo "Waiting for setup end..."
-	@while [ "$$(sudo podman inspect -f '{{.State.Status}}' proto_setup_1 2>/dev/null)" != "exited" ] && \
-	       [ "$$(sudo podman inspect -f '{{.State.Health.Status}}' proto_setup_1 2>/dev/null)" != "healthy" ]; do \
-		sleep 2; \
-	done
-	@echo "Starting gui and correlator if necessary ..."
-	-sudo podman start proto_gui_1 proto_correlator_1 2>/dev/null || true
+	(sudo podman-compose -p proto -f docker-compose.yml up 1>>logs 2>&1 &)
 
 # Rebuild all images from scratch (no cache), then recreate the
 # containers. Use this after changing a Dockerfile or when an
 # image is suspected to be stale.
 .PHONY: up-build
 up-build: check_bin $(ELASTIC_MMC) $(PROTO_DIRS)
-	(sudo podman-compose -p proto -f docker-compose.yml build --no-cache 2>&1 1>>logs && sudo podman-compose -p proto -f docker-compose.yml up --build --force-recreate 2>&1 1>>logs &)
+	(sudo podman-compose -p proto -f docker-compose.yml build --no-cache 1>>logs 2>&1 && sudo podman-compose -p proto -f docker-compose.yml up --build --force-recreate 1>>logs 2>&1 &)
 
 # Stop and remove the containers of the main stack.
 # Data volumes on the host are preserved.
@@ -191,7 +184,7 @@ clean_podman: check_bin down
 .PHONY: clean
 clean: clean_podman check_bin down
 	sudo rm -rvf logs
-	sudo rm -rvf elasticsearch_data elasticsearch_logs kafka_logs postgres_data setup_data
+	sudo rm -rvf elasticsearch_data elasticsearch_logs kafka_logs postgres_data
 
 # ============================================================
 # NGINX test webserver
@@ -202,7 +195,7 @@ clean: clean_podman check_bin down
 # Start the NGINX test webserver.
 .PHONY: up-test
 up-test: check_bin $(ELASTIC_MMC) $(PROTO_DIRS_TEST)
-	(sudo podman-compose -p proto -f docker-compose-test.yml up 2>&1 1>>logs &)
+	(sudo podman-compose -p proto -f docker-compose-test.yml up 1>>logs 2>&1 &)
 
 # Stop the NGINX test webserver.
 .PHONY: down-test

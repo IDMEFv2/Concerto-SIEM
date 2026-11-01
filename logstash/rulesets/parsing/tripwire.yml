@@ -1,0 +1,29 @@
+﻿ruleset:
+  name: tripwire_parsing
+  field: "[Attachment][RawLog][Content][message]"
+  predicate:
+    operator: or
+    operands:
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][process][name]"
+          - operator: constant
+            operands: "Tripwire"
+      - operator: in
+        operands:
+          - operator: variable
+            operands: "[Attachment][RawLog][Content][process][name]"
+          - operator: constant
+            operands: "tripwire"
+  rules:
+    - id: "24001"
+      pattern: "Added (?<Path>.*) on (?<dstAddr>.*) by (?<data>.*)"
+      samples:
+        - "2009-02-23 15:55:01 slxp0060 Tripwire: Added C:\\\\test\\\\AutoRetrieve\\\\bin\\\\AutoRetrieve.ini on srvtest by Regles test Standard"
+    - id: "24002"
+      pattern: "Removed\\s(?<Path>.*)\\son\\s(?<dstAddr>.*)\\sby\\s(?<data>.*)"
+      samples:
+        - "2009-02-23 15:45:01 slxp0060 Tripwire: Removed C:\\\\test\\\\checksign\\\\bin\\\\checksign_win32.ini on srvtest by Regles test Standard"
+    - id: "24003"
+      pattern: "Modified\\s(?<Path>.*)\\son\\s(?<dstAddr>.*)\\sby\\s(?<data>.*)"
