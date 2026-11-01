@@ -30,4 +30,4 @@ data:
     Model: "Concerto Correlator 2.1"
     Name: "Concerto Correlator"
     UnLocation: "FR PAR"
-    bootstrapserver: "kafka:9092"
+    bootstrapserver: "kafka:29092"

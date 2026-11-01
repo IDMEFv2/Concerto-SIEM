@@ -36,7 +36,7 @@ spec:
         name: kafdrop
         env:
         - name: KAFKA_BROKERCONNECT
-          value: "kafka:9092"
+          value: "kafka:29092"
         - name: JVM_OPTS
           value: "{{ .Values.kafdrop.java.jvmOpts }}"
         - name: CMD_ARGS

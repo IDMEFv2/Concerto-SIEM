@@ -9,11 +9,11 @@ spec:
   ports:
     - port: 9092
       name: kafka-9092
+      nodePort: 30092
     - port: 29093
       name: kafka-29093
     - port: 29092
       name: kafka-29092
-      nodePort: 30092
   selector:
     app: kafka-tmpl
 ---
