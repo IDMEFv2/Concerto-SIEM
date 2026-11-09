@@ -163,94 +163,92 @@
         },
         "Analyzer": {
             "type": "object",
-            "items": {
-                "description": "The Analyzer class describes the module that has analyzed the data captured by the sensors, identified an event of interest and decided to create an alert.",
-                "properties": {
-                    "ID": {
-                        "description": "Unique identifier for the analyzer.",
-                        "$ref": "#/definitions/uuidType"
-                    },
-                    "IP": {
-                        "description": "Analyzer IP address.",
-                        "$ref": "#/definitions/ipType"
-                    },
-                    "Name": {
-                        "description": "Name of the analyzer, which must be reasonably unique, however still bear some meaningful sense. This attribute usually denotes the hierarchy of organizational units the detector belongs to and its own name. It MAY also be used to distinguish multiple analyzers running with the same IP address.",
-                        "type": "string"
-                    },
-                    "Hostname": {
-                        "description": "Hostname of this analyzer. SHOULD be a fully-qualified domain name.",
-                        "type": "string"
-                    },
-                    "Model": {
-                        "description": "Analyzer model description (usually its generic name, brand and version).",
-                        "type": "string"
-                    },
-                    "Category": {
-                        "description": "Analyzer categories.",
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/definitions/analyzerCategoryEnum"
-                        }
-                    },
-                    "ext-Category": {
-                        "description": "A means by which to extend the Category attribute. (see )",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "Data": {
-                        "description": "Type of data analyzed during the detection.",
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/definitions/analyzerDataEnum"
-                        }
-                    },
-                    "ext-Data": {
-                        "description": "A means by which to extend the Data attribute. (see )",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "Method": {
-                        "description": "Detection method.",
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/definitions/analyzerMethodEnum"
-                        }
-                    },
-                    "ext-Method": {
-                        "description": "A means by which to extend the Method attribute. (see )",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "GeoLocation": {
-                        "description": "GPS coordinates for the analyzer.",
-                        "$ref": "#/definitions/geolocType"
-                    },
-                    "UnLocation": {
-                        "description": "Standard UN/Locode for the analyzer.",
-                        "$ref": "#/definitions/unlocodeType"
-                    },
-                    "Location": {
-                        "description": "Internal name for the location of the analyzer.",
-                        "type": "string"
-                    },
-                    "Locator": {
-                        "description": "Resolvable URL for the entity. May be dynamic or expire; complements Location, which is a persistent path.",
-                        "type": "string"
-                    },
-                    "CaptureZone": {
-                        "description": "A string that describes the \"capture zone\" of the analyzer (if the analyzer is also a sensor), as a JSON-serialized string. Depending on the type of sensor, the capture zone may for instance refer to: A JSON object describing a camera's settings (elevation, horizontal and vertical field of view, azimuth, etc.) A description of the IP network where packet capture is taking place.",
+            "description": "The Analyzer class describes the module that has analyzed the data captured by the sensors, identified an event of interest and decided to create an alert.",
+            "properties": {
+                "ID": {
+                    "description": "Unique identifier for the analyzer.",
+                    "$ref": "#/definitions/uuidType"
+                },
+                "IP": {
+                    "description": "Analyzer IP address.",
+                    "$ref": "#/definitions/ipType"
+                },
+                "Name": {
+                    "description": "Name of the analyzer, which must be reasonably unique, however still bear some meaningful sense. This attribute usually denotes the hierarchy of organizational units the detector belongs to and its own name. It MAY also be used to distinguish multiple analyzers running with the same IP address.",
+                    "type": "string"
+                },
+                "Hostname": {
+                    "description": "Hostname of this analyzer. SHOULD be a fully-qualified domain name.",
+                    "type": "string"
+                },
+                "Model": {
+                    "description": "Analyzer model description (usually its generic name, brand and version).",
+                    "type": "string"
+                },
+                "Category": {
+                    "description": "Analyzer categories.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/analyzerCategoryEnum"
+                    }
+                },
+                "ext-Category": {
+                    "description": "A means by which to extend the Category attribute. (see )",
+                    "type": "array",
+                    "items": {
                         "type": "string"
                     }
                 },
-                "additionalProperties": false
-            }
+                "Data": {
+                    "description": "Type of data analyzed during the detection.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/analyzerDataEnum"
+                    }
+                },
+                "ext-Data": {
+                    "description": "A means by which to extend the Data attribute. (see )",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "Method": {
+                    "description": "Detection method.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/analyzerMethodEnum"
+                    }
+                },
+                "ext-Method": {
+                    "description": "A means by which to extend the Method attribute. (see )",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "GeoLocation": {
+                    "description": "GPS coordinates for the analyzer.",
+                    "$ref": "#/definitions/geolocType"
+                },
+                "UnLocation": {
+                    "description": "Standard UN/Locode for the analyzer.",
+                    "$ref": "#/definitions/unlocodeType"
+                },
+                "Location": {
+                    "description": "Internal name for the location of the analyzer.",
+                    "type": "string"
+                },
+                "Locator": {
+                    "description": "Resolvable URL for the entity. May be dynamic or expire; complements Location, which is a persistent path.",
+                    "type": "string"
+                },
+                "CaptureZone": {
+                    "description": "A string that describes the \"capture zone\" of the analyzer (if the analyzer is also a sensor), as a JSON-serialized string. Depending on the type of sensor, the capture zone may for instance refer to: A JSON object describing a camera's settings (elevation, horizontal and vertical field of view, azimuth, etc.) A description of the IP network where packet capture is taking place.",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
         },
         "Sensor": {
             "type": "array",
@@ -281,7 +279,7 @@
                         "description": "Type of data captured by the sensor.",
                         "type": "array",
                         "items": {
-                            "$ref": "#/definitions/sensorDataEnum"
+                            "$ref": "#/definitions/analyzerDataEnum"
                         }
                     },
                     "ext-Data": {
@@ -841,7 +839,31 @@
                 "Sabotage.Other",
                 "Safety.Accident",
                 "Safety.Aggression",
-                "Safety.Explosion"
+                "Safety.Explosion",
+                "Safety.Fire",
+                "Safety.Hostage",
+                "Safety.Pollution",
+                "Safety.Sexual",
+                "Safety.Other",
+                "SocialEng.Baiting",
+                "SocialEng.Phishing",
+                "SocialEng.Pretexting",
+                "SocialEng.QuidProQuo",
+                "SocialEng.Other",
+                "SupplyChain.Compromise",
+                "SupplyChain.Disruption",
+                "SupplyChain.Other",
+                "Theft.Data",
+                "Theft.Equipment",
+                "Theft.FinInfo",
+                "Theft.IP",
+                "Theft.Machinery",
+                "Theft.PII",
+                "Theft.Other",
+                "Other.Uncategorized",
+                "Other.Undetermined",
+                "Other.Test",
+                "Other.ext-value"
             ],
             "description": "Possible alert category"
         },
