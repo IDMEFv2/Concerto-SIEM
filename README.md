@@ -53,9 +53,9 @@ sudo usermod -aG docker $USER
 newgrp docker
 
 Hardware (minimum): Concerto SIEM/Podman has been succefully installed tested with:
-   - CPU: 6 vCores
-   - RAM: 12 Go
-   - Disk: 100 G
+   - CPU: 6 Cores
+   - RAM: 12 GB
+   - Disk: 100 GB
 
 Make sure to adapt Elastic and Logstash memory in .env file, if only 12 Go available:
     - ELASTIC_JVM=-Xms2g -Xmx2g
@@ -68,7 +68,7 @@ ES	      2 GB	        2.77 GB	     38%
 Logstash	2 GB	        3.53 GB	     76%
 
 # WARNING (2026) 
-Concerto SIEM is still under developemnt as well as IDMEFv2. Make sure when you test to use the last version of the IDMEFv2 format.
+Concerto SIEM is still under developement as well as IDMEFv2. Make sure when you test to use the last version of the IDMEFv2 format.
 
 Examples can be found at: [https://github.com/IDMEFv2/IDMEFv2-Examples](https://github.com/IDMEFv2/IDMEFv2-Examples)
 
@@ -109,7 +109,7 @@ The following services are exposed with their primary purpose:
 
 # Check containers are running
 
-The following command will list all the :
+The following command will list all containers :
 ```bash
 make ps
 ```
