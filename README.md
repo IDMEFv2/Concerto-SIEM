@@ -68,7 +68,7 @@ ES	      2 GB	        2.77 GB	     38%
 Logstash	2 GB	        3.53 GB	     76%
 
 # WARNING (2026) 
-Concerto SIEM is still under developemnt as well as IDMEFv2. Make sure when you test to use the last version of the IDMEFv2 format.
+Concerto SIEM is still under development as well as IDMEFv2. Make sure when you test to use the last version of the IDMEFv2 format.
 
 Examples can be found at: [https://github.com/IDMEFv2/IDMEFv2-Examples](https://github.com/IDMEFv2/IDMEFv2-Examples)
 
