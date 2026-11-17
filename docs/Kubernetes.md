@@ -23,8 +23,6 @@ can change this by manipulating Yaml files `elasticsearch.yml` and
 
 The Yaml we provides create these services:
 * Cluster internal services
-  * Zookeeper
-    * 2181: ZooKeeper internal port
   * Kafka
     * 9092, 19092, 29092: Kafka consumer/producer connexion
     * 9999: Kafka internal port

@@ -1,7 +1,7 @@
 FROM docker.io/jertel/elastalert2:2.27.0
 USER root
 RUN apt update && apt -y upgrade && apt -y install git && rm -rf /var/lib/apt/lists/* && apt -y autoremove
-RUN pip install --no-cache-dir sigma-cli kafka-python
+RUN pip install --no-cache-dir "sigma-cli==3.1.0" kafka-python
 WORKDIR /opt
 RUN git clone --branch v2.0.3 --single-branch https://github.com/SigmaHQ/pySigma-backend-elasticsearch.git
 WORKDIR /opt/pySigma-backend-elasticsearch

@@ -2,7 +2,7 @@
 # Concerto SIEM - Master Makefile
 # ============================================================
 # Manages the lifecycle of the Concerto SIEM stack using Podman
-# and podman-compose.
+# or Docker and the "compose" component.
 #
 # Quick start:
 #   make            Show this help
@@ -129,21 +129,28 @@ proto_dirs-test:
 # Prerequisite checks
 # ============================================================
 
-# Verify that podman and podman-compose are installed, and that
-# Podman is version 4 or higher. This target is a prerequisite of
+# Verify that podman or docker are installed, and that
+# Podman is version 4 or higher or Docker is version 27 or higher.
+# This target is a prerequisite of
 # every target that interacts with the container runtime.
+CONTAINER_BIN ?= $(shell which docker 2>/dev/null || which podman 2>/dev/null)
+
 .PHONY: check_bin
 check_bin:
-ifeq (,$(shell which podman))
-		$(error "podman seems to not be installed")
+ifeq ($(CONTAINER_BIN),)
+	$(error "Neither docker nor podman seems to be installed")
 endif
-ifeq (,$(shell which podman-compose))
-		$(error "podman-compose seems to not be installed")
+	@echo "Using container engine: $(CONTAINER_BIN)"
+
+ifeq ($(CONTAINER_BIN),podman)
+CONTAINER_VERSION_OK := $(shell $(CONTAINER_BIN) version --format '{{.Version}}' | awk -F. '$$1 >= 4 {print "yes"}')
+else
+CONTAINER_VERSION_OK := $(shell $(CONTAINER_BIN) version --format '{{.Client.Version}}' | awk -F. '$$1 >= 27 {print "yes"}')
 endif
 
-PODMAN_VERSION_OK := $(shell podman version --format '{{.Version}}' | awk -F. '$$1 >= 4 {print "yes"}')
-ifndef PODMAN_VERSION_OK
-	$(error Podman version must be >= 4)
+check_version:
+ifeq (,$(CONTAINER_VERSION_OK))
+	$(error $(CONTAINER_BIN) version does not meet the minimum requirements)
 endif
 
 # ============================================================
@@ -153,36 +160,36 @@ endif
 # Show all containers, including stopped ones.
 .PHONY: ps
 ps: check_bin
-	sudo podman ps -a
+	sudo $(CONTAINER_BIN) ps -a
 
 # Start the stack. The output is redirected to the `logs` file
 # so the terminal stays usable. The stack runs in the background.
 .PHONY: up
 up: check_bin $(ELASTIC_MMC) $(PROTO_DIRS)
-	(sudo podman-compose -p proto -f docker-compose.yml up 1>>logs 2>&1 &)
+	(sudo $(CONTAINER_BIN) compose -p proto -f docker-compose.yml up 1>>logs 2>&1 &)
 
 # Rebuild all images from scratch (no cache), then recreate the
 # containers. Use this after changing a Dockerfile or when an
 # image is suspected to be stale.
 .PHONY: up-build
 up-build: check_bin $(ELASTIC_MMC) $(PROTO_DIRS)
-	(sudo podman-compose -p proto -f docker-compose.yml build --no-cache 1>>logs 2>&1 && sudo podman-compose -p proto -f docker-compose.yml up --build --force-recreate 1>>logs 2>&1 &)
+	(sudo $(CONTAINER_BIN) compose -p proto -f docker-compose.yml build --no-cache 1>>logs 2>&1 && sudo $(CONTAINER_BIN) compose -p proto -f docker-compose.yml up --build --force-recreate 1>>logs 2>&1 &)
 
 # Stop and remove the containers of the main stack.
 # Data volumes on the host are preserved.
 .PHONY: down
-down: check_bin
-	sudo podman-compose -p proto -f docker-compose.yml down
+down: check_bin down-proxy
+	sudo $(CONTAINER_BIN) compose -p proto -f docker-compose.yml down
 
 # Remove the locally built images of the main stack.
-.PHONY: clean_podman
-clean_podman: check_bin down
-	sudo podman rmi localhost/proto_setup localhost/proto_es01 localhost/proto_logstash localhost/proto_kafka1 localhost/proto_zoo1 localhost/proto_kafdrop localhost/proto_gui localhost/proto_postgres localhost/proto_correlator || true
+.PHONY: clean_container
+clean_container: check_bin down
+	sudo $(CONTAINER_BIN) rmi localhost/proto_setup localhost/proto_es01 localhost/proto_logstash localhost/proto_kafka1 localhost/proto_kafdrop localhost/proto_gui localhost/proto_postgres localhost/proto_correlator || true
 
 # Full reset: stop the stack, remove images, and delete all
 # persistent data. The next `make up` starts from a clean state.
 .PHONY: clean
-clean: clean_podman check_bin down
+clean: clean_container certs-clean down
 	sudo rm -rvf logs
 	sudo rm -rvf elasticsearch_data elasticsearch_logs kafka_logs postgres_data
 
@@ -195,21 +202,21 @@ clean: clean_podman check_bin down
 # Start the NGINX test webserver.
 .PHONY: up-test
 up-test: check_bin $(ELASTIC_MMC) $(PROTO_DIRS_TEST)
-	(sudo podman-compose -p proto -f docker-compose-test.yml up 1>>logs 2>&1 &)
+	(sudo $(CONTAINER_BIN) compose -p proto -f docker-compose-test.yml up 1>>logs 2>&1 &)
 
 # Stop the NGINX test webserver.
 .PHONY: down-test
 down-test: check_bin
-	sudo podman-compose -p proto -f docker-compose-test.yml down
+	sudo $(CONTAINER_BIN) compose -p proto -f docker-compose-test.yml down
 
 # Remove the NGINX test webserver image.
-.PHONY: clean_podman-test
-clean_podman-test: check_bin down-test
-	sudo podman rmi localhost/proto_nginx
+.PHONY: clean_container-test
+clean_container-test: check_bin down-test
+	sudo $(CONTAINER_BIN) rmi localhost/proto_nginx
 
 # Full reset of the NGINX test webserver, including its data.
 .PHONY: clean-test
-clean-test: clean_podman-test check_bin down-test
+clean-test: clean_container-test check_bin down-test
 	sudo rm -rvf nginx_data
 
 # ============================================================
@@ -222,14 +229,14 @@ clean-test: clean_podman-test check_bin down-test
 # A temporary container is built and run on the proto network.
 .PHONY: tests_logs
 tests_logs: check_bin
-	sudo podman build -t proto_tests -f tests/Dockerfile tests/
-	sudo podman run --rm --name=proto_tests_logs -v $(shell pwd)/tests/example_logs:/logs:Z,ro -v $(shell pwd)/tests/entrypoint_tests_logs.sh:/entrypoint.sh:Z,ro --net proto_proto --network-alias tests-logs proto_tests
+	sudo $(CONTAINER_BIN) build -t proto_tests -f tests/Dockerfile tests/
+	sudo $(CONTAINER_BIN) run --rm --name=proto_tests_logs -v $(shell pwd)/tests/example_logs:/logs:Z,ro -v $(shell pwd)/tests/entrypoint_tests_logs.sh:/entrypoint.sh:Z,ro --net proto_proto --network-alias tests-logs proto_tests
 
 # Send example IDMEFv2 alerts from tests/example_idmefv2 to the SIEM.
 .PHONY: tests_idmefv2
 tests_idmefv2: check_bin
-	sudo podman build -t proto_tests -f tests/Dockerfile tests/
-	sudo podman run --rm --name=proto_tests_idmefv2 -v $(shell pwd)/tests/example_idmefv2:/idmefv2:Z,ro -v $(shell pwd)/tests/entrypoint_tests_idmefv2.py:/entrypoint.sh:Z,ro --net proto_proto --network-alias tests-idmefv2 proto_tests
+	sudo $(CONTAINER_BIN) build -t proto_tests -f tests/Dockerfile tests/
+	sudo $(CONTAINER_BIN) run --rm --name=proto_tests_idmefv2 -v $(shell pwd)/tests/example_idmefv2:/idmefv2:Z,ro -v $(shell pwd)/tests/entrypoint_tests_idmefv2.py:/entrypoint.sh:Z,ro --net proto_proto --network-alias tests-idmefv2 proto_tests
 
 # ============================================================
 # Included Makefiles

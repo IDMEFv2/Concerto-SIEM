@@ -3,7 +3,7 @@
 # ============================================================
 # This file is used in combination with the main docker-compose.yml:
 #
-#   sudo podman-compose -p proto \
+#   sudo containe compose -p proto \
 #     -f docker-compose.yml \
 #     -f docker-compose.proxy.yml up -d
 #
@@ -12,7 +12,7 @@
 #
 # The network declared below is marked as external because it is
 # created by the main docker-compose.yml. Its actual name is
-# "proto_proto" in the rootful Podman context used by this project.
+# "proto_proto" in the rootful context used by this project.
 #
 # The NGINX container is the ONLY service in the Concerto stack
 # that publishes ports to the public network. Every other service
@@ -73,9 +73,9 @@ networks:
     # second, separate network, which would break name resolution
     # between NGINX and the gui service.
     external: true
-    # Actual network name as seen by rootful Podman.
+    # Actual network name as seen by rootful.
     # Compose naming convention is <project>_<network>, so for
     # a project named "proto" and a network named "proto", the
     # result is "proto_proto".
-    # Verify with: sudo podman network ls
+    # Verify with: sudo container network ls
     name: proto_proto

@@ -1,11 +1,10 @@
 # How this prototype is architectured ?
 
-Fully based on podman and podman-compose
+Fully based on podman or docker and compose
 
 One container for each function : 
 * [Container Name]: [Hostname]: Description
 * kafka: kafka: broker for each step of data manipulation, from collect to storage, with detection and correlation.
-* zoo: zoo: (ZooKeeper) centralized service for maintaining configuration of Kafka
 * kafdrop: kafdrop: Web interface for Kafka
 * elasticsearch: es01: IDMEFv2 and logs storage
 * logstash: logstash: Data manipulation, detection and correlation
@@ -19,7 +18,7 @@ During execution, if a container need to store files, the storage of the databas
 
 All logs goes to the local file "logs"
 
-Phe podman environement's name is "proto"
+The podman or docker environement's name is "proto"
 
 The todo list is stored in file TOTO.md
 

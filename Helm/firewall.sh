@@ -16,7 +16,8 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 echo "Retrieving the Minikube container IP..."
-MINIKUBE_IP=$(podman inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' minikube 2>/dev/null)
+CONTAINER_BIN=$(shell which docker 2>/dev/null || which podman 2>/dev/null)
+MINIKUBE_IP=$($CONTAINER_BIN inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' minikube 2>/dev/null)
 
 if [ -z "$MINIKUBE_IP" ]; then
     echo "Error: Could not find the Minikube IP. Is the cluster running?"

@@ -23,7 +23,6 @@ This repository provide docker files and docker-compose files for these
 services:
 
   - Kafka
-  - Zookeeper
   - Kafdrop
   - Elasticsearch
   - Logstash
@@ -33,9 +32,8 @@ services:
 
 # Prerequisite
 
-Podman software needed :
-  - podman version 4 or higher
-  - podman-compose version 1 or higher
+Container software needed :
+  - podman version 4 or higher or docker version 27 or higher
   - make , git
   - Optional: net-tools
 
@@ -52,7 +50,7 @@ sudo sysctl -w vm.max_map_count=262144
 sudo usermod -aG docker $USER
 newgrp docker
 
-Hardware (minimum): Concerto SIEM/Podman has been succefully installed tested with:
+Hardware (minimum): Concerto SIEM has been succefully installed tested with:
    - CPU: 6 vCores
    - RAM: 12 Go
    - Disk: 100 G
@@ -116,7 +114,6 @@ make ps
 The first container (proto_setup_1) should be exited and all other containers up:
 - proto_postgres_1
 - proto_es01_1
-- proto_zoo1_1
 - proto_kafka1_1
 - proto_kafdrop_1
 - proto_gui_1

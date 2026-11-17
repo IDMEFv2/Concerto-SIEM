@@ -6,8 +6,8 @@
 #
 # This file manages the optional NGINX reverse proxy that sits
 # in front of the Concerto SIEM web UI. It uses a direct
-# `podman run` command instead of podman-compose, to avoid a
-# known podman-compose 1.5.0 bug where it incorrectly reports
+# `container run` command instead of container compose, to avoid a
+# known bug where it incorrectly reports
 # that an external network does not exist.
 #
 # Prerequisite:
@@ -62,12 +62,12 @@ proxy-help:
 # exists before attempting to start the proxy.
 .PHONY: proxy-check
 proxy-check:
-	@if ! sudo podman network exists $(PROXY_NETWORK); then \
+	@if ! sudo $(CONTAINER_BIN) network inspect $(PROXY_NETWORK) >/dev/null 2>&1; then \
 		echo "ERROR: Network $(PROXY_NETWORK) does not exist."; \
 		echo "Run 'make up' first and wait for the stack to be healthy."; \
 		exit 1; \
 	fi
-	@if ! sudo podman container exists proto_gui_1; then \
+	@if ! sudo $(CONTAINER_BIN) container inspect proto-gui-1; then \
 		echo "ERROR: The main Concerto stack is not running."; \
 		echo "Run 'make up' first and wait for the stack to be healthy."; \
 		exit 1; \
@@ -85,7 +85,7 @@ proxy-check:
 # ------------------------------------------------------------
 # Start the reverse proxy
 # ------------------------------------------------------------
-# Uses a direct `podman run` command instead of podman-compose
+# Uses a direct `container run` command instead of container compose
 # to avoid the network-existence bug.
 #
 # Flags explained:
@@ -100,9 +100,9 @@ proxy-check:
 .PHONY: up-proxy
 up-proxy: proxy-check certs-init
 	@echo "Removing any existing proxy container..."
-	@sudo podman rm -f $(PROXY_CONTAINER) 2>/dev/null || true
+	@sudo $(CONTAINER_BIN) rm -f $(PROXY_CONTAINER) 2>/dev/null || true
 	@echo "Starting NGINX reverse proxy..."
-	sudo podman run -d \
+	sudo $(CONTAINER_BIN) run -d \
 		--name $(PROXY_CONTAINER) \
 		--restart unless-stopped \
 		--network $(PROXY_NETWORK) \
@@ -122,7 +122,7 @@ up-proxy: proxy-check certs-init
 .PHONY: down-proxy
 down-proxy:
 	@echo "Stopping and removing the proxy container..."
-	@sudo podman rm -f $(PROXY_CONTAINER) 2>/dev/null || true
+	@sudo $(CONTAINER_BIN) rm -f $(PROXY_CONTAINER) 2>/dev/null || true
 	@echo "Done."
 
 # ------------------------------------------------------------
@@ -134,9 +134,9 @@ down-proxy:
 .PHONY: proxy-reload
 proxy-reload:
 	@echo "Validating NGINX configuration..."
-	@sudo podman exec $(PROXY_CONTAINER) nginx -t
+	@sudo $(CONTAINER_BIN) exec $(PROXY_CONTAINER) nginx -t
 	@echo "Reloading NGINX..."
-	@sudo podman exec $(PROXY_CONTAINER) nginx -s reload
+	@sudo $(CONTAINER_BIN) exec $(PROXY_CONTAINER) nginx -s reload
 	@echo "Done."
 
 # ------------------------------------------------------------
@@ -144,21 +144,21 @@ proxy-reload:
 # ------------------------------------------------------------
 .PHONY: proxy-logs
 proxy-logs:
-	sudo podman logs -f $(PROXY_CONTAINER)
+	sudo $(CONTAINER_BIN) logs -f $(PROXY_CONTAINER)
 
 # ------------------------------------------------------------
 # Open a shell inside the proxy container
 # ------------------------------------------------------------
 .PHONY: proxy-shell
 proxy-shell:
-	sudo podman exec -it $(PROXY_CONTAINER) /bin/sh
+	sudo $(CONTAINER_BIN) exec -it $(PROXY_CONTAINER) /bin/sh
 
 # ------------------------------------------------------------
 # Show proxy status
 # ------------------------------------------------------------
 .PHONY: proxy-status
 proxy-status:
-	@sudo podman ps -a --filter name=$(PROXY_CONTAINER)
+	@sudo $(CONTAINER_BIN) ps -a --filter name=$(PROXY_CONTAINER)
 
 # ------------------------------------------------------------
 # Test the proxy from the host

@@ -2,7 +2,7 @@
 # Concerto SIEM - Main stack
 # ============================================================
 # Defines the core services of the SIEM: setup, GUI, database,
-# correlation engine, Elasticsearch, Logstash, Kafka, Zookeeper,
+# correlation engine, Elasticsearch, Logstash, Kafka,
 # and the Kafka web UI.
 #
 # All services run on the internal "proto" network and are
@@ -81,6 +81,7 @@ services:
         POSTGRES_CONCERTO_PASSWORD: ${POSTGRES_CONCERTO_PASSWORD:-concerto}
         POSTGRES_CONCERTO_DB: ${POSTGRES_CONCERTO_DB:-concerto}
         ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-elastic}
+        GUI_PASSWORD: ${GUI_PASSWORD:-S4Sadmin}
       volumes:
         # Entrypoint and Prewikka configuration files.
         # All mounted read-only so the container cannot modify them.
@@ -96,12 +97,12 @@ services:
         - 127.0.0.1:8001:81
       networks:
         - proto
-      restart: on-failure
+      restart: unless-stopped
       depends_on:
         # The GUI can only function once the setup service has
         # created the Elasticsearch indices.
         setup:
-          condition: service_healthy
+          condition: service_completed_successfully
 
     # --------------------------------------------------------
     # PostgreSQL: Prewikka database
@@ -122,7 +123,7 @@ services:
         - "127.0.0.1:5432:5432"
       networks:
         - proto
-      restart: on-failure
+      restart: unless-stopped
       healthcheck:
         # pg_isready returns 0 when the server accepts connections.
         test: ["CMD-SHELL", "pg_isready -U postgres"]
@@ -144,11 +145,11 @@ services:
         - ./correlator/rules:/opt/sigma_rules:ro,Z
       networks:
         - proto
-      restart: on-failure
+      restart: unless-stopped
       depends_on:
         # Needs the alerts index to exist before it can write to it.
         setup:
-          condition: service_healthy
+          condition: service_completed_successfully
 
     # --------------------------------------------------------
     # Elasticsearch: alert and log storage
@@ -228,7 +229,7 @@ services:
         # Maximum size of a single message, in bytes.
         MAX_MSG_SIZE: 1048576
         # Kafka and Elasticsearch endpoints, by service name.
-        BOOTSTRAP_SERVER: "http://kafka1:9092"
+        BOOTSTRAP_SERVER: "http://kafka1:29092"
         BIG_DATA_SERVER: "http://es01:9200"
         BIG_DATA_USERNAME: "elastic"
         BIG_DATA_PASSWORD: "elastic"
@@ -280,13 +281,13 @@ services:
       ports:
         - 127.0.0.1:9201:9201
       environment:
-        KAFKA_BROKERCONNECT: "kafka1:9092"
+        KAFKA_BROKERCONNECT: "kafka1:29092"
         # Small JVM heap: Kafdrop is a lightweight UI.
         JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
         CMD_ARGS: "--server.port=9201"
       networks:
         - proto
-      restart: on-failure
+      restart: unless-stopped
       depends_on:
         kafka1:
           condition: service_healthy
@@ -302,30 +303,29 @@ services:
         # 9999: JMX. All host-only.
         - "127.0.0.1:9092:9092"
         - "127.0.0.1:29092:29092"
-        - "127.0.0.1:9999:9999"
+        - "127.0.0.1:29093:29093"
       volumes:
         - ./kafka_logs:/var/lib/kafka/logs:Z
       environment:
-        # Three listeners: internal for broker-to-broker traffic,
-        # external for host access, docker for container access.
-        KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka1:19092,EXTERNAL://kafka1:9092,DOCKER://kafka1:29092
-        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
-        KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-        KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
-        KAFKA_BROKER_ID: 1
+        KAFKA_NODE_ID: "1"
+        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT"
+        KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka1:29092,PLAINTEXT_HOST://kafka1:9092"
+        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+        KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: "0"
+        KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: "1"
+        KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: "1"
         KAFKA_PORT: ""
-        KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
-        # Single-broker settings: replication factors of 1.
-        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-        KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-        KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-        KAFKA_JMX_PORT: 9999
-        KAFKA_JMX_HOSTNAME: kafka1
-        # Authorization disabled: everyone is allowed.
-        KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
-        KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
-        KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
-      restart: on-failure
+        KAFKA_PROCESS_ROLES: "broker,controller"
+        KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka1:29093"
+        KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:29092,CONTROLLER://0.0.0.0:29093,PLAINTEXT_HOST://0.0.0.0:9092"
+        KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+        KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+        KAFKA_LOG_DIRS: "/tmp/kraft-combined-logs"
+        CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
+        KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      restart: unless-stopped
+      networks:
+        - proto
       healthcheck:
         # Opens a TCP connection to the broker port. Succeeds if
         # the socket accepts the connection.

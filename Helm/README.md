@@ -9,7 +9,6 @@ This repository contains the Helm chart for deploying **ConcertoSIEM** on a Kube
 Before deploying the Helm chart, ensure you have the following installed on your host system:
 
 * [Minikube](https://minikube.sigs.k8s.io/docs/start/)
-* [Podman](https://podman.io/)
 * [Helm (v3+)](https://helm.sh/docs/intro/install/)
 * `sudo` privileges to execute the firewall script
 
@@ -21,7 +20,7 @@ Follow the instructions below in sequence to ensure a proper deployment.
 
 ### Step 1: Start Minikube
 
-Initialize Minikube using the `podman` driver with the required CPU, memory, and volume mount parameters:
+Initialize Minikube using the `podman` or `docker` driver with the required CPU, memory, and volume mount parameters:
 
 ```bash
 minikube start \
