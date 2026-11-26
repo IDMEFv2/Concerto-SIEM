@@ -41,10 +41,6 @@ services:
       volumes:
         # Entrypoint script that performs the index creation.
         - ./setup/entrypoint.sh:/entrypoint.sh:ro,Z
-        # State directory shared between runs, holding .done.
-        - ./setup_data:/state:Z
-        # Static setup configuration files.
-        - ./setup/config:/config:ro,Z
       networks:
         - proto
       depends_on:

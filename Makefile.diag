@@ -167,7 +167,7 @@ diag-resources:
 	@sudo podman stats --no-stream 2>/dev/null || echo "Cannot read podman stats."
 	@echo ""
 	@echo "=== Disk usage of data volumes ==="
-	@du -sh elasticsearch_data elasticsearch_logs kafka_logs postgres_data setup_data 2>/dev/null || true
+	@du -sh elasticsearch_data elasticsearch_logs kafka_logs postgres_data 2>/dev/null || true
 
 # ------------------------------------------------------------
 # Recent container logs

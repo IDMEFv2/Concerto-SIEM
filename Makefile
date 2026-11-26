@@ -116,8 +116,8 @@ PROTO_DIRS_TEST := proto_dirs-test
 # Elasticsearch and PostgreSQL) can write to them.
 .PHONY: proto_dirs
 proto_dirs:
-	sudo mkdir -pv elasticsearch_data elasticsearch_logs kafka_logs postgres_data setup_data
-	sudo chown -R 1000:0 elasticsearch_data elasticsearch_logs postgres_data setup_data
+	sudo mkdir -pv elasticsearch_data elasticsearch_logs kafka_logs postgres_data
+	sudo chown -R 1000:0 elasticsearch_data elasticsearch_logs postgres_data
 
 # Create the persistent data directory for the NGINX test webserver.
 .PHONY: proto_dirs-test
